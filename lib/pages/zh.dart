@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:univerx/pages/home.dart';
 import 'package:univerx/structures/exam.dart';
 import 'package:univerx/structures/exam_provider.dart';
 
@@ -32,7 +33,10 @@ class _ZhState extends State<Zh> {
             icon: Icon(Icons.arrow_back),
             color: Color.fromARGB(255, 255, 255, 255),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
             },
           ),
           backgroundColor: Colors.black,

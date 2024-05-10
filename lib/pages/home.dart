@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:univerx/structures/exam.dart';
+import 'package:univerx/structures/exam_provider.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
+  _HomeState createState() => _HomeState();
+}
+class _HomeState extends State<Home> {
+  @override
   Widget build(BuildContext context) {
+    final examProvider = Provider.of<ExamProvider>(context, listen: false);
+
+
+
+    // Create a list of Text widgets to display each exam's data
+    List<Widget> examWidgets = examProvider.exams.map((exam) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Name: ${exam.name}',
+            style: TextStyle(color: Colors.white),
+          ),
+          Text(
+            'Date: ${exam.date.toString()}',
+            style: TextStyle(color: Colors.white),
+          ),
+          SizedBox(height: 8), // Add some space between exams
+        ],
+      );
+    }).toList();
+
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -155,26 +186,53 @@ class Home extends StatelessWidget {
                   SizedBox(width: 10),
                   // ---------------------------------- upcoming zh/ tests
                   Expanded(
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/zh'),
-                        child: Container(
-                          // add margin to text
-                          //center text
-
-                          padding: EdgeInsets.all(15),
-                          child: Text("ZH", style: TextStyle(color: Colors.white, fontSize: 26.0, fontWeight: FontWeight.bold,),textAlign: TextAlign.center,),
-                          height: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Color.fromARGB(255, 255, 68, 0),
+                    child: 
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () => Navigator.pushNamed(context, '/zh'),
+                          child: Container(
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                Text(
+                                  "ZH",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 26.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                // Display the list of exams
+                                ...examProvider.exams.map((exam) {
+                                  return ListTile(
+                                    textColor: Color.fromARGB(255, 255, 255, 255),
+                                    title: Text(exam.name),
+                                    subtitle: Text('Date: ${exam.date.toString()}'),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        setState(() {
+                                          examProvider.exams.remove(exam);
+                                        });
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
+                              ],
+                            ),
+                            height: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Color.fromARGB(255, 45, 45, 45),
+                            ),
                           ),
-                          // Content of the second container
                         ),
                       ),
-                    )
                   ),
+
+
                   SizedBox(width: 10),
                   // ---------------------------------- upcoming assigments
                   Expanded(
@@ -224,3 +282,6 @@ class Home extends StatelessWidget {
     );
   }
 }
+
+
+
