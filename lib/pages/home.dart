@@ -192,7 +192,7 @@ class _HomeState extends State<Home> {
                         child: GestureDetector(
                           onTap: () => Navigator.pushNamed(context, '/zh'),
                           child: Container(
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.only(top: 15),
                             child: Column(
                               children: [
                                 Text(
@@ -208,21 +208,13 @@ class _HomeState extends State<Home> {
                                 ...examProvider.exams.map((exam) {
                                   return ListTile(
                                     textColor: Color.fromARGB(255, 255, 255, 255),
-                                    title: Text(exam.name),
-                                    subtitle: Text('Date: ${exam.date.toString()}'),
-                                    trailing: IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () {
-                                        setState(() {
-                                          examProvider.exams.remove(exam);
-                                        });
-                                      },
-                                    ),
+                                    title: Text(exam.name + ': ${examProvider.DateFormat(exam.date.toString())}'),
+                                    //subtitle: Text('Date: ${examProvider.DateFormat(exam.date.toString())}'),
                                   );
                                 }).toList(),
                               ],
                             ),
-                            height: 150,
+                            height: 200,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
                               color: Color.fromARGB(255, 45, 45, 45),
@@ -243,10 +235,10 @@ class _HomeState extends State<Home> {
                         child: Container(
                           padding: EdgeInsets.all(15),
                           child: Text("Assigments", style: TextStyle(color: Colors.white, fontSize: 23.0, fontWeight: FontWeight.bold,),textAlign: TextAlign.center,),
-                          height: 150,
+                          height: 200,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            color: Color.fromARGB(255, 0, 221, 255),
+                              color: Color.fromARGB(255, 45, 45, 45),
                           ),
                           // Content of the second container
                         ),
@@ -264,6 +256,8 @@ class _HomeState extends State<Home> {
                   Expanded(
                     flex: 2,
                     child: Container(
+                      padding: EdgeInsets.all(15),
+                      child: Text("Notes", style: TextStyle(color: Colors.white, fontSize: 23.0, fontWeight: FontWeight.bold,),textAlign: TextAlign.center,),
                       height: 300,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40),
