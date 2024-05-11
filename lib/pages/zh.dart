@@ -48,7 +48,7 @@ class _ZhState extends State<Zh> {
             final exam = examProvider.exams[index];
             return ListTile(
               title: Text(exam.name), textColor: Color.fromARGB(255, 255, 255, 255),
-              subtitle: Text('Date: ${exam.date.toString()}'),
+              subtitle: Text('Date: ${examProvider.DateFormat(exam.date.toString())} ${examProvider.DaysLeft(exam.date.toString())}'),
               trailing: IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
@@ -69,7 +69,7 @@ class _ZhState extends State<Zh> {
       ),
     );
   }
-
+  
   void _addExam(examProvider) async {
     final exam = await showDialog<Exam>(
       context: context,
