@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:univerx/pages/home.dart';
-import 'package:univerx/structures/exam.dart';
-import 'package:univerx/structures/exam_provider.dart';
+import 'package:univerx/models/examModel.dart';
+import 'package:univerx/database_helper.dart';
 
 void main() {
   runApp(Zh());
@@ -16,62 +15,23 @@ class Zh extends StatefulWidget {
 }
 
 class _ZhState extends State<Zh> {
+  List<ExamModel> _exams = [];
 
   @override
-  Widget build(BuildContext context) {
-    final examProvider = Provider.of<ExamProvider>(context, listen: false);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: const Text(
-            "Exam Manager",
-            style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: Color.fromARGB(255, 255, 255, 255),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              );
-            },
-          ),
-          backgroundColor: Colors.black,
-          elevation: 0,
-        ),
-        body: ListView.builder(
-          itemCount: examProvider.exams.length,
-          itemBuilder: (context, index) {
-            final exam = examProvider.exams[index];
-            return ListTile(
-              title: Text(exam.name), textColor: Color.fromARGB(255, 255, 255, 255),
-              subtitle: Text('Date: ${examProvider.DateFormat(exam.date.toString())} ${examProvider.DaysLeft(exam.date.toString())}'),
-              trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  setState(() {
-                    examProvider.exams.removeAt(index);
-                  });
-                },
-              ),
-            );
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _addExam(examProvider);
-          },
-          child: Icon(Icons.add),
-        ),
-      ),
-    );
+  void initState() {
+    super.initState();
+    _loadExams();
   }
-  
-  void _addExam(examProvider) async {
-    final exam = await showDialog<Exam>(
+
+  Future<void> _loadExams() async {
+    final exams = await DatabaseHelper.instance.getExams();
+    setState(() {
+      _exams = exams;
+    });
+  }
+
+  void _addExam() async {
+    final exam = await showDialog<ExamModel>(
       context: context,
       builder: (BuildContext context) {
         String examName = '';
@@ -115,7 +75,7 @@ class _ZhState extends State<Zh> {
             TextButton(
               onPressed: () {
                 if (examName.isNotEmpty && examDate != null) {
-                  Navigator.pop(context, Exam(examName, examDate!));
+                  Navigator.pop(context, ExamModel(name: examName, date: examDate!));
                 }
               },
               child: Text('Add'),
@@ -125,9 +85,60 @@ class _ZhState extends State<Zh> {
       },
     );
     if (exam != null) {
-      setState(() {
-        examProvider.addExam(exam);
-      });
+      await DatabaseHelper.instance.insertExam(exam);
+      _loadExams(); // Refresh the list of exams
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          title: const Text(
+            "Exam Manager",
+            style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Color.fromARGB(255, 255, 255, 255),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
+            },
+          ),
+          backgroundColor: Colors.black,
+          elevation: 0,
+        ),
+        body: ListView.builder(
+          itemCount: _exams.length,
+          itemBuilder: (context, index) {
+            final exam = _exams[index];
+            return ListTile(
+              title: Text(exam.name, style: TextStyle(color: Colors.white)),
+              subtitle: Text(
+                'Date: ${exam.date.toLocal().toString().substring(0, 10)}',
+                style: TextStyle(color: Colors.white70),
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.delete, color: Colors.white),
+                onPressed: () async {
+                  await DatabaseHelper.instance.deleteExam(exam.id!);
+                  _loadExams(); // Refresh the list of exams
+                },
+              ),
+            );
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _addExam,
+          child: Icon(Icons.add),
+        ),
+      ),
+    );
   }
 }
