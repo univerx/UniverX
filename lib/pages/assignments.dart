@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:univerx/pages/home.dart';
-import 'package:univerx/structures/exam.dart';
-import 'package:univerx/structures/exam_provider.dart';
+
 
 class Assigments extends StatelessWidget {
   const Assigments({Key? key});
 
   @override
   Widget build(BuildContext context) {
-      final examProvider = Provider.of<ExamProvider>(context, listen: false);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -66,18 +64,7 @@ class Assigments extends StatelessWidget {
             )],
         ),
         
-        body: Center(
-          child: ListView.builder(
-          itemCount: examProvider.exams.length,
-          itemBuilder: (context, index) {
-            final exam = examProvider.exams[index];
-            return ListTile(
-              title: Text(exam.name), textColor: Color.fromARGB(255, 255, 255, 255),
-              subtitle: Text('Date: ${exam.date.toString()}'),
-            );
-          },
-        ),
-        ),
+        body: Center(child: Text("asd"),)
       ),
     );
   }
