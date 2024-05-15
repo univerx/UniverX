@@ -5,16 +5,12 @@ import 'package:univerx/pages/home.dart';
 import 'package:univerx/pages/zh.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:univerx/structures/exam.dart';
-import 'package:univerx/structures/exam_provider.dart';
+
 
  
-void main() {
+void main() async{
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ExamProvider(),
-      child: MyApp(),
-    ),
+    const MyApp(),
   );
 }
 
