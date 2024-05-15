@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+
+
 class ExamModel {
   final int? id;
   final String name;
@@ -19,5 +22,10 @@ class ExamModel {
       name: map['name'],
       date: DateTime.parse(map['date']),
     );
+  }
+
+  String getFormattedDate() {
+    final DateFormat formatter = DateFormat('MMM d');
+    return formatter.format(date);
   }
 }
