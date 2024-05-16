@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:univerx/database_helper.dart';
 import 'package:univerx/models/examModel.dart';
+import 'package:univerx/models/assignmentModel.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,17 +12,26 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<ExamModel> _exams = [];
+  List<AssignmentModel> _assignments = [];
 
   @override
   void initState() {
     super.initState();
     _loadExams();
+    _loadAssignments();
   }
 
   Future<void> _loadExams() async {
     final exams = await DatabaseHelper.instance.getExams();
     setState(() {
       _exams = exams;
+    });
+  }
+
+  Future<void> _loadAssignments() async {
+    final assignments = await DatabaseHelper.instance.getAssignments();
+    setState(() {
+      _assignments = assignments;
     });
   }
 
@@ -68,7 +77,6 @@ class _HomeState extends State<Home> {
                   const SizedBox(width: 5),
                   Expanded(
                     flex: 2,
-
                     // ---------------------------------- upcoming classes/event
                     child: Container(
                       height: 140,
@@ -108,7 +116,6 @@ class _HomeState extends State<Home> {
                               ),
                             ],
                           ),
-
                           SizedBox(height: 5), // Add some space between the row and the text below
                           Row(
                             //crossAxisAlignment: CrossAxisAlignment.end,
@@ -166,7 +173,6 @@ class _HomeState extends State<Home> {
                       ),
                       // Content of the first container
                     ),
-
                   ),
                   SizedBox(width: 5),
                 ],
@@ -229,7 +235,6 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       SizedBox(width: 5),
-
                                     ],
                                   ),
                                 );
@@ -248,20 +253,58 @@ class _HomeState extends State<Home> {
                       child: GestureDetector(
                         onTap: () => Navigator.pushNamed(context, '/assignments'),
                         child: Container(
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(top: 15),
                           height: 200,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: Color.fromARGB(255, 45, 45, 45),
                           ),
-                          child: const Text(
-                            "Assignments",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 23.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center, // Center align the text
+                            children: [
+                              const Text(
+                                "Assignments",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              // Display the list of assignments
+                              ..._assignments.map((assignment) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          assignment.name,
+                                          style: TextStyle(color: Colors.white, fontSize: 18),
+                                          textAlign: TextAlign.left, // Left align the subject text
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(255, 120, 120, 120),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          assignment.getFormattedDate(),
+                                          style: TextStyle(color: Colors.white),
+                                          textAlign: TextAlign.center, // Center align the date text
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ],
                           ),
                         ),
                       ),
