@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:univerx/database_helper.dart';
 import 'package:univerx/models/examModel.dart';
 import 'package:univerx/models/assignmentModel.dart';
+import 'package:univerx/models/noteModel.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,12 +14,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<ExamModel> _exams = [];
   List<AssignmentModel> _assignments = [];
+  List<Note> _notes = [];
 
   @override
   void initState() {
     super.initState();
     _loadExams();
     _loadAssignments();
+    _loadNotes();
   }
 
   Future<void> _loadExams() async {
@@ -32,6 +35,13 @@ class _HomeState extends State<Home> {
     final assignments = await DatabaseHelper.instance.getAssignments();
     setState(() {
       _assignments = assignments;
+    });
+  }
+
+  Future<void> _loadNotes() async {
+    final notes = await DatabaseHelper.instance.getNotes();
+    setState(() {
+      _notes = notes;
     });
   }
 
@@ -313,6 +323,9 @@ class _HomeState extends State<Home> {
                   SizedBox(width: 5),
                 ],
               ),
+
+
+
               SizedBox(height: 10),
               Row(
                 children: [
@@ -320,23 +333,67 @@ class _HomeState extends State<Home> {
                   // ---------------------------------- notes
                   Expanded(
                     flex: 2,
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      height: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(40),
-                        color: Color.fromARGB(255, 45, 45, 45),
-                      ),
-                      child: const Text(
-                        "Notes",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 23.0,
-                          fontWeight: FontWeight.bold,
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/notes'),
+                        child: Container(
+                          padding: EdgeInsets.all(15),
+                          height: 600, // 300
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            color: Color.fromARGB(255, 45, 45, 45),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center, // Center align the text
+                            children:[
+                              const Text(
+                                "Notes",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 23.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              // Display the list of notes
+                              ..._notes.map((note) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          note.title,
+                                          style: TextStyle(color: Colors.white, fontSize: 18),
+                                          textAlign: TextAlign.left, // Left align the subject text
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(255, 120, 120, 120),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          note.content,
+                                          style: TextStyle(color: Colors.white),
+                                          textAlign: TextAlign.center, // Center align the date text
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ]
+                          )
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                      )
+                    )
                   ),
                   SizedBox(width: 5),
                 ],
