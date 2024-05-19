@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'package:univerx/models/assignmentModel.dart';
 import 'models/examModel.dart'; // Assume this model has toMap() and fromMap() methods
 import 'models/assignmentModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
+import 'models/noteModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -15,7 +16,7 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('database3.db');
+    _database = await _initDB('database5.db');
     return _database!;
   }
 
@@ -46,9 +47,17 @@ class DatabaseHelper {
         date TEXT NOT NULL
       )
     ''');
+
+    await db.execute('''      
+      CREATE TABLE notes(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL
+      )
+    ''');
   }
 
-  // Exam methods
+  // ----------------------- Exam methods ------------------------
   Future<void> insertExam(ExamModel exam) async {
     final db = await instance.database;
     await db.insert(
@@ -83,7 +92,8 @@ class DatabaseHelper {
     );
   }
 
-  // Assignment methods
+
+  // ----------------------- Assignment methods ------------------------
   Future<void> insertAssignment(AssignmentModel assignment) async {
     final db = await instance.database;
     await db.insert(
@@ -117,4 +127,41 @@ class DatabaseHelper {
       whereArgs: [id],
     );
   }
+
+  // ----------------------- notes methods ------------------------
+  Future<void> insertNote(Note note) async {
+    final db = await instance.database;
+    await db.insert(
+      'notes',
+      note.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Note>> getNotes() async {
+    final db = await instance.database;
+    final result = await db.query('notes');
+    return result.map((json) => Note.fromMap(json)).toList();
+  }
+
+  Future<void> updateNote(Note note) async {
+    final db = await instance.database;
+    await db.update(
+      'notes',
+      note.toMap(),
+      where: 'id = ?',
+      whereArgs: [note.id],
+    );
+  }
+
+  Future<void> deleteNote(int id) async {
+    final db = await instance.database;
+    await db.delete(
+      'notes',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+
 }
