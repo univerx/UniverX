@@ -57,7 +57,10 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               Text(
                 "UniX-PTE-TTK",
-                style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -111,7 +114,8 @@ class _HomeState extends State<Home> {
                               ),
                               const SizedBox(width: 5),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(10),
@@ -126,7 +130,9 @@ class _HomeState extends State<Home> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 5), // Add some space between the row and the text below
+                          SizedBox(
+                              height:
+                                  5), // Add some space between the row and the text below
                           Row(
                             //crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -140,7 +146,8 @@ class _HomeState extends State<Home> {
                               ),
                               SizedBox(width: 5),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 3),
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(10),
@@ -157,7 +164,8 @@ class _HomeState extends State<Home> {
                           ),
                           const SizedBox(height: 12),
                           const Row(
-                            mainAxisAlignment: MainAxisAlignment.end, // Align the text to the right
+                            mainAxisAlignment: MainAxisAlignment
+                                .end, // Align the text to the right
                             children: [
                               Text(
                                 "Time left: 1 hour 20 min", // Display the time left text
@@ -172,13 +180,17 @@ class _HomeState extends State<Home> {
                           SizedBox(
                             height: 10,
                             child: LinearProgressIndicator(
-                              backgroundColor: Colors.grey[300], // Background color of the progress bar
-                              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                              borderRadius: BorderRadius.circular(20), // Color of the progress indicator
-                              value: 0.8, // Value between 0.0 and 1.0 representing the progress
+                              backgroundColor: Colors.grey[
+                                  300], // Background color of the progress bar
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Colors.blue),
+                              borderRadius: BorderRadius.circular(
+                                  20), // Color of the progress indicator
+                              value:
+                                  0.8, // Value between 0.0 and 1.0 representing the progress
                             ),
                           )
-                           // Add some space between the text and the progress bar
+                          // Add some space between the text and the progress bar
                         ],
                       ),
                       // Content of the first container
@@ -205,7 +217,8 @@ class _HomeState extends State<Home> {
                             color: Color.fromARGB(255, 45, 45, 45),
                           ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center, // Center align the text
+                            crossAxisAlignment: CrossAxisAlignment
+                                .center, // Center align the text
                             children: [
                               const Text(
                                 "ZH",
@@ -217,31 +230,40 @@ class _HomeState extends State<Home> {
                                 textAlign: TextAlign.center,
                               ),
                               // Display the list of exams
-                              ..._exams.map((exam) {
+                              ..._exams.take(3).map((exam) {
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
                                           exam.name,
-                                          style: TextStyle(color: Colors.white, fontSize: 18),
-                                          textAlign: TextAlign.left, // Left align the subject text
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
+                                          textAlign: TextAlign
+                                              .left, // Left align the subject text
                                         ),
                                       ),
                                       SizedBox(width: 5),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
                                         decoration: BoxDecoration(
-                                          color: const Color.fromARGB(255, 120, 120, 120),
-                                          borderRadius: BorderRadius.circular(10),
+                                          color: const Color.fromARGB(
+                                              255, 120, 120, 120),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Text(
                                           exam.getFormattedDate(),
                                           style: TextStyle(color: Colors.white),
-                                          textAlign: TextAlign.center, // Center align the date text
+                                          textAlign: TextAlign
+                                              .center, // Center align the date text
                                         ),
                                       ),
                                       SizedBox(width: 5),
@@ -261,7 +283,8 @@ class _HomeState extends State<Home> {
                     child: MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/assignments'),
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/assignments'),
                         child: Container(
                           padding: const EdgeInsets.only(top: 15),
                           height: 200,
@@ -270,7 +293,8 @@ class _HomeState extends State<Home> {
                             color: Color.fromARGB(255, 45, 45, 45),
                           ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center, // Center align the text
+                            crossAxisAlignment: CrossAxisAlignment
+                                .center, // Center align the text
                             children: [
                               const Text(
                                 "Assignments",
@@ -282,31 +306,40 @@ class _HomeState extends State<Home> {
                                 textAlign: TextAlign.center,
                               ),
                               // Display the list of assignments
-                              ..._assignments.map((assignment) {
+                              ..._assignments.take(3).map((assignment) {
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
                                           assignment.name,
-                                          style: TextStyle(color: Colors.white, fontSize: 18),
-                                          textAlign: TextAlign.left, // Left align the subject text
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
+                                          textAlign: TextAlign
+                                              .left, // Left align the subject text
                                         ),
                                       ),
                                       SizedBox(width: 5),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
                                         decoration: BoxDecoration(
-                                          color: const Color.fromARGB(255, 120, 120, 120),
-                                          borderRadius: BorderRadius.circular(10),
+                                          color: const Color.fromARGB(
+                                              255, 120, 120, 120),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Text(
                                           assignment.getFormattedDate(),
                                           style: TextStyle(color: Colors.white),
-                                          textAlign: TextAlign.center, // Center align the date text
+                                          textAlign: TextAlign
+                                              .center, // Center align the date text
                                         ),
                                       ),
                                       SizedBox(width: 5),
@@ -323,78 +356,83 @@ class _HomeState extends State<Home> {
                   SizedBox(width: 5),
                 ],
               ),
-
-
-
               SizedBox(height: 10),
               Row(
                 children: [
                   SizedBox(width: 5),
                   // ---------------------------------- notes
                   Expanded(
-                    flex: 2,
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/notes'),
-                        child: Container(
-                          padding: EdgeInsets.all(15),
-                          height: 600, // 300
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            color: Color.fromARGB(255, 45, 45, 45),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center, // Center align the text
-                            children:[
-                              const Text(
-                                "Notes",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 23.0,
-                                  fontWeight: FontWeight.bold,
+                      flex: 2,
+                      child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () => Navigator.pushNamed(context, '/notes'),
+                            child: Container(
+                                padding: EdgeInsets.all(15),
+                                height: 600, // 300
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                  color: Color.fromARGB(255, 45, 45, 45),
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              // Display the list of notes
-                              ..._notes.map((note) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .center, // Center align the text
                                     children: [
-                                      SizedBox(width: 10),
-                                      Expanded(
-                                        child: Text(
-                                          note.title,
-                                          style: TextStyle(color: Colors.white, fontSize: 18),
-                                          textAlign: TextAlign.left, // Left align the subject text
+                                      const Text(
+                                        "Notes",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 23.0,
+                                          fontWeight: FontWeight.bold,
                                         ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      SizedBox(width: 5),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                        decoration: BoxDecoration(
-                                          color: const Color.fromARGB(255, 120, 120, 120),
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Text(
-                                          note.content,
-                                          style: TextStyle(color: Colors.white),
-                                          textAlign: TextAlign.center, // Center align the date text
-                                        ),
-                                      ),
-                                      SizedBox(width: 5),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ]
-                          )
-                        ),
-                      )
-                    )
-                  ),
+                                      // Display the list of notes
+                                      ..._notes.map((note) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  note.title,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18),
+                                                  textAlign: TextAlign
+                                                      .left, // Left align the subject text
+                                                ),
+                                              ),
+                                              SizedBox(width: 5),
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      255, 120, 120, 120),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Text(
+                                                  note.content,
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                  textAlign: TextAlign
+                                                      .center, // Center align the date text
+                                                ),
+                                              ),
+                                              SizedBox(width: 5),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ])),
+                          ))),
                   SizedBox(width: 5),
                 ],
               ),
