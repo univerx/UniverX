@@ -8,6 +8,8 @@
 	<true/>
 	<key>com.apple.security.network.server</key>
 	<true/>
+	
+	<!-- IOS internet access -->
 	<key>com.apple.security.network.client</key>
     <true/>
 </dict>
