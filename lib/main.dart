@@ -6,11 +6,13 @@ import 'package:univerx/pages/home.dart';
 import 'package:univerx/pages/notes.dart';
 import 'package:univerx/pages/zh.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-
-
- 
-void main() async{
+void main() async {
+  //Initialize FFI
+  sqfliteFfiInit();
+  //Set the database factory
+  databaseFactory = databaseFactoryFfi;
   runApp(
     const MyApp(),
   );
@@ -27,9 +29,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => Home(),
         '/zh': (context) => Zh(),
-        '/assignments':(context) => Assignments(),
-        '/notes':(context) => Notes(),
-      } ,
+        '/assignments': (context) => Assignments(),
+        '/notes': (context) => Notes(),
+      },
     );
   }
 }
