@@ -21,6 +21,7 @@ class _AssignmentsState extends State<Assignments> {
 
   Future<void> _loadAssignments() async {
     final assignments = await DatabaseHelper.instance.getAssignments();
+    assignments.sort((a, b) => a.date.compareTo(b.date)); // Sort exams by date
     setState(() {
       _assignments = assignments;
     });
@@ -57,7 +58,9 @@ class _AssignmentsState extends State<Assignments> {
                     assignmentDate = selectedDate;
                   });
                 },
-                child: Text(assignmentDate == null ? 'Select Date' : 'Date: ${assignmentDate.toString().substring(0, 10)}'),
+                child: Text(assignmentDate == null
+                    ? 'Select Date'
+                    : 'Date: ${assignmentDate.toString().substring(0, 10)}'),
               ),
             ],
           ),
@@ -71,7 +74,10 @@ class _AssignmentsState extends State<Assignments> {
             TextButton(
               onPressed: () {
                 if (assignmentName.isNotEmpty && assignmentDate != null) {
-                  Navigator.pop(context, AssignmentModel(name: assignmentName, date: assignmentDate!));
+                  Navigator.pop(
+                      context,
+                      AssignmentModel(
+                          name: assignmentName, date: assignmentDate!));
                 }
               },
               child: Text('Add'),
@@ -95,7 +101,10 @@ class _AssignmentsState extends State<Assignments> {
         appBar: AppBar(
           title: const Text(
             "Assignment Manager",
-            style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold),
           ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -130,7 +139,8 @@ class _AssignmentsState extends State<Assignments> {
           itemBuilder: (context, index) {
             final assignment = _assignments[index];
             return ListTile(
-              title: Text(assignment.name, style: TextStyle(color: Colors.white)),
+              title:
+                  Text(assignment.name, style: TextStyle(color: Colors.white)),
               subtitle: Text(
                 'Date: ${assignment.date.toLocal().toString().substring(0, 10)}',
                 style: TextStyle(color: Colors.white70),
@@ -138,7 +148,8 @@ class _AssignmentsState extends State<Assignments> {
               trailing: IconButton(
                 icon: Icon(Icons.delete, color: Colors.white),
                 onPressed: () async {
-                  await DatabaseHelper.instance.deleteAssignment(assignment.id!);
+                  await DatabaseHelper.instance
+                      .deleteAssignment(assignment.id!);
                   _loadAssignments(); // Refresh the list of assignments
                 },
               ),

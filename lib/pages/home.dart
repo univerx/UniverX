@@ -24,8 +24,8 @@ class _HomeState extends State<Home> {
   late Future<String?> timeLeftForEvent;
   late Future<double?> percentagePassedForEvent;
 
-  final eventService = EventService('https://neptun-web2.tr.pte.hu/hallgato/cal/cal.ashx?id=BB24FE2D35D43417A71C81D956920C8F1EEF975C7C8D75F121B7BAD54821D0977171BBD64EDB3A10.ics');
-
+  final eventService = EventService(
+      'https://neptun-web2.tr.pte.hu/hallgato/cal/cal.ashx?id=BB24FE2D35D43417A71C81D956920C8F1EEF975C7C8D75F121B7BAD54821D0977171BBD64EDB3A10.ics');
 
   @override
   void initState() {
@@ -43,6 +43,7 @@ class _HomeState extends State<Home> {
 
   Future<void> _loadExams() async {
     final exams = await DatabaseHelper.instance.getExams();
+    exams.sort((a, b) => a.date.compareTo(b.date)); // Sort exams by date
     setState(() {
       _exams = exams;
     });
@@ -50,6 +51,8 @@ class _HomeState extends State<Home> {
 
   Future<void> _loadAssignments() async {
     final assignments = await DatabaseHelper.instance.getAssignments();
+    assignments
+        .sort((a, b) => a.date.compareTo(b.date)); // Sort assignments by date
     setState(() {
       _assignments = assignments;
     });
@@ -124,24 +127,28 @@ class _HomeState extends State<Home> {
                               FutureBuilder<Event?>(
                                 future: currentEvent,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return Center(child: CircularProgressIndicator());
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
                                   } else if (snapshot.hasError) {
-                                    return Center(child: Text('Error: ${snapshot.error}'));
+                                    return Center(
+                                        child:
+                                            Text('Error: ${snapshot.error}'));
                                   } else if (snapshot.hasData) {
                                     final event = snapshot.data;
                                     if (event != null) {
                                       return Text(
-                                        '${event.summary.substring(0,15)}',
+                                        '${event.summary.substring(0, 15)}',
                                         style: const TextStyle(
                                           fontSize: 20.0,
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       );
-                                        
                                     } else {
-                                      return Text('No event currently happening');
+                                      return Text(
+                                          'No event currently happening');
                                     }
                                   } else {
                                     return Text('No event currently happening');
@@ -156,33 +163,35 @@ class _HomeState extends State<Home> {
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: 
-                                  FutureBuilder<Event?>(
-                                    future: currentEvent,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return Center(child: CircularProgressIndicator());
-                                      } else if (snapshot.hasError) {
-                                        return Center(child: Text('Error: ${snapshot.error}'));
-                                      } else if (snapshot.hasData) {
-                                        final event = snapshot.data;
-                                        if (event != null) {
-                                          return Text(
-                                            '${event.location.split(" ").first}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          );
-                                            
-                                        } else {
-                                          return Text('-');
-                                        }
+                                child: FutureBuilder<Event?>(
+                                  future: currentEvent,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                          child:
+                                              Text('Error: ${snapshot.error}'));
+                                    } else if (snapshot.hasData) {
+                                      final event = snapshot.data;
+                                      if (event != null) {
+                                        return Text(
+                                          '${event.location.split(" ").first}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
                                       } else {
                                         return Text('-');
                                       }
-                                    },
-                                  ),
+                                    } else {
+                                      return Text('-');
+                                    }
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -195,22 +204,25 @@ class _HomeState extends State<Home> {
                               FutureBuilder<Event?>(
                                 future: upcomingEvent,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return Center(child: CircularProgressIndicator());
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
                                   } else if (snapshot.hasError) {
-                                    return Center(child: Text('Error: ${snapshot.error}'));
+                                    return Center(
+                                        child:
+                                            Text('Error: ${snapshot.error}'));
                                   } else if (snapshot.hasData) {
                                     final event = snapshot.data;
                                     if (event != null) {
                                       return Text(
-                                        '→ ${event.summary.substring(0,15)}',
+                                        '→ ${event.summary.substring(0, 15)}',
                                         style: TextStyle(
                                           fontSize: 14.0,
                                           color: Colors.white,
                                           //fontWeight: FontWeight.bold,
                                         ),
                                       );
-                                        
                                     } else {
                                       return Text('No upcoming event.');
                                     }
@@ -230,10 +242,14 @@ class _HomeState extends State<Home> {
                                 child: FutureBuilder<Event?>(
                                   future: upcomingEvent,
                                   builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Center(child: CircularProgressIndicator());
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
                                     } else if (snapshot.hasError) {
-                                      return Center(child: Text('Error: ${snapshot.error}'));
+                                      return Center(
+                                          child:
+                                              Text('Error: ${snapshot.error}'));
                                     } else if (snapshot.hasData) {
                                       final event = snapshot.data;
                                       if (event != null) {
@@ -244,7 +260,6 @@ class _HomeState extends State<Home> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         );
-                                          
                                       } else {
                                         return Text('-');
                                       }
@@ -260,10 +275,13 @@ class _HomeState extends State<Home> {
                           FutureBuilder<String?>(
                             future: timeLeftForEvent,
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator());
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
                               } else if (snapshot.hasError) {
-                                return Center(child: Text('Error: ${snapshot.error}'));
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
                               } else if (snapshot.hasData) {
                                 final timeLeft = snapshot.data;
                                 if (timeLeft != null) {
@@ -280,10 +298,12 @@ class _HomeState extends State<Home> {
                                     ],
                                   );
                                 } else {
-                                  return const Text('No event currently happening');
+                                  return const Text(
+                                      'No event currently happening');
                                 }
                               } else {
-                                return const Text('No event currently happening');
+                                return const Text(
+                                    'No event currently happening');
                               }
                             },
                           ),
@@ -291,10 +311,13 @@ class _HomeState extends State<Home> {
                           FutureBuilder<double?>(
                             future: percentagePassedForEvent,
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator());
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
                               } else if (snapshot.hasError) {
-                                return Center(child: Text('Error: ${snapshot.error}'));
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
                               } else if (snapshot.hasData) {
                                 final percentagePassed = snapshot.data;
                                 if (percentagePassed != null) {
@@ -302,16 +325,20 @@ class _HomeState extends State<Home> {
                                     height: 10,
                                     child: LinearProgressIndicator(
                                       backgroundColor: Colors.grey[300],
-                                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                                      borderRadius: BorderRadius.circular(20), 
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                              Colors.blue),
+                                      borderRadius: BorderRadius.circular(20),
                                       value: percentagePassed,
                                     ),
                                   );
                                 } else {
-                                  return const Text('No event currently happening');
+                                  return const Text(
+                                      'No event currently happening');
                                 }
                               } else {
-                                return const Text('No event currently happening');
+                                return const Text(
+                                    'No event currently happening');
                               }
                             },
                           ),

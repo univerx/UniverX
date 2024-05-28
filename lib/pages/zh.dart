@@ -26,7 +26,8 @@ class _ZhState extends State<Zh> {
   Future<void> _loadExams() async {
     final exams = await DatabaseHelper.instance.getExams();
     setState(() {
-      _exams = exams;
+      _exams = exams
+        ..sort((a, b) => a.date.compareTo(b.date)); // Sort exams by date
     });
   }
 
@@ -61,7 +62,9 @@ class _ZhState extends State<Zh> {
                     examDate = selectedDate;
                   });
                 },
-                child: Text(examDate == null ? 'Select Date' : 'Date: ${examDate.toString().substring(0, 10)}'),
+                child: Text(examDate == null
+                    ? 'Select Date'
+                    : 'Date: ${examDate.toString().substring(0, 10)}'),
               ),
             ],
           ),
@@ -75,7 +78,8 @@ class _ZhState extends State<Zh> {
             TextButton(
               onPressed: () {
                 if (examName.isNotEmpty && examDate != null) {
-                  Navigator.pop(context, ExamModel(name: examName, date: examDate!));
+                  Navigator.pop(
+                      context, ExamModel(name: examName, date: examDate!));
                 }
               },
               child: Text('Add'),
@@ -99,7 +103,10 @@ class _ZhState extends State<Zh> {
         appBar: AppBar(
           title: const Text(
             "Exam Manager",
-            style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold),
           ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
