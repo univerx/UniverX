@@ -69,7 +69,11 @@ class DatabaseHelper {
 
   Future<List<ExamModel>> getExams() async {
     final db = await instance.database;
-    final result = await db.query('exams');
+    final result = await db.query(
+      'exams',
+      orderBy: 'date ASC', // Sort by date in ascending order
+    );
+    
     return result.map((json) => ExamModel.fromMap(json)).toList();
   }
 
@@ -105,7 +109,10 @@ class DatabaseHelper {
 
   Future<List<AssignmentModel>> getAssignments() async {
     final db = await instance.database;
-    final result = await db.query('assignments');
+    final result = await db.query(
+      'assignments',
+      orderBy: 'date ASC', // Sort by date in ascending order
+    );
     return result.map((json) => AssignmentModel.fromMap(json)).toList();
   }
 
