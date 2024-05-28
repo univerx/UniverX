@@ -124,9 +124,7 @@ class _HomeState extends State<Home> {
                               FutureBuilder<Event?>(
                                 future: currentEvent,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return Center(child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError) {
+                                  if (snapshot.hasError) {
                                     return Center(child: Text('Error: ${snapshot.error}'));
                                   } else if (snapshot.hasData) {
                                     final event = snapshot.data;
@@ -160,9 +158,7 @@ class _HomeState extends State<Home> {
                                   FutureBuilder<Event?>(
                                     future: currentEvent,
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return Center(child: CircularProgressIndicator());
-                                      } else if (snapshot.hasError) {
+                                      if (snapshot.hasError) {
                                         return Center(child: Text('Error: ${snapshot.error}'));
                                       } else if (snapshot.hasData) {
                                         final event = snapshot.data;
@@ -195,9 +191,7 @@ class _HomeState extends State<Home> {
                               FutureBuilder<Event?>(
                                 future: upcomingEvent,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return Center(child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError) {
+                                  if (snapshot.hasError) {
                                     return Center(child: Text('Error: ${snapshot.error}'));
                                   } else if (snapshot.hasData) {
                                     final event = snapshot.data;
@@ -230,9 +224,7 @@ class _HomeState extends State<Home> {
                                 child: FutureBuilder<Event?>(
                                   future: upcomingEvent,
                                   builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Center(child: CircularProgressIndicator());
-                                    } else if (snapshot.hasError) {
+                                    if (snapshot.hasError) {
                                       return Center(child: Text('Error: ${snapshot.error}'));
                                     } else if (snapshot.hasData) {
                                       final event = snapshot.data;
@@ -260,9 +252,7 @@ class _HomeState extends State<Home> {
                           FutureBuilder<String?>(
                             future: timeLeftForEvent,
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
+                              if (snapshot.hasError) {
                                 return Center(child: Text('Error: ${snapshot.error}'));
                               } else if (snapshot.hasData) {
                                 final timeLeft = snapshot.data;
@@ -291,9 +281,7 @@ class _HomeState extends State<Home> {
                           FutureBuilder<double?>(
                             future: percentagePassedForEvent,
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
+                              if (snapshot.hasError) {
                                 return Center(child: Text('Error: ${snapshot.error}'));
                               } else if (snapshot.hasData) {
                                 final percentagePassed = snapshot.data;
