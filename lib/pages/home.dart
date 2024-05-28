@@ -18,8 +18,8 @@ class _HomeState extends State<Home> {
   List<AssignmentModel> _assignments = [];
   List<Note> _notes = [];
 
-  late Future<Event?> currentEvent;
-  late Future<Event?> upcomingEvent;
+  late Future<EventModel?> currentEvent;
+  late Future<EventModel?> upcomingEvent;
 
   late Future<String?> timeLeftForEvent;
   late Future<double?> percentagePassedForEvent;
@@ -121,7 +121,7 @@ class _HomeState extends State<Home> {
                           Row(
                             //crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              FutureBuilder<Event?>(
+                              FutureBuilder<EventModel?>(
                                 future: currentEvent,
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
@@ -155,7 +155,7 @@ class _HomeState extends State<Home> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: 
-                                  FutureBuilder<Event?>(
+                                  FutureBuilder<EventModel?>(
                                     future: currentEvent,
                                     builder: (context, snapshot) {
                                       if (snapshot.hasError) {
@@ -188,7 +188,7 @@ class _HomeState extends State<Home> {
                           Row(
                             //crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              FutureBuilder<Event?>(
+                              FutureBuilder<EventModel?>(
                                 future: upcomingEvent,
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
@@ -221,7 +221,7 @@ class _HomeState extends State<Home> {
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: FutureBuilder<Event?>(
+                                child: FutureBuilder<EventModel?>(
                                   future: upcomingEvent,
                                   builder: (context, snapshot) {
                                     if (snapshot.hasError) {
