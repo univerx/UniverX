@@ -7,12 +7,16 @@ import 'package:univerx/pages/notes.dart';
 import 'package:univerx/pages/zh.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:univerx/events/fetchAndUpdateEvents.dart';
 
 void main() async {
   //Initialize FFI
   sqfliteFfiInit();
   //Set the database factory
   databaseFactory = databaseFactoryFfi;
+
+  String icsFilePath = 'https://neptun-web2.tr.pte.hu/hallgato/cal/cal.ashx?id=BB24FE2D35D43417A71C81D956920C8F1EEF975C7C8D75F121B7BAD54821D0977171BBD64EDB3A10.ics';
+  await fetchAndUpdateEventsFromIcs(icsFilePath);
   runApp(
     const MyApp(),
   );
