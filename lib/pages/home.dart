@@ -3,6 +3,8 @@ import 'package:univerx/database_helper.dart';
 import 'package:univerx/models/examModel.dart';
 import 'package:univerx/models/assignmentModel.dart';
 import 'package:univerx/models/noteModel.dart';
+import 'package:univerx/event_service.dart';
+import 'package:univerx/models/eventModel.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,12 +18,27 @@ class _HomeState extends State<Home> {
   List<AssignmentModel> _assignments = [];
   List<Note> _notes = [];
 
+  late Future<Event?> currentEvent;
+  late Future<Event?> upcomingEvent;
+
+  late Future<String?> timeLeftForEvent;
+  late Future<double?> percentagePassedForEvent;
+
+  final eventService = EventService('https://neptun-web2.tr.pte.hu/hallgato/cal/cal.ashx?id=BB24FE2D35D43417A71C81D956920C8F1EEF975C7C8D75F121B7BAD54821D0977171BBD64EDB3A10.ics');
+
+
   @override
   void initState() {
     super.initState();
     _loadExams();
     _loadAssignments();
     _loadNotes();
+
+    currentEvent = eventService.getCurrentEvent();
+    upcomingEvent = eventService.getUpcomingEvent();
+
+    timeLeftForEvent = eventService.timeLeftForCurrentEvent();
+    percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
   }
 
   Future<void> _loadExams() async {
@@ -104,13 +121,32 @@ class _HomeState extends State<Home> {
                           Row(
                             //crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text(
-                                "Programozás II.",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              FutureBuilder<Event?>(
+                                future: currentEvent,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Center(child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return Center(child: Text('Error: ${snapshot.error}'));
+                                  } else if (snapshot.hasData) {
+                                    final event = snapshot.data;
+                                    if (event != null) {
+                                      return Text(
+                                        '${event.summary.substring(0,15)}',
+                                        style: const TextStyle(
+                                          fontSize: 20.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                        
+                                    } else {
+                                      return Text('No event currently happening');
+                                    }
+                                  } else {
+                                    return Text('No event currently happening');
+                                  }
+                                },
                               ),
                               const SizedBox(width: 5),
                               Container(
@@ -120,13 +156,33 @@ class _HomeState extends State<Home> {
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: const Text(
-                                  "f/201",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                child: 
+                                  FutureBuilder<Event?>(
+                                    future: currentEvent,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return Center(child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(child: Text('Error: ${snapshot.error}'));
+                                      } else if (snapshot.hasData) {
+                                        final event = snapshot.data;
+                                        if (event != null) {
+                                          return Text(
+                                            '${event.location.split(" ").first}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                            
+                                        } else {
+                                          return Text('-');
+                                        }
+                                      } else {
+                                        return Text('-');
+                                      }
+                                    },
                                   ),
-                                ),
                               ),
                             ],
                           ),
@@ -136,13 +192,32 @@ class _HomeState extends State<Home> {
                           Row(
                             //crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text(
-                                "→ Számítógép hálózatok",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: Colors.white,
-                                  //fontWeight: FontWeight.bold,
-                                ),
+                              FutureBuilder<Event?>(
+                                future: upcomingEvent,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Center(child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return Center(child: Text('Error: ${snapshot.error}'));
+                                  } else if (snapshot.hasData) {
+                                    final event = snapshot.data;
+                                    if (event != null) {
+                                      return Text(
+                                        '→ ${event.summary.substring(0,15)}',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white,
+                                          //fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                        
+                                    } else {
+                                      return Text('No upcoming event.');
+                                    }
+                                  } else {
+                                    return Text('No upcoming event.');
+                                  }
+                                },
                               ),
                               SizedBox(width: 5),
                               Container(
@@ -152,44 +227,94 @@ class _HomeState extends State<Home> {
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: const Text(
-                                  "C/V/I",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    //fontWeight: FontWeight.bold,
-                                  ),
+                                child: FutureBuilder<Event?>(
+                                  future: upcomingEvent,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Center(child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(child: Text('Error: ${snapshot.error}'));
+                                    } else if (snapshot.hasData) {
+                                      final event = snapshot.data;
+                                      if (event != null) {
+                                        return Text(
+                                          '${event.location.split(" ").first}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                          
+                                      } else {
+                                        return Text('-');
+                                      }
+                                    } else {
+                                      return Text('-');
+                                    }
+                                  },
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 12),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .end, // Align the text to the right
-                            children: [
-                              Text(
-                                "Time left: 1 hour 20 min", // Display the time left text
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
+                          FutureBuilder<String?>(
+                            future: timeLeftForEvent,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const Center(child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(child: Text('Error: ${snapshot.error}'));
+                              } else if (snapshot.hasData) {
+                                final timeLeft = snapshot.data;
+                                if (timeLeft != null) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "Time left: ${timeLeft}",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return const Text('No event currently happening');
+                                }
+                              } else {
+                                return const Text('No event currently happening');
+                              }
+                            },
                           ),
                           const SizedBox(height: 5),
-                          SizedBox(
-                            height: 10,
-                            child: LinearProgressIndicator(
-                              backgroundColor: Colors.grey[
-                                  300], // Background color of the progress bar
-                              valueColor: const AlwaysStoppedAnimation<Color>(
-                                  Colors.blue),
-                              borderRadius: BorderRadius.circular(
-                                  20), // Color of the progress indicator
-                              value:
-                                  0.8, // Value between 0.0 and 1.0 representing the progress
-                            ),
-                          )
+                          FutureBuilder<double?>(
+                            future: percentagePassedForEvent,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const Center(child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(child: Text('Error: ${snapshot.error}'));
+                              } else if (snapshot.hasData) {
+                                final percentagePassed = snapshot.data;
+                                if (percentagePassed != null) {
+                                  return SizedBox(
+                                    height: 10,
+                                    child: LinearProgressIndicator(
+                                      backgroundColor: Colors.grey[300],
+                                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                                      borderRadius: BorderRadius.circular(20), 
+                                      value: percentagePassed,
+                                    ),
+                                  );
+                                } else {
+                                  return const Text('No event currently happening');
+                                }
+                              } else {
+                                return const Text('No event currently happening');
+                              }
+                            },
+                          ),
                           // Add some space between the text and the progress bar
                         ],
                       ),
