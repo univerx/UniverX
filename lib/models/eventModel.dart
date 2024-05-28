@@ -1,17 +1,41 @@
-class Event {
+import 'package:intl/intl.dart';
+
+
+class EventModel {
   final DateTime start;
   final DateTime end;
   final String summary;
   final String location;
 
-  Event({
+  EventModel({
     required this.start,
     required this.end,
     required this.summary,
     required this.location,
   });
 
-  factory Event.fromICS(String icsData) {
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      'start': start.toIso8601String(),
+      'end': end.toIso8601String(),
+      'summary': summary,
+      'location': location,
+    };
+    return map;
+  }
+
+  factory EventModel.fromMap(Map<String, dynamic> map) {
+    return EventModel(
+      start: DateTime.parse(map['start']),
+      end: DateTime.parse(map['end']),
+      summary: map['summary'],
+      location: map['location'],
+    );
+  }
+
+
+  factory EventModel.fromICS(String icsData) {
     final lines = icsData.split('\n');
     DateTime? start;
     DateTime? end;
@@ -30,7 +54,7 @@ class Event {
       }
     }
 
-    return Event(
+    return EventModel(
       start: start!,
       end: end!,
       summary: summary!,

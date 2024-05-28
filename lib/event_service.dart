@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:univerx/models/eventModel.dart';
+import 'package:univerx/database_helper.dart';
 
 class EventService {
   final String url;
   final now = DateTime(2024, 4, 30, 11, 30);
   EventService(this.url);
 
-  Future<List<Event>> fetchEvents() async {
+  Future<List<EventModel>> fetchEvents() async {
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -24,12 +25,12 @@ class EventService {
     }
   }
 
-  List<Event> parseICS(String icsData) {
+  List<EventModel> parseICS(String icsData) {
     try {
-      final events = <Event>[];
+      final events = <EventModel>[];
       final eventStrings = icsData.split('BEGIN:VEVENT');
       for (var eventString in eventStrings.skip(1)) {
-        events.add(Event.fromICS(eventString));
+        events.add(EventModel.fromICS(eventString));
       }
       return events;
     } catch (e) {
@@ -38,8 +39,8 @@ class EventService {
     }
   }
 
-  Future<Event?> getCurrentEvent() async {
-    final events = await fetchEvents();
+  Future<EventModel?> getCurrentEvent() async {
+    final events = await DatabaseHelper.instance.getAllEvents();
     // final now = DateTime.now(); //-------------------------------REMOVE COMMENT TO ENABLE LIVE TIME-----------------------------
     for (final event in events) {
       if (event.start.isBefore(now) && event.end.isAfter(now)) {
@@ -49,8 +50,8 @@ class EventService {
     return null; // No event currently happening
   }
 
-  Future<Event?> getUpcomingEvent() async {
-    final events = await fetchEvents();
+  Future<EventModel?> getUpcomingEvent() async {
+    final events = await DatabaseHelper.instance.getAllEvents();
     // final now = DateTime.now();
     for (final event in events) {
       if (event.start.isAfter(now)) {

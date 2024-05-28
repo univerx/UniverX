@@ -5,6 +5,7 @@ import 'package:univerx/models/assignmentModel.dart';
 import 'models/examModel.dart'; // Assume this model has toMap() and fromMap() methods
 import 'models/assignmentModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
 import 'models/noteModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
+import 'models/eventModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -16,7 +17,7 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('database5.db');
+    _database = await _initDB('database6.db');
     return _database!;
   }
 
@@ -55,6 +56,14 @@ class DatabaseHelper {
         content TEXT NOT NULL
       )
     ''');
+
+    await db.execute("""
+      CREATE TABLE events(
+        start TEXT, end TEXT,
+        summary TEXT,
+        location TEXT
+      )
+    """);  // <-- Add this line
   }
 
   // ----------------------- Exam methods ------------------------
@@ -170,5 +179,36 @@ class DatabaseHelper {
     );
   }
 
+  // ----------------------- events methods ------------------------
+  Future<int> saveEvent(EventModel event) async {
+    var dbClient = await instance.database;
+    int res = await dbClient.insert("events", event.toMap());
+    return res;
+  }
 
+  Future<List<EventModel>> getAllEvents() async {
+    var dbClient = await instance.database;
+    var result = await dbClient.rawQuery('SELECT * FROM events');
+    List<EventModel> events = result.map((e) => EventModel.fromMap(e)).toList();
+    return events;
+  }
+
+  Future<int> updateEvent(EventModel event) async {
+    var dbClient = await instance.database;
+    return await dbClient.update("events", event.toMap(),
+        where: "start = ? AND end = ? AND summary = ?",
+        whereArgs: [event.start.toIso8601String(), event.end.toIso8601String(), event.summary]);
+  }
+
+  Future<int> deleteEvent(EventModel event) async {
+    var dbClient = await instance.database;
+    return await dbClient.delete("events",
+        where: "start = ? AND end = ? AND summary = ?",
+        whereArgs: [event.start.toIso8601String(), event.end.toIso8601String(), event.summary]);
+  }
+
+  Future<void> clearAllEvents() async {
+    var dbClient = await instance.database;
+    await dbClient.delete("events");
+  }
 }
