@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:univerx/models/noteModel.dart';
 import 'package:univerx/pages/assignments.dart';
+import 'package:univerx/pages/events.dart';
 import 'package:univerx/pages/home.dart';
 import 'package:univerx/pages/notes.dart';
 import 'package:univerx/pages/zh.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         '/zh': (context) => Zh(),
         '/assignments': (context) => Assignments(),
         '/notes': (context) => Notes(),
+        '/events': (context) => Events(),
       },
     );
   }
