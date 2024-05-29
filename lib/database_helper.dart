@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:univerx/models/assignmentModel.dart';
-import 'models/examModel.dart';
-import 'models/noteModel.dart';
-import 'models/eventModel.dart';
+import 'models/examModel.dart'; // Assume this model has toMap() and fromMap() methods
+import 'models/assignmentModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
+import 'models/noteModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
+import 'models/eventModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -19,12 +17,12 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('database9.db');
+    _database = await _initDB('database11.db');
     return _database!;
   }
 
   Future<Database> _initDB(String filePath) async {
-    final dbPath = await _getDatabasePath();
+    final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
     return await openDatabase(
@@ -32,15 +30,6 @@ class DatabaseHelper {
       version: 1,
       onCreate: _createDB,
     );  
-  }
-
-  Future<String> _getDatabasePath() async {
-    if (Platform.isIOS) {
-      final directory = await getApplicationDocumentsDirectory();
-      return directory.path;
-    } else {
-      return await getDatabasesPath();
-    }
   }
 
   Future _createDB(Database db, int version) async {
@@ -70,15 +59,14 @@ class DatabaseHelper {
 
     await db.execute("""
       CREATE TABLE events(
-        start TEXT, 
-        end TEXT,
+        start TEXT, end TEXT,
         summary TEXT,
         location TEXT
       )
-    """);
+    """);  // <-- Add this line
   }
 
-  // Exam methods
+  // ----------------------- Exam methods ------------------------
   Future<void> insertExam(ExamModel exam) async {
     final db = await instance.database;
     await db.insert(
@@ -92,8 +80,9 @@ class DatabaseHelper {
     final db = await instance.database;
     final result = await db.query(
       'exams',
-      orderBy: 'date ASC',
+      orderBy: 'date ASC', // Sort by date in ascending order
     );
+    
     return result.map((json) => ExamModel.fromMap(json)).toList();
   }
 
@@ -116,7 +105,8 @@ class DatabaseHelper {
     );
   }
 
-  // Assignment methods
+
+  // ----------------------- Assignment methods ------------------------
   Future<void> insertAssignment(AssignmentModel assignment) async {
     final db = await instance.database;
     await db.insert(
@@ -130,7 +120,7 @@ class DatabaseHelper {
     final db = await instance.database;
     final result = await db.query(
       'assignments',
-      orderBy: 'date ASC',
+      orderBy: 'date ASC', // Sort by date in ascending order
     );
     return result.map((json) => AssignmentModel.fromMap(json)).toList();
   }
@@ -154,7 +144,7 @@ class DatabaseHelper {
     );
   }
 
-  // Note methods
+  // ----------------------- notes methods ------------------------
   Future<void> insertNote(Note note) async {
     final db = await instance.database;
     await db.insert(
@@ -189,7 +179,7 @@ class DatabaseHelper {
     );
   }
 
-  // Event methods
+  // ----------------------- events methods ------------------------
   Future<int> saveEvent(EventModel event) async {
     var dbClient = await instance.database;
     int res = await dbClient.insert("events", event.toMap());
