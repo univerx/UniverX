@@ -8,8 +8,11 @@ import 'package:univerx/pages/zh.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:univerx/events/fetchAndUpdateEvents.dart';
+import 'package:univerx/database_helper.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper.instance.database; //
   //Initialize FFI
   sqfliteFfiInit();
   //Set the database factory
