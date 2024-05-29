@@ -102,59 +102,28 @@ class _HomeState extends State<Home> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              // --------------------------- Classes and events ---------------------------
               Row(
                 children: [
                   const SizedBox(width: 5),
                   Expanded(
                     flex: 2,
-                    // ---------------------------------- upcoming classes/event
-                    child: Container(
-                      height: 140,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(40),
-                        color: Color.fromARGB(255, 45, 45, 45),
-                      ),
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            //crossAxisAlignment: CrossAxisAlignment.end,
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/events'),
+                        child: Container(
+                          height: 140,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            color: Color.fromARGB(255, 45, 45, 45),
+                          ),
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              FutureBuilder<EventModel?>(
-                                future: currentEvent,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    return Center(child: Text('Error: ${snapshot.error}'));
-                                  } else if (snapshot.hasData) {
-                                    final event = snapshot.data;
-                                    if (event != null) {
-                                      return Text(
-                                        '${event.summary.substring(0,15)}',
-                                        style: const TextStyle(
-                                          fontSize: 20.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      );
-                                        
-                                    } else {
-                                      return Text('No event currently happening');
-                                    }
-                                  } else {
-                                    return Text('No event currently happening');
-                                  }
-                                },
-                              ),
-                              const SizedBox(width: 5),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: 
+                              Row(
+                                children: [
                                   FutureBuilder<EventModel?>(
                                     future: currentEvent,
                                     builder: (context, snapshot) {
@@ -164,154 +133,178 @@ class _HomeState extends State<Home> {
                                         final event = snapshot.data;
                                         if (event != null) {
                                           return Text(
-                                            '${event.location.split(" ").first}',
+                                            '${event.summary.substring(0, 15)}',
                                             style: const TextStyle(
+                                              fontSize: 20.0,
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           );
-                                            
                                         } else {
-                                          return Text('-');
+                                          return Text('No event currently happening');
                                         }
                                       } else {
-                                        return Text('-');
+                                        return Text('No event currently happening');
                                       }
                                     },
                                   ),
+                                  const SizedBox(width: 5),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: FutureBuilder<EventModel?>(
+                                      future: currentEvent,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Center(child: Text('Error: ${snapshot.error}'));
+                                        } else if (snapshot.hasData) {
+                                          final event = snapshot.data;
+                                          if (event != null) {
+                                            return Text(
+                                              '${event.location.split(" ").first}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            );
+                                          } else {
+                                            return Text('-');
+                                          }
+                                        } else {
+                                          return Text('-');
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                              height:
-                                  5), // Add some space between the row and the text below
-                          Row(
-                            //crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              FutureBuilder<EventModel?>(
-                                future: upcomingEvent,
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  FutureBuilder<EventModel?>(
+                                    future: upcomingEvent,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        return Center(child: Text('Error: ${snapshot.error}'));
+                                      } else if (snapshot.hasData) {
+                                        final event = snapshot.data;
+                                        if (event != null) {
+                                          return Text(
+                                            '→ ${event.summary.substring(0, 15)}',
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.white,
+                                            ),
+                                          );
+                                        } else {
+                                          return Text('No upcoming event.');
+                                        }
+                                      } else {
+                                        return Text('No upcoming event.');
+                                      }
+                                    },
+                                  ),
+                                  SizedBox(width: 5),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: FutureBuilder<EventModel?>(
+                                      future: upcomingEvent,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Center(child: Text('Error: ${snapshot.error}'));
+                                        } else if (snapshot.hasData) {
+                                          final event = snapshot.data;
+                                          if (event != null) {
+                                            return Text(
+                                              '${event.location.split(" ").first}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            );
+                                          } else {
+                                            return Text('-');
+                                          }
+                                        } else {
+                                          return Text('-');
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              FutureBuilder<String?>(
+                                future: timeLeftForEvent,
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return Center(child: Text('Error: ${snapshot.error}'));
                                   } else if (snapshot.hasData) {
-                                    final event = snapshot.data;
-                                    if (event != null) {
-                                      return Text(
-                                        '→ ${event.summary.substring(0,15)}',
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.white,
-                                          //fontWeight: FontWeight.bold,
-                                        ),
+                                    final timeLeft = snapshot.data;
+                                    if (timeLeft != null) {
+                                      return Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "Time left: ${timeLeft}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ],
                                       );
-                                        
                                     } else {
-                                      return Text('No upcoming event.');
+                                      return const Text('No event currently happening');
                                     }
                                   } else {
-                                    return Text('No upcoming event.');
+                                    return const Text('No event currently happening');
                                   }
                                 },
                               ),
-                              SizedBox(width: 5),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 3),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: FutureBuilder<EventModel?>(
-                                  future: upcomingEvent,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasError) {
-                                      return Center(child: Text('Error: ${snapshot.error}'));
-                                    } else if (snapshot.hasData) {
-                                      final event = snapshot.data;
-                                      if (event != null) {
-                                        return Text(
-                                          '${event.location.split(" ").first}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        );
-                                          
-                                      } else {
-                                        return Text('-');
-                                      }
+                              const SizedBox(height: 5),
+                              FutureBuilder<double?>(
+                                future: percentagePassedForEvent,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Center(child: Text('Error: ${snapshot.error}'));
+                                  } else if (snapshot.hasData) {
+                                    final percentagePassed = snapshot.data;
+                                    if (percentagePassed != null) {
+                                      return SizedBox(
+                                        height: 10,
+                                        child: LinearProgressIndicator(
+                                          backgroundColor: Colors.grey[300],
+                                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                                          borderRadius: BorderRadius.circular(20),
+                                          value: percentagePassed,
+                                        ),
+                                      );
                                     } else {
-                                      return Text('-');
+                                      return const Text('No event currently happening');
                                     }
-                                  },
-                                ),
+                                  } else {
+                                    return const Text('No event currently happening');
+                                  }
+                                },
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
-                          FutureBuilder<String?>(
-                            future: timeLeftForEvent,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Center(child: Text('Error: ${snapshot.error}'));
-                              } else if (snapshot.hasData) {
-                                final timeLeft = snapshot.data;
-                                if (timeLeft != null) {
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Time left: ${timeLeft}",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return const Text('No event currently happening');
-                                }
-                              } else {
-                                return const Text('No event currently happening');
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 5),
-                          FutureBuilder<double?>(
-                            future: percentagePassedForEvent,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Center(child: Text('Error: ${snapshot.error}'));
-                              } else if (snapshot.hasData) {
-                                final percentagePassed = snapshot.data;
-                                if (percentagePassed != null) {
-                                  return SizedBox(
-                                    height: 10,
-                                    child: LinearProgressIndicator(
-                                      backgroundColor: Colors.grey[300],
-                                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                                      borderRadius: BorderRadius.circular(20), 
-                                      value: percentagePassed,
-                                    ),
-                                  );
-                                } else {
-                                  return const Text('No event currently happening');
-                                }
-                              } else {
-                                return const Text('No event currently happening');
-                              }
-                            },
-                          ),
-                          // Add some space between the text and the progress bar
-                        ],
+                        ),
                       ),
-                      // Content of the first container
                     ),
                   ),
                   SizedBox(width: 5),
                 ],
               ),
+
               SizedBox(height: 10),
               Row(
                 children: [
@@ -471,9 +464,9 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(height: 10),
               Row(
+                // ---------------------------------- notes
                 children: [
                   SizedBox(width: 5),
-                  // ---------------------------------- notes
                   Expanded(
                       flex: 2,
                       child: MouseRegion(
