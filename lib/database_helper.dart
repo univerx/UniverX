@@ -17,7 +17,8 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('database11.db');
+    _database = await _initDB('database26.db');
+    
     return _database!;
   }
 
@@ -63,7 +64,14 @@ class DatabaseHelper {
         summary TEXT,
         location TEXT
       )
-    """);  // <-- Add this line
+    """);
+
+    await db.execute('''
+      CREATE TABLE calendarICS(
+        url TEXT NOT NULL
+      )
+    ''');
+
   }
 
   // ----------------------- Exam methods ------------------------
@@ -210,5 +218,32 @@ class DatabaseHelper {
   Future<void> clearAllEvents() async {
     var dbClient = await instance.database;
     await dbClient.delete("events");
+
   }
+
+  // ----------------------- calendarICS methods ------------------------
+  Future<int> saveCalendarICS(String url) async {
+    var dbClient = await instance.database;
+    return await dbClient.insert("calendarICS", {"url": url});
+  }
+
+  Future<Object?> getCalendarICS() async {
+    var dbClient = await instance.database;
+    var result = await dbClient.rawQuery('SELECT * FROM calendarICS');
+    if (result.isEmpty) {
+      return null;
+    }
+    return result[0]["url"];
+  }
+
+  Future<int> updateCalendarICS(String url) async {
+    var dbClient = await instance.database;
+    return await dbClient.update("calendarICS", {"url": url});
+  }
+
+  Future<int> deleteCalendarICS() async {
+    var dbClient = await instance.database;
+    return await dbClient.delete("calendarICS");
+  }
+
 }
