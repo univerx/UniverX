@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:univerx/database_helper.dart';
+import 'package:univerx/events/fetchAndUpdateEvents.dart';
 import 'package:univerx/models/examModel.dart';
 import 'package:univerx/models/assignmentModel.dart';
 import 'package:univerx/models/noteModel.dart';
@@ -28,7 +29,7 @@ class _HomeState extends State<Home> {
   late Future<String?> timeLeftForEvent;
   late Future<double?> percentagePassedForEvent;
 
-  final eventService = EventService('https://neptun-web2.tr.pte.hu/hallgato/cal/cal.ashx?id=BB24FE2D35D43417A71C81D956920C8F1EEF975C7C8D75F121B7BAD54821D0977171BBD64EDB3A10.ics');
+  final eventService = EventService('');
 
 
   @override
@@ -37,6 +38,8 @@ class _HomeState extends State<Home> {
     _loadExams();
     _loadAssignments();
     _loadNotes();
+
+    
 
     currentEvent = eventService.getCurrentEvent();
     upcomingEvent = eventService.getUpcomingEvent();
@@ -85,6 +88,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: TextTheme(
+          bodyText2: TextStyle(color: Colors.white), // Default text color
+        ),
+      ),
       home: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -316,10 +324,10 @@ class _HomeState extends State<Home> {
                                           ],
                                         );
                                       } else {
-                                        return const Text('No event currently happening');
+                                        return const Text('');
                                       }
                                     } else {
-                                      return const Text('No event currently happening');
+                                      return const Text('');
                                     }
                                   },
                                 ),
@@ -329,23 +337,20 @@ class _HomeState extends State<Home> {
                                   builder: (context, snapshot) {
                                     if (snapshot.hasError) {
                                       return Center(child: Text('Error: ${snapshot.error}'));
-                                    } else if (snapshot.hasData) {
-                                      final percentagePassed = snapshot.data;
-                                      if (percentagePassed != null) {
-                                        return SizedBox(
-                                          height: 10,
-                                          child: LinearProgressIndicator(
-                                            backgroundColor: Color.fromARGB(255,43,44,49),
-                                            valueColor: const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 255, 255, 255)),
-                                            borderRadius: BorderRadius.circular(20),
-                                            value: percentagePassed,
-                                          ),
-                                        );
-                                      } else {
-                                        return const Text('No event currently happening');
-                                      }
                                     } else {
-                                      return const Text('No event currently happening');
+                                      var percentagePassed = snapshot.data;
+                                      if (percentagePassed == null) {
+                                        percentagePassed = 0;
+                                      }
+                                      return SizedBox(
+                                        height: 10,
+                                        child: LinearProgressIndicator(
+                                          backgroundColor: Color.fromARGB(255,43,44,49),
+                                          valueColor: const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 255, 255, 255)),
+                                          borderRadius: BorderRadius.circular(20),
+                                          value: percentagePassed,
+                                        ),
+                                      );
                                     }
                                   },
                                 ),
