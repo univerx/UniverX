@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
   Future<void> _handleRefresh() async {
     bool? hasVibrator = await Vibration.hasVibrator();
     if (hasVibrator == true) {
-      HapticFeedback.mediumImpact();
+      HapticFeedback.heavyImpact();
     }
     await _loadExams();
     await _loadAssignments();
