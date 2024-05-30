@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
                 //Navigator.pushNamed(context, '/second');
               },
               icon: const CircleAvatar(
-                backgroundColor: Colors.blue, // Change the color as needed
+                backgroundColor: Color.fromARGB(255, 20, 21, 27), // Change the color as needed
                 child: Text(
                   "D", // Replace with your letter
                   style: TextStyle(color: Colors.white),
@@ -116,7 +116,19 @@ class _HomeState extends State<Home> {
                           height: 140,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(40),
-                            color: Color.fromARGB(255, 45, 45, 45),
+                            color: Color.fromARGB(255, 20, 21, 27),
+                            /*
+                            gradient: LinearGradient(
+                              end: Alignment.topLeft,
+                              begin: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withOpacity(0.4),
+                                Colors.white.withOpacity(0.3),
+                                Colors.white.withOpacity(0.2),
+                                Colors.white.withOpacity(0.1),
+                                Colors.transparent,
+                              ],
+                            ),*/
                           ),
                           padding: EdgeInsets.all(15),
                           child: Column(
@@ -152,7 +164,7 @@ class _HomeState extends State<Home> {
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                     decoration: BoxDecoration(
-                                      color: Colors.blue,
+                                      color: Color.fromARGB(255, 35, 37, 48),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: FutureBuilder<EventModel?>(
@@ -166,7 +178,7 @@ class _HomeState extends State<Home> {
                                             return Text(
                                               '${event.location.split(" ").first}',
                                               style: const TextStyle(
-                                                color: Colors.white,
+                                                color: Color.fromARGB(255, 163, 172, 222),
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             );
@@ -211,7 +223,7 @@ class _HomeState extends State<Home> {
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                                     decoration: BoxDecoration(
-                                      color: Colors.blue,
+                                      color: Color.fromARGB(255, 35, 37, 48),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: FutureBuilder<EventModel?>(
@@ -225,7 +237,7 @@ class _HomeState extends State<Home> {
                                             return Text(
                                               '${event.location.split(" ").first}',
                                               style: const TextStyle(
-                                                color: Colors.white,
+                                                color: Color.fromARGB(255, 163, 172, 222),
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             );
@@ -281,8 +293,8 @@ class _HomeState extends State<Home> {
                                       return SizedBox(
                                         height: 10,
                                         child: LinearProgressIndicator(
-                                          backgroundColor: Colors.grey[300],
-                                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                                          backgroundColor: Color.fromARGB(255,43,44,49),
+                                          valueColor: const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 255, 255, 255)),
                                           borderRadius: BorderRadius.circular(20),
                                           value: percentagePassed,
                                         ),
@@ -320,7 +332,7 @@ class _HomeState extends State<Home> {
                           height: 200,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            color: Color.fromARGB(255, 45, 45, 45),
+                            color: Color.fromARGB(255, 20, 21, 27),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment
@@ -341,35 +353,34 @@ class _HomeState extends State<Home> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 5),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
                                           exam.name,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18),
-                                          textAlign: TextAlign
-                                              .left, // Left align the subject text
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18
+                                          ),
+                                          textAlign: TextAlign.left, // Left align the subject text
                                         ),
                                       ),
                                       SizedBox(width: 5),
                                       Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 5),
+                                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                         decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 120, 120, 120),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          color: const Color.fromARGB(255, 35, 37, 48),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: Text(
                                           exam.getFormattedDate(),
-                                          style: TextStyle(color: Colors.white),
-                                          textAlign: TextAlign
-                                              .center, // Center align the date text
+                                          style: const TextStyle(
+                                            color: Color.fromARGB(255, 163, 172, 222),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center, // Center align the date text
+
                                         ),
                                       ),
                                       SizedBox(width: 5),
@@ -383,7 +394,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 5),
+                  SizedBox(width: 10),
                   // ---------------------------------- upcoming assignments
                   Expanded(
                     child: MouseRegion(
@@ -396,7 +407,7 @@ class _HomeState extends State<Home> {
                           height: 200,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            color: Color.fromARGB(255, 45, 45, 45),
+                            color: Color.fromARGB(255, 20, 21, 27),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment
@@ -478,7 +489,7 @@ class _HomeState extends State<Home> {
                                 height: 600, // 300
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
-                                  color: Color.fromARGB(255, 45, 45, 45),
+                                  color: Color.fromARGB(255, 20, 21, 27),
                                 ),
                                 child: Column(
                                     crossAxisAlignment: CrossAxisAlignment
