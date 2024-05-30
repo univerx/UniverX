@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:univerx/database_helper.dart';
 import 'package:univerx/models/examModel.dart';
 import 'package:univerx/models/assignmentModel.dart';
@@ -68,7 +69,7 @@ class _HomeState extends State<Home> {
   Future<void> _handleRefresh() async {
     bool? hasVibrator = await Vibration.hasVibrator();
     if (hasVibrator == true) {
-      Vibration.vibrate();
+      HapticFeedback.mediumImpact();
     }
     await _loadExams();
     await _loadAssignments();
