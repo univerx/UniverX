@@ -18,9 +18,21 @@ void main() async {
   sqfliteFfiInit();
   //Set the database factory
   databaseFactory = databaseFactoryFfi;
+  // ezt is tisztitani kell!!!!!!KJOIFJOIAFJOISFJOAIJFIOASJFOIAJSAOIJFIOASJfIOASJfio
+  final result = await DatabaseHelper.instance.getCalendarICS();
+  if (result != null){
+    if (result.toString() == ''){
+      print("asd");
+      await DatabaseHelper.instance.clearAllEvents();
+    }
+    else{
+      print(result.toString());
+      String icsFilePath = result.toString();
+      await fetchAndUpdateEventsFromIcs(icsFilePath);
+    }
+  }
 
-  String icsFilePath = 'https://neptun-web2.tr.pte.hu/hallgato/cal/cal.ashx?id=BB24FE2D35D43417A71C81D956920C8F1EEF975C7C8D75F121B7BAD54821D0977171BBD64EDB3A10.ics';
-  await fetchAndUpdateEventsFromIcs(icsFilePath);
+  
   runApp(
     const MyApp(),
   );
