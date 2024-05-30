@@ -104,15 +104,17 @@ class _AssignmentsState extends State<Events> {
           backgroundColor: Colors.black,
           elevation: 0,
           actions: [
-            IconButton(
+             ElevatedButton(
               onPressed: () {
                 _showIcsLinkInputDialog(context);
               },
-              icon: const CircleAvatar(
-                backgroundColor: Colors.blue, // Change the color as needed
-                child: Icon(
-                  Icons.add_link, color: Colors.white, size: 20.0,
-                )
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                backgroundColor: Color.fromARGB(255, 20, 21, 27),
+              ),
+              child: const Text(
+                'Import',
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
             IconButton(
