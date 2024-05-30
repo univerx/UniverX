@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: TextTheme(
-          bodyText2: TextStyle(color: Colors.white), // Default text color
+          bodyMedium: TextStyle(color: Colors.white), // Default text color
         ),
       ),
       home: Scaffold(
