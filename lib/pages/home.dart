@@ -75,9 +75,11 @@ class _HomeState extends State<Home> {
               Text(
                 "UniX-PTE-TTK",
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontFamily: "sfpro"
+                ),
+                    // add monospace font family                    
               ),
             ],
           ),
@@ -93,7 +95,7 @@ class _HomeState extends State<Home> {
                 backgroundColor: Color.fromARGB(255, 20, 21, 27), // Change the color as needed
                 child: Text(
                   "D", // Replace with your letter
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white,fontFamily: "sfpro"),
                 ),
               ),
             )
@@ -209,6 +211,7 @@ class _HomeState extends State<Home> {
                                             style: TextStyle(
                                               fontSize: 14.0,
                                               color: Colors.white,
+                                              fontFamily: "sfpro"
                                             ),
                                           );
                                         } else {
@@ -339,11 +342,11 @@ class _HomeState extends State<Home> {
                                 .center, // Center align the text
                             children: [
                               const Text(
-                                "ZH",
+                                "Exams",
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color.fromARGB(255, 163, 172, 222),
                                   fontSize: 26.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "sfpro"
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -361,7 +364,8 @@ class _HomeState extends State<Home> {
                                           exam.name,
                                           style: const TextStyle(
                                             color: Colors.white,
-                                            fontSize: 18
+                                            fontSize: 18,
+                                            fontFamily: 'sfpro',
                                           ),
                                           textAlign: TextAlign.left, // Left align the subject text
                                         ),
@@ -416,9 +420,9 @@ class _HomeState extends State<Home> {
                               const Text(
                                 "Assignments",
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color.fromARGB(255, 163, 172, 222),
                                   fontSize: 26.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "sfpro"
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -436,10 +440,11 @@ class _HomeState extends State<Home> {
                                         child: Text(
                                           assignment.name,
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18),
-                                          textAlign: TextAlign
-                                              .left, // Left align the subject text
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontFamily: "sfpro"
+                                          ),
+                                          textAlign: TextAlign.left, // Left align the subject text
                                         ),
                                       ),
                                       SizedBox(width: 5),
@@ -447,16 +452,18 @@ class _HomeState extends State<Home> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 5),
                                         decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 120, 120, 120),
+                                          color: const Color.fromARGB(255, 35, 37, 48),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
                                         child: Text(
                                           assignment.getFormattedDate(),
-                                          style: TextStyle(color: Colors.white),
-                                          textAlign: TextAlign
-                                              .center, // Center align the date text
+                                          style: TextStyle(
+                                            color: Color.fromARGB(255, 163, 172, 222),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center, // Center align the date text
+                                          
                                         ),
                                       ),
                                       SizedBox(width: 5),
@@ -498,9 +505,9 @@ class _HomeState extends State<Home> {
                                       const Text(
                                         "Notes",
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Color.fromARGB(255, 163, 172, 222),
                                           fontSize: 23.0,
-                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "sfpro"
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -518,10 +525,10 @@ class _HomeState extends State<Home> {
                                                 child: Text(
                                                   note.title,
                                                   style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 18),
-                                                  textAlign: TextAlign
-                                                      .left, // Left align the subject text
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                  ),
+                                                  textAlign: TextAlign.left, // Left align the subject text
                                                 ),
                                               ),
                                               SizedBox(width: 5),
