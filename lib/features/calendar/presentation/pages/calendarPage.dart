@@ -4,7 +4,7 @@ import 'package:univerx/features/home/presentation/pages/homePage.dart';
 import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/features/calendar/data/model/calendarModel.dart';
 import 'package:univerx/event_service.dart'; // Assuming you have a model for assignments
-import 'package:univerx/events/fetchAndUpdateEvents.dart'; // Assuming you have a model for assignments
+import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.dart'; // Assuming you have a model for assignments
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
