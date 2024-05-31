@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:univerx/pages/home.dart';
+import 'package:univerx/features/home/presentation/pages/homePage.dart';
 import 'package:univerx/database_helper.dart'; // Assuming you use the same database helper for assignments
 import 'package:univerx/models/eventModel.dart'; // Assuming you have a model for assignments
 import 'package:univerx/event_service.dart'; // Assuming you have a model for assignments
 import 'package:univerx/events/fetchAndUpdateEvents.dart'; // Assuming you have a model for assignments
+
+// ---------------------Widgets--------------------------
+import 'package:univerx/features/common/widgets/default_app_bar.dart';
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -82,70 +85,28 @@ class _AssignmentsState extends State<Events> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: const Text(
-            "Event Manager",
-            style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: Color.fromARGB(255, 255, 255, 255),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              );
-            },
-          ),
-          backgroundColor: Colors.black,
-          elevation: 0,
-          actions: [
-             ElevatedButton(
-              onPressed: () {
-                _showIcsLinkInputDialog(context);
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                backgroundColor: Color.fromARGB(255, 20, 21, 27),
-              ),
-              child: const Text(
-                'Import',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
+    
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: DefaultAppBar(
+        title: "UniX-Calendar",
+        showBackButton: true,
+      ),
+
+      body: ListView.builder(
+        itemCount: _allEvents.length,
+        itemBuilder: (context, index) {
+          final events = _allEvents[index];
+          return ListTile(
+            title: Text(events?.summary ?? '', style: TextStyle(color: Colors.white)),
+            subtitle: Text(
+              'Location: ${events?.location ?? ''}\n Start: ${events?.start ?? ''}\nEnd: ${events?.end ?? ''}',
+              style: TextStyle(color: Colors.white70),
             ),
-            IconButton(
-              onPressed: () {
-                // to second page
-                //Navigator.pushNamed(context, '/second');
-              },
-              icon: const CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 20, 21, 27), // Change the color as needed
-                child: Text(
-                  "D", // Replace with your letter
-                  style: TextStyle(color: Colors.white,fontFamily: "sfpro"),
-                ),
-              ),
-            )
-          ],
-        ),
-        body: ListView.builder(
-          itemCount: _allEvents.length,
-          itemBuilder: (context, index) {
-            final events = _allEvents[index];
-            return ListTile(
-              title: Text(events?.summary ?? '', style: TextStyle(color: Colors.white)),
-              subtitle: Text(
-                'Location: ${events?.location ?? ''}\n Start: ${events?.start ?? ''}\nEnd: ${events?.end ?? ''}',
-                style: TextStyle(color: Colors.white70),
-              ),
-            );
-          },
-        ),
+          );
+        },
       ),
     );
+    
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/pages/home.dart';
+import 'package:univerx/features/home/presentation/pages/homePage.dart';
 import 'package:univerx/models/examModel.dart';
 import 'package:univerx/database_helper.dart';
+
+// ---------------------Widgets--------------------------
+import 'package:univerx/features/common/widgets/default_app_bar.dart';
 
 void main() {
   runApp(Zh());
@@ -92,53 +95,37 @@ class _ZhState extends State<Zh> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: const Text(
-            "Exam Manager",
-            style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: Color.fromARGB(255, 255, 255, 255),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              );
-            },
-          ),
-          backgroundColor: Colors.black,
-          elevation: 0,
-        ),
-        body: ListView.builder(
-          itemCount: _exams.length,
-          itemBuilder: (context, index) {
-            final exam = _exams[index];
-            return ListTile(
-              title: Text(exam.name, style: TextStyle(color: Colors.white)),
-              subtitle: Text(
-                'Date: ${exam.date.toLocal().toString().substring(0, 10)}',
-                style: TextStyle(color: Colors.white70),
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.white),
-                onPressed: () async {
-                  await DatabaseHelper.instance.deleteExam(exam.id!);
-                  _loadExams(); // Refresh the list of exams
-                },
-              ),
-            );
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _addExam,
-          child: Icon(Icons.add),
-        ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: DefaultAppBar(
+        title: "UniX-Exams",
+        showBackButton: true,
       ),
+      body: ListView.builder(
+        itemCount: _exams.length,
+        itemBuilder: (context, index) {
+          final exam = _exams[index];
+          return ListTile(
+            title: Text(exam.name, style: TextStyle(color: Colors.white)),
+            subtitle: Text(
+              'Date: ${exam.date.toLocal().toString().substring(0, 10)}',
+              style: TextStyle(color: Colors.white70),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.delete, color: Colors.white),
+              onPressed: () async {
+                await DatabaseHelper.instance.deleteExam(exam.id!);
+                _loadExams(); // Refresh the list of exams
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addExam,
+        child: Icon(Icons.add),
+      ),
+    
     );
   }
 }

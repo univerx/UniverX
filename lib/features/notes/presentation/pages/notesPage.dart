@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/models/noteModel.dart';
 import 'package:univerx/database_helper.dart';
-import 'package:univerx/pages/home.dart';
+import 'package:univerx/features/home/presentation/pages/homePage.dart';
+
+// ---------------------Widgets--------------------------
+import 'package:univerx/features/common/widgets/default_app_bar.dart';
 
 class Notes extends StatefulWidget {
   const Notes({Key? key}) : super(key: key);
@@ -118,20 +121,9 @@ class _NotesState extends State<Notes> {
     return Scaffold(
       backgroundColor: Colors.black,
 
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-
-        title: Text('Notes', style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),),
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: Color.fromARGB(255, 255, 255, 255),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              );
-            },
-          ),
+      appBar: DefaultAppBar(
+          title: "UniX-Notes",
+          showBackButton: true,
       ),
       
       body: FutureBuilder<List<Note>>(
