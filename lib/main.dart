@@ -10,9 +10,7 @@ import 'package:univerx/features/assignments/presentation/pages/assignmentsPage.
 import 'package:univerx/features/notes/presentation/pages/notesPage.dart';
 
 import 'package:univerx/database/database_helper.dart';
-
-
-import 'package:univerx/events/fetchAndUpdateEvents.dart';
+import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.dart';
 
 // ---------------------Other Packages--------------------------
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
