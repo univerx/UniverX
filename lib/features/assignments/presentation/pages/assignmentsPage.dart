@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/pages/home.dart';
-import 'package:univerx/models/assignmentModel.dart'; // Assuming you have a model for assignments
-import 'package:univerx/database_helper.dart'; // Assuming you use the same database helper for assignments
+import 'package:univerx/features/home/presentation/pages/homePage.dart';
+import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
+import 'package:univerx/database/database_helper.dart';
+
+// ---------------------Widgets--------------------------
+import 'package:univerx/features/common/widgets/default_app_bar.dart';
 
 class Assignments extends StatefulWidget {
   const Assignments({Key? key}) : super(key: key);
@@ -88,68 +91,37 @@ class _AssignmentsState extends State<Assignments> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: const Text(
-            "Assignment Manager",
-            style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: Color.fromARGB(255, 255, 255, 255),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              );
-            },
-          ),
-          backgroundColor: Colors.black,
-          elevation: 0,
-          actions: [
-            IconButton(
-              onPressed: () {
-                // to second page
-                //Navigator.pushNamed(context, '/second');
-              },
-              icon: const CircleAvatar(
-                backgroundColor: Colors.blue, // Change the color as needed
-                child: Text(
-                  "D", // Replace with your letter
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            )
-          ],
-        ),
-        body: ListView.builder(
-          itemCount: _assignments.length,
-          itemBuilder: (context, index) {
-            final assignment = _assignments[index];
-            return ListTile(
-              title: Text(assignment.name, style: TextStyle(color: Colors.white)),
-              subtitle: Text(
-                'Date: ${assignment.date.toLocal().toString().substring(0, 10)}',
-                style: TextStyle(color: Colors.white70),
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.white),
-                onPressed: () async {
-                  await DatabaseHelper.instance.deleteAssignment(assignment.id!);
-                  _loadAssignments(); // Refresh the list of assignments
-                },
-              ),
-            );
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _addAssignment,
-          child: Icon(Icons.add),
-        ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: DefaultAppBar(
+        title: "UniX-Assignments",
+        showBackButton: true,
       ),
+      body: ListView.builder(
+        itemCount: _assignments.length,
+        itemBuilder: (context, index) {
+          final assignment = _assignments[index];
+          return ListTile(
+            title: Text(assignment.name, style: TextStyle(color: Colors.white)),
+            subtitle: Text(
+              'Date: ${assignment.date.toLocal().toString().substring(0, 10)}',
+              style: TextStyle(color: Colors.white70),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.delete, color: Colors.white),
+              onPressed: () async {
+                await DatabaseHelper.instance.deleteAssignment(assignment.id!);
+                _loadAssignments(); // Refresh the list of assignments
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addAssignment,
+        child: Icon(Icons.add),
+      ),
+      
     );
   }
 }

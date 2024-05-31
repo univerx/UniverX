@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:univerx/models/eventModel.dart';
-import 'package:univerx/database_helper.dart';
+import 'package:univerx/features/calendar/data/model/calendarModel.dart';
+import 'package:univerx/database/database_helper.dart';
 
 class EventService {
   final String url;

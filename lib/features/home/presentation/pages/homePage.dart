@@ -1,15 +1,25 @@
+// ---------------------Flutter Packages--------------------------
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:univerx/database_helper.dart';
-import 'package:univerx/events/fetchAndUpdateEvents.dart';
-import 'package:univerx/models/examModel.dart';
-import 'package:univerx/models/assignmentModel.dart';
-import 'package:univerx/models/noteModel.dart';
+
+// ---------------------Self Defined Packages--------------------------
+import 'package:univerx/features/exams/data/model/examModel.dart';
+import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
+import 'package:univerx/features/notes/data/model/noteModel.dart';
+import 'package:univerx/features/calendar/data/model/calendarModel.dart';
+
+
+import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/event_service.dart';
-import 'package:univerx/models/eventModel.dart';
+
+import 'package:univerx/main.dart';
+
+// ---------------------Other Packages--------------------------
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:vibration/vibration.dart';
 
+// ---------------------Widgets--------------------------
+import 'package:univerx/features/common/widgets/default_app_bar.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,7 +28,8 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with RouteAware {
+  // ---------------------Initialize Variables--------------------------
   List<ExamModel> _exams = [];
   List<AssignmentModel> _assignments = [];
   List<Note> _notes = [];
@@ -31,6 +42,7 @@ class _HomeState extends State<Home> {
 
   final eventService = EventService('');
 
+  
 
   @override
   void initState() {
@@ -38,8 +50,6 @@ class _HomeState extends State<Home> {
     _loadExams();
     _loadAssignments();
     _loadNotes();
-
-    
 
     currentEvent = eventService.getCurrentEvent();
     upcomingEvent = eventService.getUpcomingEvent();
@@ -68,22 +78,52 @@ class _HomeState extends State<Home> {
       _notes = notes;
     });
   }
+  
+  // ---------------------POP Observer To Refresh The Page--------------------------
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final modalRoute = ModalRoute.of(context);
+    if (modalRoute is PageRoute) {
+      routeObserver.subscribe(this, modalRoute as PageRoute);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // This method is called when the current route has been popped
+    // off, and the current route shows up again.
+    _handleRefresh();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+  
+
 
   Future<void> _handleRefresh() async {
     bool? hasVibrator = await Vibration.hasVibrator();
     if (hasVibrator == true) {
       HapticFeedback.heavyImpact();
     }
-    await _loadExams();
-    await _loadAssignments();
-    await _loadNotes();
-    await currentEvent;
-    await upcomingEvent;
-    await timeLeftForEvent;
-    await percentagePassedForEvent;
+
+    _loadExams();
+    _loadAssignments();
+    _loadNotes();
+
+    currentEvent = eventService.getCurrentEvent();
+    upcomingEvent = eventService.getUpcomingEvent();
+
+    timeLeftForEvent = eventService.timeLeftForCurrentEvent();
+    percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
+    
     return await Future<void>.delayed(const Duration(seconds: 0, milliseconds: 500));
   }
 
+  // ---------------------Home Page Builder--------------------------
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -95,38 +135,10 @@ class _HomeState extends State<Home> {
       ),
       home: Scaffold(
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "UniX-PTE-TTK",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontFamily: "sfpro"
-                ),
-                    // add monospace font family                    
-              ),
-            ],
-          ),
-          backgroundColor: Colors.black,
-          elevation: 0,
-          actions: [
-            IconButton(
-              onPressed: () {
-                // to second page
-                //Navigator.pushNamed(context, '/second');
-              },
-              icon: const CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 20, 21, 27), // Change the color as needed
-                child: Text(
-                  "D", // Replace with your letter
-                  style: TextStyle(color: Colors.white,fontFamily: "sfpro"),
-                ),
-              ),
-            )
-          ],
+
+        appBar: DefaultAppBar(
+          title: "UniX-PTE-TTK",
+          showBackButton: false,
         ),
         
         body: CustomMaterialIndicator(
