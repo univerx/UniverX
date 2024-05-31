@@ -109,13 +109,17 @@ class _HomeState extends State<Home> with RouteAware {
     if (hasVibrator == true) {
       HapticFeedback.heavyImpact();
     }
-    await _loadExams();
-    await _loadAssignments();
-    await _loadNotes();
-    await currentEvent;
-    await upcomingEvent;
-    await timeLeftForEvent;
-    await percentagePassedForEvent;
+
+    _loadExams();
+    _loadAssignments();
+    _loadNotes();
+
+    currentEvent = eventService.getCurrentEvent();
+    upcomingEvent = eventService.getUpcomingEvent();
+
+    timeLeftForEvent = eventService.timeLeftForCurrentEvent();
+    percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
+    
     return await Future<void>.delayed(const Duration(seconds: 0, milliseconds: 500));
   }
 

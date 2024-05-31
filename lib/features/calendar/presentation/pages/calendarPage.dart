@@ -8,6 +8,7 @@ import 'package:univerx/events/fetchAndUpdateEvents.dart'; // Assuming you have 
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
+import 'package:univerx/features/calendar/presentation/widgets/icsLinkManager.dart';
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _AssignmentsState extends State<Events> {
     });
   }
 
-  void _showIcsLinkInputDialog(BuildContext context) async{
+  void showIcsLinkInputDialog(BuildContext context) async{
     final TextEditingController icsLinkController = TextEditingController();
 
     final result = await DatabaseHelper.instance.getCalendarICS();
@@ -91,8 +92,11 @@ class _AssignmentsState extends State<Events> {
       appBar: DefaultAppBar(
         title: "UniX-Calendar",
         showBackButton: true,
+        icsButton: CustomImportButton(
+          onPressed: () => showIcsLinkInputDialog(context),
+        ),
       ),
-
+      
       body: ListView.builder(
         itemCount: _allEvents.length,
         itemBuilder: (context, index) {

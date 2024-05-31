@@ -8,12 +8,14 @@ import 'package:univerx/features/home/presentation/pages/homePage.dart';
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
+  final Widget? icsButton;
 
 
   // ---------------------Requirement Title--------------------------
   DefaultAppBar({
     required this.title,
     this.showBackButton = false,
+    this.icsButton,
   });
 
   // ---------------------AppBar--------------------------
@@ -47,6 +49,9 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.black,
       elevation: 0,
       actions: [
+
+        if (icsButton != null) icsButton!,
+        
         IconButton(
           onPressed: (){}, // nothing
           icon: const CircleAvatar(
