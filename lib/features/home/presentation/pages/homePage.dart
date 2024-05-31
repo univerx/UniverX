@@ -9,7 +9,7 @@ import 'package:univerx/features/notes/data/model/noteModel.dart';
 import 'package:univerx/features/calendar/data/model/calendarModel.dart';
 
 
-import 'package:univerx/database_helper.dart';
+import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/event_service.dart';
 
 import 'package:univerx/main.dart';
