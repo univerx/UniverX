@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/features/home/presentation/pages/homePage.dart';
-import 'package:univerx/models/assignmentModel.dart'; // Assuming you have a model for assignments
+import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
 import 'package:univerx/database_helper.dart'; // Assuming you use the same database helper for assignments
 
 // ---------------------Widgets--------------------------

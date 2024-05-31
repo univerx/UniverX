@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/models/noteModel.dart';
+import 'package:univerx/features/notes/data/model/noteModel.dart';
 import 'package:univerx/database_helper.dart';
 import 'package:univerx/features/home/presentation/pages/homePage.dart';
 

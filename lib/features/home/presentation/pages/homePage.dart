@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // ---------------------Self Defined Packages--------------------------
+import 'package:univerx/features/exams/data/model/examModel.dart';
+import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
+import 'package:univerx/features/notes/data/model/noteModel.dart';
+import 'package:univerx/features/calendar/data/model/calendarModel.dart';
+
+
 import 'package:univerx/database_helper.dart';
-import 'package:univerx/models/examModel.dart';
-import 'package:univerx/models/assignmentModel.dart';
-import 'package:univerx/models/noteModel.dart';
 import 'package:univerx/event_service.dart';
-import 'package:univerx/models/eventModel.dart';
 
 import 'package:univerx/main.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/features/home/presentation/pages/homePage.dart';
-import 'package:univerx/models/examModel.dart';
+import 'package:univerx/features/exams/data/model/examModel.dart';
 import 'package:univerx/database_helper.dart';
 
 // ---------------------Widgets--------------------------

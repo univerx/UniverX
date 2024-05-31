@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:univerx/models/assignmentModel.dart';
-import 'models/examModel.dart'; // Assume this model has toMap() and fromMap() methods
-import 'models/assignmentModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
-import 'models/noteModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
-import 'models/eventModel.dart'; // Similarly assume this model has toMap() and fromMap() methods
+import 'package:univerx/features/exams/data/model/examModel.dart';
+import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
+import 'package:univerx/features/notes/data/model/noteModel.dart';
+import 'package:univerx/features/calendar/data/model/calendarModel.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
