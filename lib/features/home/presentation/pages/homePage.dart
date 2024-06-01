@@ -8,7 +8,6 @@ import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
 import 'package:univerx/features/notes/data/model/noteModel.dart';
 import 'package:univerx/features/calendar/data/model/calendarModel.dart';
 
-
 import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/event_service.dart';
 
@@ -24,6 +23,7 @@ import 'package:univerx/features/common/widgets/refresh_app_icon.dart';
 import 'package:univerx/features/home/presentation/widgets/calendarWidget.dart';
 import 'package:univerx/features/home/presentation/widgets/examsAssignmentsWidget.dart';
 import 'package:univerx/features/home/presentation/widgets/notesWidget.dart';
+import 'package:univerx/features/common/widgets/profile_menu.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -45,8 +45,6 @@ class _HomeState extends State<Home> with RouteAware {
   late Future<double?> percentagePassedForEvent;
 
   final eventService = EventService('');
-
-  
 
   @override
   void initState() {
@@ -82,7 +80,7 @@ class _HomeState extends State<Home> with RouteAware {
       _notes = notes;
     });
   }
-  
+
   // ---------------------POP Observer To Refresh The Page--------------------------
   @override
   void didChangeDependencies() {
@@ -105,8 +103,6 @@ class _HomeState extends State<Home> with RouteAware {
     routeObserver.unsubscribe(this);
     super.dispose();
   }
-  
-
 
   Future<void> _handleRefresh() async {
     bool? hasVibrator = await Vibration.hasVibrator();
@@ -123,7 +119,7 @@ class _HomeState extends State<Home> with RouteAware {
 
     timeLeftForEvent = eventService.timeLeftForCurrentEvent();
     percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
-    
+
     return await Future<void>.delayed(const Duration(seconds: 0, milliseconds: 500));
   }
 
@@ -148,7 +144,9 @@ class _HomeState extends State<Home> with RouteAware {
           title: "UniX-PTE-TTK",
           showBackButton: false,
         ),
-        
+
+        endDrawer: const DrawerMenu(), //Profile_menu pop up
+
         body: CustomMaterialIndicator(
           onRefresh: _handleRefresh,
           indicatorBuilder: (context, controller) {
@@ -167,7 +165,7 @@ class _HomeState extends State<Home> with RouteAware {
                   percentagePassedForEvent: percentagePassedForEvent,
                   homeContext: context,
                 ),
-          
+
                 const SizedBox(height: 10),// space between the calendar and the (upcoming exams and assignments)
                 Row(
                   children: [
