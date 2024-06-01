@@ -5,6 +5,7 @@ import 'package:univerx/database/database_helper.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
+import 'package:univerx/features/common/widgets/profile_menu.dart';
 
 void main() {
   runApp(Zh());
@@ -101,6 +102,9 @@ class _ZhState extends State<Zh> {
         title: "UniX-Exams",
         showBackButton: true,
       ),
+
+      endDrawer: const DrawerMenu(), //Profile_menu pop up
+
       body: ListView.builder(
         itemCount: _exams.length,
         itemBuilder: (context, index) {
@@ -125,7 +129,7 @@ class _ZhState extends State<Zh> {
         onPressed: _addExam,
         child: Icon(Icons.add),
       ),
-    
+      
     );
   }
 }
