@@ -1,6 +1,8 @@
 // ---------------------Flutter Packages--------------------------
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:io'; // Needed to detect platform
+
 
 // ---------------------Self Defined Packages--------------------------
 import 'package:univerx/features/home/presentation/pages/homePage.dart';
@@ -19,11 +21,18 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() async {
-  // ---------------------Initialize SQLite--------------------------
   WidgetsFlutterBinding.ensureInitialized();
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  // ---------------------Initialize SQLite--------------------------
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    // FFI initialization for desktop platforms
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
+  // Ensure the database is properly initialized
   await DatabaseHelper.instance.database;
+
   // ---------------------Fetch and Update Events--------------------------
   final result = await DatabaseHelper.instance.getCalendarICS();
 
