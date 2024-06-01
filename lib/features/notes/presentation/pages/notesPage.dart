@@ -5,6 +5,7 @@ import 'package:univerx/features/home/presentation/pages/homePage.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
+import 'package:univerx/features/common/widgets/profile_menu.dart';
 
 class Notes extends StatefulWidget {
   const Notes({Key? key}) : super(key: key);
@@ -122,10 +123,12 @@ class _NotesState extends State<Notes> {
       backgroundColor: Colors.black,
 
       appBar: DefaultAppBar(
-          title: "UniX-Notes",
-          showBackButton: true,
+        title: "UniX-Notes",
+        showBackButton: true,
       ),
-      
+
+      endDrawer: const DrawerMenu(), //Profile_menu pop up
+
       body: FutureBuilder<List<Note>>(
         future: _notesList,
         builder: (context, snapshot) {
