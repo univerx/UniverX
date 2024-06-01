@@ -53,7 +53,9 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (icsButton != null) icsButton!,
         
         IconButton(
-          onPressed: (){}, // nothing
+          onPressed: (){
+              Scaffold.of(context).openEndDrawer();
+          },
           icon: const CircleAvatar(
             backgroundColor: Color.fromARGB(255, 20, 21, 27),
             child: Text(

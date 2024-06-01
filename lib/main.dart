@@ -21,10 +21,9 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() async {
   // ---------------------Initialize SQLite--------------------------
   WidgetsFlutterBinding.ensureInitialized();
-  await DatabaseHelper.instance.database;
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-
+  await DatabaseHelper.instance.database;
   // ---------------------Fetch and Update Events--------------------------
   final result = await DatabaseHelper.instance.getCalendarICS();
 
