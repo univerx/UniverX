@@ -5,6 +5,7 @@ import 'package:univerx/database/database_helper.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
+import 'package:univerx/features/common/widgets/profile_menu.dart';
 
 class Assignments extends StatefulWidget {
   const Assignments({Key? key}) : super(key: key);
@@ -97,6 +98,9 @@ class _AssignmentsState extends State<Assignments> {
         title: "UniX-Assignments",
         showBackButton: true,
       ),
+
+      endDrawer: const DrawerMenu(), //Profile_menu pop up
+
       body: ListView.builder(
         itemCount: _assignments.length,
         itemBuilder: (context, index) {

@@ -9,6 +9,7 @@ import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
 import 'package:univerx/features/calendar/presentation/widgets/icsLinkManager.dart';
+import 'package:univerx/features/common/widgets/profile_menu.dart';
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -86,7 +87,7 @@ class _AssignmentsState extends State<Events> {
 
   @override
   Widget build(BuildContext context) {
-    
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: DefaultAppBar(
@@ -96,7 +97,9 @@ class _AssignmentsState extends State<Events> {
           onPressed: () => showIcsLinkInputDialog(context),
         ),
       ),
-      
+
+      endDrawer: const DrawerMenu(), //Profile_menu pop up
+
       body: ListView.builder(
         itemCount: _allEvents.length,
         itemBuilder: (context, index) {
