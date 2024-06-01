@@ -14,12 +14,14 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-         flutter-version: '1.10'
+         flutter-version: '3.19.5'
 
       - run: flutter pub get
       - run: flutter build apk
 
       - uses: actions/upload-artifact@v2
         with:
-          name: 1.10
-          path: build/app/outputs/flutter-apk/1.10.apk
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/app/outputs/flutter-apk/1.10.apk
+          tag: v1.10
+          overwrite: true
