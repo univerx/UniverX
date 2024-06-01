@@ -1,4 +1,4 @@
-name: Flutter Action
+name: APK Build
 
 on:
   push:
