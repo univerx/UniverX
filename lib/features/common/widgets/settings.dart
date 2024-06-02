@@ -21,6 +21,7 @@ class Settings extends StatelessWidget {
                 "sfpro", // Change 'YourFontFamily' to your desired font family
           ),
         ),
+        automaticallyImplyLeading: false, // Remove the back button
         actions: [
           TextButton(
             onPressed: () {
