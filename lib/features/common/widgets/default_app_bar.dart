@@ -8,13 +8,18 @@ import 'package:univerx/features/home/presentation/pages/homePage.dart';
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
+  final bool showProfileMenu;
+  final bool showDoneButton;
   final Widget? icsButton;
+
 
 
   // ---------------------Requirement Title--------------------------
   DefaultAppBar({
     required this.title,
     this.showBackButton = false,
+    this.showProfileMenu = true,
+    this.showDoneButton = false,
     this.icsButton,
   });
 
@@ -52,7 +57,8 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
 
         if (icsButton != null) icsButton!,
         
-        IconButton(
+
+        if (showProfileMenu) IconButton(
           onPressed: (){
               Scaffold.of(context).openEndDrawer();
           },
@@ -64,6 +70,23 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
         ),
+        
+        if (showDoneButton) TextButton(
+              onPressed: () {
+                // Navigate back to the home page
+                Navigator.pop(context);
+                Navigator.pop(context);// nem vegleges xd
+              },
+              child: const Text(
+                'Done',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 16.0,
+                  fontFamily:
+                      "sfpro", // Change 'YourFontFamily' to your desired font family
+                ),
+              ),
+            ), 
       ],
     );
   }
