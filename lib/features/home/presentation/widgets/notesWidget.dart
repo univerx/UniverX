@@ -43,30 +43,43 @@ class NotesWidget extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Expanded(
+                               //---------------------NOTE TITLE---------------------
                               child: Text(
                                 note.title,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
+                                  fontSize: 15,
+                                  fontFamily: "sfpro",
                                 ),
                                 textAlign: TextAlign.left,
+                                softWrap: true,
                               ),
                             ),
-                            SizedBox(width: 5),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 120, 120, 120),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                note.content,
-                                style: TextStyle(color: Colors.white),
-                                textAlign: TextAlign.center,
+                            const SizedBox(width: 5),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 120, 120, 120),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                //---------------------NOTE CONTENT---------------------
+                                child: Text(
+                                  note.content,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.0,
+                                    fontFamily: "spro"
+                                  ),
+                                  textAlign: TextAlign.left,
+                                  softWrap: true,
+                                ),
                               ),
                             ),
                             SizedBox(width: 5),
