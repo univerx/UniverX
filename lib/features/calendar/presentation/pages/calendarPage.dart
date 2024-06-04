@@ -6,114 +6,130 @@ import 'package:univerx/features/calendar/data/model/calendarModel.dart';
 import 'package:univerx/event_service.dart'; // Assuming you have a model for assignments
 import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.dart'; // Assuming you have a model for assignments
 
+
+import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
+
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
 import 'package:univerx/features/calendar/presentation/widgets/icsLinkManager.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
+import 'package:univerx/features/calendar/presentation/widgets/customCalendar.dart';
 
-class Events extends StatefulWidget {
-  const Events({Key? key}) : super(key: key);
+
+
+class Calendar extends StatefulWidget {
+  const Calendar({super.key});
 
   @override
-  _AssignmentsState createState() => _AssignmentsState();
+  _CalendarPageState createState() => _CalendarPageState();
 }
 
-class _AssignmentsState extends State<Events> {
-  List<EventModel?> _allEvents = [];
+class _CalendarPageState extends State<Calendar> {
+  late final ValueNotifier<List<EventModel>> _selectedEvents;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  List<EventModel> _allEvents = [];
 
   @override
   void initState() {
     super.initState();
+
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    
+    // Load events
     _loadEvents();
   }
 
+  @override
+  void dispose() {
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadEvents() async {
-    final events = await DatabaseHelper.instance.getAllEvents();
+    _allEvents = await DatabaseHelper.instance.getAllEvents();
+
+
     setState(() {
-      _allEvents = events;
+      _selectedEvents.value = _getEventsForDay(_selectedDay!);
     });
   }
 
-  void showIcsLinkInputDialog(BuildContext context) async{
-    final TextEditingController icsLinkController = TextEditingController();
-
-    final result = await DatabaseHelper.instance.getCalendarICS();
-    if (result != null) {
-      icsLinkController.text = result.toString();
-    }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Enter .ics Link'),
-          content: TextField(
-            controller: icsLinkController,
-            decoration: InputDecoration(
-              hintText: 'https://sample.com/a.ics',
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                // ezt itt szebben kene EEEEEEEEEEEEEEEEEEEEEDTSADKSHFDAHSFLSAJFLKASJFLKSAJFKLS
-                String icsLink = icsLinkController.text;
-                if (icsLink == '') {
-                  DatabaseHelper.instance.updateCalendarICS(icsLink);
-                  DatabaseHelper.instance.clearAllEvents();
-                }
-                else if (result == null) {
-                  DatabaseHelper.instance.saveCalendarICS(icsLink);
-                  await fetchAndUpdateEventsFromIcs(icsLink);
-                } else{
-                  DatabaseHelper.instance.updateCalendarICS(icsLink);
-                  await fetchAndUpdateEventsFromIcs(icsLink);
-                }
-                Navigator.of(context).pop(); // Close the dialog
-                _loadEvents();
-              },
-              child: Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
+  List<EventModel> _getEventsForDay(DateTime day) {
+    return _allEvents.where((event) => isSameDay(event.start, day)).toList();
   }
+  void _goToToday() {
+    setState(() {
+      _focusedDay = DateTime.now();
+      _selectedDay = _focusedDay;
+    });
+    _selectedEvents.value = _getEventsForDay(_selectedDay!);
+  }
+
+  
+
+
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor: Colors.black,
+      // ---------------------App Bar--------------------------
       appBar: DefaultAppBar(
         title: "UniX-Calendar",
         showBackButton: true,
         icsButton: CustomImportButton(
-          onPressed: () => showIcsLinkInputDialog(context),
+          loadEvents: _loadEvents,
         ),
       ),
+      body: Column(
+        children: [
+          // -----------------------CALENDAR-----------------------
+          CustomCalendar(
+            focusedDay: _focusedDay,
+            selectedDay: _selectedDay,
+            selectedEvents: _selectedEvents,
+            onDaySelected: (selectedDay, focusedDay) {
+              if (!isSameDay(_selectedDay, selectedDay)) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
 
-      endDrawer: const DrawerMenu(), //Profile_menu pop up
+                _selectedEvents.value = _getEventsForDay(selectedDay);
+              }
+            },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
+            eventLoader: _getEventsForDay,
+          ),
+          
+          const SizedBox(height: 8.0),
 
-      body: ListView.builder(
-        itemCount: _allEvents.length,
-        itemBuilder: (context, index) {
-          final events = _allEvents[index];
-          return ListTile(
-            title: Text(events?.summary ?? '', style: TextStyle(color: Colors.white)),
-            subtitle: Text(
-              'Location: ${events?.location ?? ''}\n Start: ${events?.start ?? ''}\nEnd: ${events?.end ?? ''}',
-              style: TextStyle(color: Colors.white70),
+          // -----------------------SELECTED EVENTS-----------------------
+          Expanded(
+            child: ValueListenableBuilder<List<EventModel>>(
+              valueListenable: _selectedEvents,
+              builder: (context, value, _) {
+                return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    final event = value[index];
+                    return ListTile(
+                      title: Text(event.summary),
+                      subtitle: Text(
+                          '${DateFormat.yMMMd().format(event.start)} - ${DateFormat.Hm().format(event.start)} to ${DateFormat.Hm().format(event.end)}'),
+                      trailing: Text(event.location),
+                    );
+                  },
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
-    
   }
 }
