@@ -58,6 +58,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.black,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.black,
+        ),
+      ),
+
+
       debugShowCheckedModeBanner: false,
       home: const Home(),
       navigatorObservers: [routeObserver], // Set the observer
@@ -67,7 +77,7 @@ class MyApp extends StatelessWidget {
         '/zh': (context) => const Zh(),
         '/assignments': (context) => const Assignments(),
         '/notes': (context) => const Notes(),
-        '/events': (context) => const Events(),
+        '/events': (context) => const Calendar(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {
