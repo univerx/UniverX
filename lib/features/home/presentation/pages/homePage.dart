@@ -126,25 +126,9 @@ class _HomeState extends State<Home> with RouteAware {
   // ---------------------Home Page Builder--------------------------
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // ---------------------Config--------------------------
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Colors.white), // Default text color
-        ),
-      ),
-
-      // ---------------------Home Page--------------------------
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.black,
-
         // ---------------------Header--------------------------
-        appBar: DefaultAppBar(
-          title: "UniX-PTE-TTK",
-          showBackButton: false,
-        ),
-
         endDrawer: const DrawerMenu(), //Profile_menu pop up
 
         body: CustomMaterialIndicator(
@@ -154,51 +138,58 @@ class _HomeState extends State<Home> with RouteAware {
           },
 
           // ---------------------Body--------------------------
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // --------------------------- Classes and events ---------------------------
-                CalendarWidget(
-                  currentEvent: currentEvent,
-                  upcomingEvent: upcomingEvent,
-                  timeLeftForEvent: timeLeftForEvent,
-                  percentagePassedForEvent: percentagePassedForEvent,
-                  homeContext: context,
-                ),
+          child: CustomScrollView(
+            slivers: <Widget>[
+              DefaultAppBar(
+                title: "UniX-PTE-TTK",
+                showBackButton: false,
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    // --------------------------- Classes and events ---------------------------
+                    CalendarWidget(
+                      currentEvent: currentEvent,
+                      upcomingEvent: upcomingEvent,
+                      timeLeftForEvent: timeLeftForEvent,
+                      percentagePassedForEvent: percentagePassedForEvent,
+                      homeContext: context,
+                    ),
 
-                const SizedBox(height: 10),// space between the calendar and the (upcoming exams and assignments)
-                Row(
-                  children: [
-                    const SizedBox(width: 5),
-                    // ---------------------------------- exams ---------------------------
-                    ExamsAssignmentsWidget(
-                      title: "Exams",
-                      exams: _exams,
-                      routeName: '/zh',
+                    const SizedBox(height: 10), // space between the calendar and the (upcoming exams and assignments)
+                    Row(
+                      children: [
+                        const SizedBox(width: 5),
+                        // ---------------------------------- exams ---------------------------
+                        ExamsAssignmentsWidget(
+                          title: "Exams",
+                          exams: _exams,
+                          routeName: '/zh',
+                          homeContext: context,
+                        ),
+                        const SizedBox(width: 10),
+                        // ---------------------------------- assignments ---------------------------
+                        ExamsAssignmentsWidget(
+                          title: "Assignments",
+                          assignments: _assignments,
+                          routeName: '/assignments',
+                          homeContext: context,
+                        ),
+                        const SizedBox(width: 5),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ---------------------------------- notes ---------------------------
+                    NotesWidget(
+                      notes: _notes,
                       homeContext: context,
                     ),
-                    const SizedBox(width: 10),
-                    // ---------------------------------- assignments ---------------------------
-                    ExamsAssignmentsWidget(
-                      title: "Assignments",
-                      assignments: _assignments,
-                      routeName: '/assignments',
-                      homeContext: context,
-                    ),
-                    const SizedBox(width: 5),
                   ],
                 ),
-                const SizedBox(height: 10),
-                // ---------------------------------- notes ---------------------------
-                NotesWidget(
-                  notes: _notes,
-                  homeContext: context,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ),
     );
   }
 }

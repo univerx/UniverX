@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/home/presentation/pages/homePage.dart';
 import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
 import 'package:univerx/database/database_helper.dart';
 
@@ -94,38 +93,47 @@ class _AssignmentsState extends State<Assignments> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: DefaultAppBar(
-        title: "UniX-Assignments",
-        showBackButton: true,
-      ),
-
       endDrawer: const DrawerMenu(), //Profile_menu pop up
-
-      body: ListView.builder(
-        itemCount: _assignments.length,
-        itemBuilder: (context, index) {
-          final assignment = _assignments[index];
-          return ListTile(
-            title: Text(assignment.name, style: TextStyle(color: Colors.white)),
-            subtitle: Text(
-              'Date: ${assignment.date.toLocal().toString().substring(0, 10)}',
-              style: TextStyle(color: Colors.white70),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          DefaultAppBar(
+            title: "UniX-Assignments",
+            showBackButton: true,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: _assignments.length,
+                  itemBuilder: (context, index) {
+                    final assignment = _assignments[index];
+                    return ListTile(
+                      title: Text(assignment.name, style: TextStyle(color: Colors.white)),
+                      subtitle: Text(
+                        'Date: ${assignment.date.toLocal().toString().substring(0, 10)}',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.white),
+                        onPressed: () async {
+                          await DatabaseHelper.instance.deleteAssignment(assignment.id!);
+                          _loadAssignments(); // Refresh the list of assignments
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.delete, color: Colors.white),
-              onPressed: () async {
-                await DatabaseHelper.instance.deleteAssignment(assignment.id!);
-                _loadAssignments(); // Refresh the list of assignments
-              },
-            ),
-          );
-        },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addAssignment,
         child: Icon(Icons.add),
       ),
-      
     );
   }
 }

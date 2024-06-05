@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/home/presentation/pages/homePage.dart';
 import 'package:univerx/features/exams/data/model/examModel.dart';
 import 'package:univerx/database/database_helper.dart';
 
@@ -98,38 +97,47 @@ class _ZhState extends State<Zh> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: DefaultAppBar(
-        title: "UniX-Exams",
-        showBackButton: true,
-      ),
-
       endDrawer: const DrawerMenu(), //Profile_menu pop up
-
-      body: ListView.builder(
-        itemCount: _exams.length,
-        itemBuilder: (context, index) {
-          final exam = _exams[index];
-          return ListTile(
-            title: Text(exam.name, style: TextStyle(color: Colors.white)),
-            subtitle: Text(
-              'Date: ${exam.date.toLocal().toString().substring(0, 10)}',
-              style: TextStyle(color: Colors.white70),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          DefaultAppBar(
+            title: "UniX-Exams",
+            showBackButton: true,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: _exams.length,
+                  itemBuilder: (context, index) {
+                    final exam = _exams[index];
+                    return ListTile(
+                      title: Text(exam.name, style: TextStyle(color: Colors.white)),
+                      subtitle: Text(
+                        'Date: ${exam.date.toLocal().toString().substring(0, 10)}',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.white),
+                        onPressed: () async {
+                          await DatabaseHelper.instance.deleteExam(exam.id!);
+                          _loadExams(); // Refresh the list of exams
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.delete, color: Colors.white),
-              onPressed: () async {
-                await DatabaseHelper.instance.deleteExam(exam.id!);
-                _loadExams(); // Refresh the list of exams
-              },
-            ),
-          );
-        },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addExam,
         child: Icon(Icons.add),
       ),
-      
     );
   }
 }

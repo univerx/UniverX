@@ -22,6 +22,8 @@ class CustomCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TableCalendar<EventModel>(
+      availableGestures: AvailableGestures.none,//THIS SHOULD BE TEMPORARY
+
       firstDay: DateTime.utc(2020, 1, 1),
       lastDay: DateTime.utc(2030, 12, 31),
       focusedDay: focusedDay,

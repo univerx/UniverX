@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/features/notes/data/model/noteModel.dart';
 import 'package:univerx/database/database_helper.dart';
-import 'package:univerx/features/home/presentation/pages/homePage.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
@@ -121,51 +120,60 @@ class _NotesState extends State<Notes> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-
-      appBar: DefaultAppBar(
-        title: "UniX-Notes",
-        showBackButton: true,
-      ),
-
       endDrawer: const DrawerMenu(), //Profile_menu pop up
-
-      body: FutureBuilder<List<Note>>(
-        future: _notesList,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No notes available.'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final note = snapshot.data![index];
-                return Card(
-                  elevation: 4,
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: ListTile(
-                    title: Text(
-                      note.title,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(note.content),
-                    onTap: () => _showNoteDialog(note: note),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        _dbHelper.deleteNote(note.id!);
-                        _refreshNotes();
-                      },
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        },
+      body: CustomScrollView(
+        slivers: <Widget>[
+          DefaultAppBar(
+            title: "UniX-Notes",
+            showBackButton: true,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                FutureBuilder<List<Note>>(
+                  future: _notesList,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No notes available.'));
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final note = snapshot.data![index];
+                          return Card(
+                            elevation: 4,
+                            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                            child: ListTile(
+                              title: Text(
+                                note.title,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(note.content),
+                              onTap: () => _showNoteDialog(note: note),
+                              trailing: IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () {
+                                  _dbHelper.deleteNote(note.id!);
+                                  _refreshNotes();
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showNoteDialog(),
