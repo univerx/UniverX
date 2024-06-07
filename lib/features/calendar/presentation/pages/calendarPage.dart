@@ -8,12 +8,14 @@ import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.
 
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:calendar_view/calendar_view.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
 import 'package:univerx/features/calendar/presentation/widgets/icsLinkManager.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
 import 'package:univerx/features/calendar/presentation/widgets/customCalendar.dart';
+import 'package:univerx/features/calendar/presentation/widgets/hourlyView.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -70,7 +72,7 @@ class _CalendarPageState extends State<Calendar> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-         DefaultAppBar(
+          DefaultAppBar(
             title: "UniX-Exams",
             showBackButton: true,
           ),
@@ -87,9 +89,8 @@ class _CalendarPageState extends State<Calendar> {
                       setState(() {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
+                        _selectedEvents.value = _getEventsForDay(selectedDay);
                       });
-
-                      _selectedEvents.value = _getEventsForDay(selectedDay);
                     }
                   },
                   onPageChanged: (focusedDay) {
@@ -101,23 +102,14 @@ class _CalendarPageState extends State<Calendar> {
                 const SizedBox(height: 8.0),
 
                 // -----------------------SELECTED EVENTS-----------------------
+
                 ValueListenableBuilder<List<EventModel>>(
                   valueListenable: _selectedEvents,
                   builder: (context, value, _) {
-                    return ListView.builder(
-                      shrinkWrap: true, // This will allow ListView to shrink in a SingleChildScrollView
-                      physics: NeverScrollableScrollPhysics(), // This will disable ListView's own scrolling
-                      itemCount: value.length,
-                      itemBuilder: (context, index) {
-                        final event = value[index];
-                        return ListTile(
-                          title: Text(event.summary),
-                          subtitle: Text(
-                            '${DateFormat.yMMMd().format(event.start)} - ${DateFormat.Hm().format(event.start)} to ${DateFormat.Hm().format(event.end)}',
-                          ),
-                          trailing: Text(event.location),
-                        );
-                      },
+                    DateTime initialDate = value.isNotEmpty ? value.first.start : DateTime.now();
+                    return Container(
+                      height: 1000,  // Adjust the height as needed
+                      child: HourlyView(events: value, initialDate: initialDate),
                     );
                   },
                 ),
