@@ -79,7 +79,7 @@ class DefaultAppBar extends StatelessWidget {
           ),
         ),
       ],
-      pinned: false,
+      pinned: true,
       floating: true,
       snap: true,
     );
