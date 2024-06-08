@@ -37,6 +37,7 @@ class _HomeState extends State<Home> with RouteAware {
   List<ExamModel> _exams = [];
   List<AssignmentModel> _assignments = [];
   List<Note> _notes = [];
+  List<Note> _favoriteNotes = [];
 
   late Future<EventModel?> currentEvent;
   late Future<EventModel?> upcomingEvent;
@@ -52,6 +53,8 @@ class _HomeState extends State<Home> with RouteAware {
     _loadExams();
     _loadAssignments();
     _loadNotes();
+    _loadFavoriteNotes(); // Load favorite notes
+
 
     currentEvent = eventService.getCurrentEvent();
     upcomingEvent = eventService.getUpcomingEvent();
@@ -78,6 +81,12 @@ class _HomeState extends State<Home> with RouteAware {
     final notes = await DatabaseHelper.instance.getNotes();
     setState(() {
       _notes = notes;
+    });
+  }
+  Future<void> _loadFavoriteNotes() async {
+    final favoriteNotes = await DatabaseHelper.instance.getFavoriteNotes();
+    setState(() {
+      _favoriteNotes = favoriteNotes;
     });
   }
 
@@ -113,6 +122,7 @@ class _HomeState extends State<Home> with RouteAware {
     _loadExams();
     _loadAssignments();
     _loadNotes();
+    _loadFavoriteNotes(); // Refresh favorite notes
 
     currentEvent = eventService.getCurrentEvent();
     upcomingEvent = eventService.getUpcomingEvent();
@@ -193,6 +203,7 @@ class _HomeState extends State<Home> with RouteAware {
                 NotesWidget(
                   notes: _notes,
                   homeContext: context,
+                  favoriteNotes: _favoriteNotes,
                 ),
               ],
             ),

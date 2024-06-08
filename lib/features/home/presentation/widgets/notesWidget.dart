@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:univerx/features/notes/data/model/noteModel.dart';
 
 class NotesWidget extends StatelessWidget {
   final List<Note> notes;
+  final List<Note> favoriteNotes; // New parameter to accept favorite notes
   final BuildContext homeContext;
 
-  NotesWidget({required this.notes, required this.homeContext});
+  NotesWidget({required this.notes, required this.homeContext, this.favoriteNotes = const [],});
 
   @override
   Widget build(BuildContext context) {
@@ -38,55 +38,50 @@ class NotesWidget extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    const SizedBox(
+                        height:
+                            10), // Space between the title and the note list
                     // Display the list of notes
-                    ...notes.map((note) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(width: 10),
-                            Expanded(
-                               //---------------------NOTE TITLE---------------------
-                              child: Text(
-                                note.title,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontFamily: "sfpro",
-                                ),
-                                textAlign: TextAlign.left,
-                                softWrap: true,
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: favoriteNotes.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 120, 120, 120),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ),
-                            const SizedBox(width: 5),
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 120, 120, 120),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                //---------------------NOTE CONTENT---------------------
-                                child: Text(
-                                  note.content,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.0,
-                                    fontFamily: "spro"
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    favoriteNotes[index].title,
+                                    style: const TextStyle(
+                                       // Highlighted color
+                                      fontSize: 15,
+                                      fontFamily: "sfpro",
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  textAlign: TextAlign.left,
-                                  softWrap: true,
-                                ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    favoriteNotes[index].content,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.0,
+                                      fontFamily: "sfpro",
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(width: 5),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
