@@ -49,7 +49,7 @@ class CustomCalendar extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         selectedDecoration: BoxDecoration(
-          color: Color.fromARGB(255, 163, 172, 222),
+          color: Color.fromARGB(255, 84, 111, 178),
           shape: BoxShape.circle,
         ),
       ),
