@@ -10,6 +10,9 @@ Future<void> fetchAndUpdateEventsFromIcs(String filePath) async {
 
   // Fetch events from .ics file
   List<EventModel> newEvents = await eventService.fetchEvents();
+  if (newEvents.isEmpty) {
+    return;
+  }
 
   // Fetch existing events from database
   DatabaseHelper dbHelper = DatabaseHelper.instance;

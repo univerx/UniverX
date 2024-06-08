@@ -29,6 +29,7 @@ class _CalendarPageState extends State<Calendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   List<EventModel> _allEvents = [];
+  DateTime initialDate = DateTime.now();
 
   @override
   void initState() {
@@ -54,6 +55,23 @@ class _CalendarPageState extends State<Calendar> {
       _selectedEvents.value = _getEventsForDay(_selectedDay!);
     });
   }
+
+  List<EventModel> _changeDateForInitialBUG(List<EventModel> events) {
+  List<EventModel> newEvents = [];
+  DateTime now = DateTime.now();
+  for (EventModel event in events) {
+    DateTime newStart = DateTime(now.year, now.month, now.day, event.start.hour, event.start.minute);
+    DateTime newEnd = DateTime(now.year, now.month, now.day, event.end.hour, event.end.minute);
+    newEvents.add(EventModel(
+      summary: event.summary,
+      start: newStart,
+      end: newEnd,
+      location: event.location,
+    ));
+  }
+  return newEvents;
+}
+
 
   List<EventModel> _getEventsForDay(DateTime day) {
     return _allEvents.where((event) => isSameDay(event.start, day)).toList();
@@ -86,10 +104,13 @@ class _CalendarPageState extends State<Calendar> {
                   selectedEvents: _selectedEvents,
                   onDaySelected: (selectedDay, focusedDay) {
                     if (!isSameDay(_selectedDay, selectedDay)) {
+                      List<EventModel> __selectedEvents = _getEventsForDay(selectedDay);
                       setState(() {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
-                        _selectedEvents.value = _getEventsForDay(selectedDay);
+
+                        initialDate = __selectedEvents.isNotEmpty ? __selectedEvents.first.start : DateTime.now();
+                        _selectedEvents.value = _changeDateForInitialBUG(__selectedEvents);
                       });
                     }
                   },
@@ -106,7 +127,6 @@ class _CalendarPageState extends State<Calendar> {
                 ValueListenableBuilder<List<EventModel>>(
                   valueListenable: _selectedEvents,
                   builder: (context, value, _) {
-                    DateTime initialDate = value.isNotEmpty ? value.first.start : DateTime.now();
                     return Container(
                       height: 1000,  // Adjust the height as needed
                       child: HourlyView(events: value, initialDate: initialDate),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:intl/intl.dart';
@@ -25,12 +27,14 @@ class HourlyView extends StatelessWidget {
       );
     });
 
-    print("Initial Date: $initialDate");
-    if (eventController.allEvents.isEmpty) {
-      print("No events");
-    }else{
-      print("Number of Events: ${eventController.allEvents.first.startTime}");
-    }
+    int calculatedStartHour = (events.isNotEmpty && events.first.start.hour - 1 > 0)
+        ? events.first.start.hour - 1
+        : 0;
+
+    int calculatedEndHour = (events.isNotEmpty && events.last.end.hour + 1 < 24)
+        ? events.last.end.hour + 1
+        : 24;
+
 
     return ScrollConfiguration(
       behavior: NoScrollBehavior(),
@@ -47,30 +51,54 @@ class HourlyView extends StatelessWidget {
               bottom: boundary.bottom,
               child: Container(
                 margin: EdgeInsets.all(2),
+                padding: EdgeInsets.only(left: 8), // Adding padding on the left
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.blue,
-                ),
-                child: Center(
-                  child: Text(
-                    events.first.title, // Display the title of the event
-                    style: TextStyle(color: Colors.white),
+                  color: const Color.fromARGB(255, 36, 63, 109).withOpacity(0.8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 152, 152, 152).withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3), // Positioning the shadow
+                    ),
+                  ],
+                  border: const Border(
+                    left: BorderSide(
+                      color: Color.fromARGB(255, 84, 111, 178), // Change this to the color you want
+                      width: 4, // Adjust the width of the border as needed
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-          dayTitleBuilder: (date) {
-            return Container(
-              color: Colors.black,
-              padding: EdgeInsets.all(8),
-              child: Center(
-                child: Text(
-                  DateFormat('EEEE, MMM d').format(date),
-                  style: TextStyle(color: Colors.white),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start of the column
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8), // Add padding to the top for spacing
+                      child: Text(
+                        DateFormat("HH:mm").format(events.first.startTime!), // Placeholder for the location or time
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 4), // Add some space between the two texts
+                    Text(
+                      events.first.title.substring(0, 15), // Display the title of the event
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
+
+
           },
           backgroundColor: Colors.black,
           showVerticalLine: true,
@@ -80,9 +108,9 @@ class HourlyView extends StatelessWidget {
           initialDay: initialDate,
           heightPerMinute: 0.7,
           eventArranger: SideEventArranger(),
-          startHour: 5, // Adjust the start hour as needed
-          endHour: 20,  // Adjust the end hour as needed
-          //dayTitleBuilder: DayHeader.hidden, // Hide day header
+          startHour: calculatedStartHour, // Adjust the start hour as needed
+          endHour: calculatedEndHour,  // Adjust the end hour as needed
+          dayTitleBuilder: DayHeader.hidden, // Hide day header
           
           keepScrollOffset: true,
           timeLineBuilder: (date) {
@@ -91,11 +119,19 @@ class HourlyView extends StatelessWidget {
               child: Center(
                 child: Text(
                   DateFormat('HH:mm').format(date),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Color.fromARGB(255, 97, 97, 97)),
                 ),
               ),
             );
           },
+          hourIndicatorSettings: const HourIndicatorSettings(
+            color: Color.fromARGB(255, 97, 97, 97), // Set your desired color here
+            height: 0.7, // Set your desired thickness here
+          ),
+          liveTimeIndicatorSettings: const LiveTimeIndicatorSettings(
+            color: Color.fromARGB(255, 84, 111, 178), // Set your desired color here
+            height: 2.0, // Set your desired thickness here
+          ),
         ),
       ),
     );

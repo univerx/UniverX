@@ -21,7 +21,7 @@ class EventService {
       }
     } catch (e) {
       print('Error fetching events: $e');
-      rethrow;
+      return [];
     }
   }
 
