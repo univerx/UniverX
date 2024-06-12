@@ -1,12 +1,17 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:univerx/features/notes/data/model/noteModel.dart';
+import 'package:univerx/features/home/presentation/widgets/noteCard.dart'; // Import the new NoteCard widget
 
 class NotesWidget extends StatelessWidget {
-  final List<Note> notes;
   final BuildContext homeContext;
+  final List<Note> notes;
 
-  NotesWidget({required this.notes, required this.homeContext});
+  NotesWidget({
+    required this.homeContext,
+    this.notes = const [],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,62 +43,24 @@ class NotesWidget extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    // Display the list of notes
-                    ...notes.map((note) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(width: 10),
-                            Expanded(
-                               //---------------------NOTE TITLE---------------------
-                              child: Text(
-                                note.title,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontFamily: "sfpro",
-                                ),
-                                textAlign: TextAlign.left,
-                                softWrap: true,
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 120, 120, 120),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                //---------------------NOTE CONTENT---------------------
-                                child: Text(
-                                  note.content,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.0,
-                                    fontFamily: "spro"
-                                  ),
-                                  textAlign: TextAlign.left,
-                                  softWrap: true,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Column(
+                        children: List.generate(min(notes.length, 3) , (index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: NoteCard(note: notes[index]),
+                          );
+                        }),
+                      ),
+                    )
                   ],
                 ),
               ),
             ),
           ),
         ),
-        SizedBox(width: 5),
+        const SizedBox(width: 5),
       ],
     );
   }

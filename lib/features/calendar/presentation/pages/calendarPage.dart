@@ -96,7 +96,6 @@ class _CalendarPageState extends State<Calendar> {
             icsButton: CustomImportButton(
               loadEvents: _loadEvents,
             ),
-            
           ),
           SliverList(
             delegate: SliverChildListDelegate(

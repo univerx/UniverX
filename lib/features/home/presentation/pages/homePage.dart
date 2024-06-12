@@ -38,6 +38,7 @@ class _HomeState extends State<Home> with RouteAware {
   List<AssignmentModel> _assignments = [];
   List<Note> _notes = [];
 
+
   late Future<EventModel?> currentEvent;
   late Future<EventModel?> upcomingEvent;
 
@@ -80,6 +81,7 @@ class _HomeState extends State<Home> with RouteAware {
       _notes = notes;
     });
   }
+    
 
   // ---------------------POP Observer To Refresh The Page--------------------------
   @override
