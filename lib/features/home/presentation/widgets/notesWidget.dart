@@ -1,27 +1,20 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:univerx/features/notes/data/model/noteModel.dart';
 import 'package:univerx/features/home/presentation/widgets/noteCard.dart'; // Import the new NoteCard widget
 
 class NotesWidget extends StatelessWidget {
-  final List<Note> notes;
   final BuildContext homeContext;
-  final List<Note> favoriteNotes;
+  final List<Note> notes;
 
   NotesWidget({
-    required this.notes,
     required this.homeContext,
-    this.favoriteNotes = const [],
+    this.notes = const [],
   });
 
   @override
   Widget build(BuildContext context) {
-    List<Note> sortedNotes = List.from(notes);
-    sortedNotes.sort((a, b) {
-      if (a.isFavorite && !b.isFavorite) return -1;
-      if (!a.isFavorite && b.isFavorite) return 1;
-      return 0;
-    });
-
     return Row(
       children: [
         SizedBox(width: 5),
@@ -52,16 +45,15 @@ class NotesWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: sortedNotes.length,
-                        itemBuilder: (context, index) {
+                      child: Column(
+                        children: List.generate(min(notes.length, 3) , (index) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: NoteCard(note: sortedNotes[index]),
+                            child: NoteCard(note: notes[index]),
                           );
-                        },
+                        }),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
