@@ -5,6 +5,7 @@ import 'package:univerx/database/database_helper.dart';
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
+import 'package:univerx/features/notes/presentation/NoteDetailPage.dart';
 
 class Notes extends StatefulWidget {
   const Notes({Key? key}) : super(key: key);
@@ -94,6 +95,7 @@ class _NotesState extends State<Notes> {
                       Note(
                         title: _titleController.text,
                         content: _contentController.text,
+                        createdAt: DateTime.now().toString(), // Set createdAt here
                       ),
                     );
                   } else {
@@ -102,6 +104,8 @@ class _NotesState extends State<Notes> {
                         id: note.id,
                         title: _titleController.text,
                         content: _contentController.text,
+                        createdAt: note.createdAt, // Keep the existing createdAt
+                        isFavorite: note.isFavorite, // Keep the existing isFavorite
                       ),
                     );
                   }
@@ -114,6 +118,14 @@ class _NotesState extends State<Notes> {
         );
       },
     );
+  }
+
+  void _toggleFavorite(Note note) {
+    setState(() {
+      note.isFavorite = !note.isFavorite;
+    });
+    _dbHelper.updateNote(note);
+    _refreshNotes();
   }
 
   @override
@@ -134,34 +146,47 @@ class _NotesState extends State<Notes> {
                   future: _notesList,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No notes available.'));
+                      return const Center(child: Text('No notes available.'));
                     } else {
+                      // Sort notes by isFavorite and createdAt
+                      final notes = snapshot.data!;
+                      notes.sort((a, b) {
+                        if (a.isFavorite == b.isFavorite) {
+                          return b.createdAt.compareTo(a.createdAt);
+                        }
+                        return a.isFavorite ? -1 : 1;
+                      });
+
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data!.length,
+                        itemCount: notes.length,
                         itemBuilder: (context, index) {
-                          final note = snapshot.data![index];
+                          final note = notes[index];
                           return Card(
                             elevation: 4,
-                            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                             child: ListTile(
                               title: Text(
                                 note.title,
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              subtitle: Text(note.content),
-                              onTap: () => _showNoteDialog(note: note),
+                              subtitle: Text(note.createdAt), // Use createdAt instead of date
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NoteDetailPage(note: note),
+                                  ),
+                                );
+                              },
                               trailing: IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  _dbHelper.deleteNote(note.id!);
-                                  _refreshNotes();
-                                },
+                                icon: Icon(note.isFavorite ? Icons.favorite : Icons.favorite_border),
+                                onPressed: () => _toggleFavorite(note),
                               ),
                             ),
                           );
@@ -177,7 +202,7 @@ class _NotesState extends State<Notes> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showNoteDialog(),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

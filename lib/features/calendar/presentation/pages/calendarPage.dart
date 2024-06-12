@@ -93,6 +93,9 @@ class _CalendarPageState extends State<Calendar> {
           DefaultAppBar(
             title: "UniX-Exams",
             showBackButton: true,
+             icsButton: CustomImportButton(
+              loadEvents: _loadEvents,
+            ),
           ),
           SliverList(
             delegate: SliverChildListDelegate(
