@@ -50,17 +50,17 @@ class HourlyView extends StatelessWidget {
               right: boundary.right,
               bottom: boundary.bottom,
               child: Container(
-                margin: EdgeInsets.all(2),
-                padding: EdgeInsets.only(left: 8), // Adding padding on the left
+                margin: const EdgeInsets.all(2),
+                padding: const EdgeInsets.only(left: 8), // Adding padding on the left
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: const Color.fromARGB(255, 36, 63, 109).withOpacity(0.8),
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 152, 152, 152).withOpacity(0.3),
+                      color: const Color.fromARGB(255, 152, 152, 152).withOpacity(0.3),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 3), // Positioning the shadow
+                      offset: const Offset(0, 3), // Positioning the shadow
                     ),
                   ],
                   border: const Border(
@@ -77,17 +77,17 @@ class HourlyView extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 8), // Add padding to the top for spacing
                       child: Text(
                         DateFormat("HH:mm").format(events.first.startTime!), // Placeholder for the location or time
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    SizedBox(height: 4), // Add some space between the two texts
+                    const SizedBox(height: 4), // Add some space between the two texts
                     Text(
                       events.first.title.substring(0, 15), // Display the title of the event
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
