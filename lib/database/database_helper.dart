@@ -165,7 +165,10 @@ class DatabaseHelper {
 
   Future<List<Note>> getNotes() async {
     final db = await instance.database;
-    final result = await db.query('notes');
+    final result = await db.query(
+      'notes',
+      orderBy: 'isFavorite DESC', // Sorting by createdAt, descending
+    );
     return result.map((json) => Note.fromMap(json)).toList();
   }
 
@@ -186,14 +189,6 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
-  }
- Future<List<Note>> getFavoriteNotes() async {
-    final db = await instance.database;
-    final result = await db.query(
-      'notes',
-      orderBy: 'isFavorite DESC', // Sorting by createdAt, descending
-    );
-    return result.map((json) => Note.fromMap(json)).toList();
   }
 
   // ----------------------- events methods ------------------------
