@@ -16,7 +16,7 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('database30.db');
+    _database = await _initDB('database35.db');
     
     return _database!;
   }
@@ -53,13 +53,17 @@ class DatabaseHelper {
       CREATE TABLE notes(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
-        content TEXT NOT NULL
+        content TEXT NOT NULL,
+        createdAt TEXT NOT NULL,
+        isFavorite BOOLEAN NOT NULL
       )
     ''');
 
+
     await db.execute("""
       CREATE TABLE events(
-        start TEXT, end TEXT,
+        start TEXT,
+        end TEXT,
         summary TEXT,
         location TEXT
       )
@@ -111,8 +115,6 @@ class DatabaseHelper {
       whereArgs: [id],
     );
   }
-
-
   // ----------------------- Assignment methods ------------------------
   Future<void> insertAssignment(AssignmentModel assignment) async {
     final db = await instance.database;
@@ -184,6 +186,14 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+ Future<List<Note>> getFavoriteNotes() async {
+    final db = await instance.database;
+    final result = await db.query(
+      'notes',
+      orderBy: 'isFavorite DESC', // Sorting by createdAt, descending
+    );
+    return result.map((json) => Note.fromMap(json)).toList();
   }
 
   // ----------------------- events methods ------------------------
