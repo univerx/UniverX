@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:intl/intl.dart';
@@ -35,7 +34,6 @@ class HourlyView extends StatelessWidget {
         ? events.last.end.hour + 1
         : 24;
 
-
     return ScrollConfiguration(
       behavior: NoScrollBehavior(),
       child: Container(
@@ -43,62 +41,58 @@ class HourlyView extends StatelessWidget {
         child: DayView(
           controller: eventController,
           eventTileBuilder: (date, events, boundary, start, end) {
+            // Ensure events are available to display
+            if (events.isEmpty) {
+              return Container();
+            }
             // Build the event tile
-            return Positioned(
-              left: boundary.left,
-              top: boundary.top,
-              right: boundary.right,
-              bottom: boundary.bottom,
-              child: Container(
-                margin: const EdgeInsets.all(2),
-                padding: const EdgeInsets.only(left: 8), // Adding padding on the left
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 36, 63, 109).withOpacity(0.8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color.fromARGB(255, 152, 152, 152).withOpacity(0.3),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3), // Positioning the shadow
-                    ),
-                  ],
-                  border: const Border(
-                    left: BorderSide(
-                      color: Color.fromARGB(255, 84, 111, 178), // Change this to the color you want
-                      width: 4, // Adjust the width of the border as needed
-                    ),
+            return Container(
+              margin: const EdgeInsets.all(2),
+              padding: const EdgeInsets.only(left: 8), // Adding padding on the left
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: const Color.fromARGB(255, 36, 63, 109).withOpacity(0.8),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 152, 152, 152).withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3), // Positioning the shadow
+                  ),
+                ],
+                border: const Border(
+                  left: BorderSide(
+                    color: Color.fromARGB(255, 84, 111, 178), // Change this to the color you want
+                    width: 4, // Adjust the width of the border as needed
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start of the column
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8), // Add padding to the top for spacing
-                      child: Text(
-                        DateFormat("HH:mm").format(events.first.startTime!), // Placeholder for the location or time
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 4), // Add some space between the two texts
-                    Text(
-                      events.first.title.substring(0, 15), // Display the title of the event
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start of the column
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8), // Add padding to the top for spacing
+                    child: Text(
+                      DateFormat("HH:mm").format(events.first.startTime!), // Placeholder for the location or time
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 4), // Add some space between the two texts
+                  Text(
+                    events.first.title.substring(0, min(15, events.first.title.length)), // Display the title of the event
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             );
-
-
           },
           backgroundColor: Colors.black,
           showVerticalLine: true,
@@ -111,7 +105,6 @@ class HourlyView extends StatelessWidget {
           startHour: calculatedStartHour, // Adjust the start hour as needed
           endHour: calculatedEndHour,  // Adjust the end hour as needed
           dayTitleBuilder: DayHeader.hidden, // Hide day header
-          
           keepScrollOffset: true,
           timeLineBuilder: (date) {
             return Container(
