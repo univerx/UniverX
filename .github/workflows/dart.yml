@@ -36,6 +36,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/ios/iphoneos/1.13.1ipa
+          file: build/ios/iphoneos/1.13.1.ipa
           tag: v1.13.1
           overwrite: true
