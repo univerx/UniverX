@@ -13,6 +13,7 @@ import 'package:univerx/features/notes/presentation/pages/notesPage.dart';
 
 import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.dart';
+import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateApi.dart';
 
 // ---------------------Other Packages--------------------------
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -34,6 +35,7 @@ void main() async {
   await DatabaseHelper.instance.database;
 
   // ---------------------Fetch and Update Events--------------------------
+  /*
   final result = await DatabaseHelper.instance.getCalendarICS();
 
   if (result != null) { // If there is value in the database
@@ -44,6 +46,14 @@ void main() async {
       String icsFilePath = result.toString();
       await fetchAndUpdateEventsFromIcs(icsFilePath);
     }
+  }
+  */
+
+  // ---------------------Fetch and Update Api--------------------------
+  final result = await DatabaseHelper.instance.getNeptunLogin();
+
+  if (result != null) { // If there is value in the database
+    await fetchAndUpdateApi();
   }
 
   // ---------------------Run the App--------------------------
