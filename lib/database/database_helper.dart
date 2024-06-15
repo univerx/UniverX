@@ -16,7 +16,7 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('database35.db');
+    _database = await _initDB('database37.db');
     
     return _database!;
   }
@@ -72,6 +72,15 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE calendarICS(
         url TEXT NOT NULL
+      )
+    ''');
+
+     await db.execute('''
+      CREATE TABLE NeptunLogin(
+        university TEXT NOT NULL,
+        url TEXT NOT NULL,
+        login TEXT NOT NULL,
+        password TEXT NOT NULL
       )
     ''');
 
@@ -248,6 +257,31 @@ class DatabaseHelper {
   Future<int> deleteCalendarICS() async {
     var dbClient = await instance.database;
     return await dbClient.delete("calendarICS");
+  }
+
+  // ----------------------- NeptunLogin methods ------------------------
+  Future<int> saveNeptunLogin(String university, String url,String login, String password) async {
+    var dbClient = await instance.database;
+    return await dbClient.insert("NeptunLogin", {"university": university, "url": url, "login": login, "password": password});
+  }
+
+  Future<Object?> getNeptunLogin() async {
+    var dbClient = await instance.database;
+    var result = await dbClient.rawQuery('SELECT * FROM NeptunLogin');
+    if (result.isEmpty) {
+      return null;
+    }
+    return {"university": result[0]["university"], "url": result[0]["url"], "login": result[0]["login"], "password": result[0]["password"]};
+  }
+
+  Future<int> updateNeptunLogin(String university, String url, String login, String password) async {
+    var dbClient = await instance.database;
+    return await dbClient.update("NeptunLogin", {"university": university, "url": url, "login": login, "password": password});
+  }
+
+  Future<int> deleteNeptunLogin() async {
+    var dbClient = await instance.database;
+    return await dbClient.delete("NeptunLogin");
   }
 
 }
