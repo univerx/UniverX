@@ -77,4 +77,46 @@ class EventModel {
       throw FormatException('Invalid date format: $date');
     }
   }
+
+  static DateTime parseApi(String date) {
+    // Use a regular expression to extract the timestamp
+    RegExp regExp = RegExp(r'/Date\((\d+)\)/');
+    Match? match = regExp.firstMatch(date);
+    
+    if (match != null) {
+      // Get the timestamp as a string
+      String timestampStr = match.group(1)!;
+      
+      // Convert the timestamp to an integer
+      int timestamp = int.parse(timestampStr);
+      
+      // Create a DateTime object using the timestamp (assuming it's in UTC)
+      DateTime utcDateTime = DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true);
+      
+      // Convert UTC DateTime to local time
+      DateTime localDateTime = utcDateTime.toLocal();
+      
+      // Check if the date is in daylight saving time (DST)
+      bool isDST = _isDaylightSavingTime(localDateTime);
+      
+      // Adjust the time according to DST
+      if (isDST) {
+        localDateTime = localDateTime.subtract(Duration(hours: 2));
+      } else {
+        localDateTime = localDateTime.subtract(Duration(hours: 1));
+      }
+      
+      return localDateTime;
+    } else {
+      throw FormatException('Invalid date format');
+    }
+  }
+
+  static bool _isDaylightSavingTime(DateTime date) {
+    // Define the start and end dates of DST for a given year
+    DateTime dstStart = DateTime(date.year, 3, 31 - (DateTime(date.year, 3, 31).weekday + 1) % 7);
+    DateTime dstEnd = DateTime(date.year, 10, 31 - (DateTime(date.year, 10, 31).weekday + 1) % 7);
+    
+    return date.isAfter(dstStart) && date.isBefore(dstEnd);
+  }
 }
