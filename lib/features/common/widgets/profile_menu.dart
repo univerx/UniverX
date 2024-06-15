@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:univerx/features/neptun_login/presentation/pages/neptunLoginPage.dart';
 import 'package:univerx/features/settings/presentation/pages/settingsPage.dart';
 
 class DrawerMenu extends StatelessWidget {
@@ -77,6 +78,22 @@ class DrawerMenu extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Settings()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings, color: Colors.white),
+              title: const Text('Neptun Login',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontFamily: "sfpro",
+                  )),
+              onTap: () {
+                // Handle navigation to Settings
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NeptunLogin()),
                 );
               },
             ),
