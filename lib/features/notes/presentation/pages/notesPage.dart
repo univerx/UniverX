@@ -128,6 +128,36 @@ class _NotesState extends State<Notes> {
     _refreshNotes();
   }
 
+  void _deleteNoteConfirmation(BuildContext context, Note note) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Note'),
+          content: Text('Are you sure you want to delete this note?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (note.id != null) {
+                  await _dbHelper.deleteNote(note.id!);
+                  Navigator.of(context).pop();
+                  _refreshNotes();
+                }
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,9 +214,18 @@ class _NotesState extends State<Notes> {
                                   ),
                                 );
                               },
-                              trailing: IconButton(
-                                icon: Icon(note.isFavorite ? Icons.favorite : Icons.favorite_border),
-                                onPressed: () => _toggleFavorite(note),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(note.isFavorite ? Icons.favorite : Icons.favorite_border),
+                                    onPressed: () => _toggleFavorite(note),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () => _deleteNoteConfirmation(context, note),
+                                  ),
+                                ],
                               ),
                             ),
                           );
