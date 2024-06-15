@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateApi.dart';
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
 import 'package:univerx/database/database_helper.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:univerx/features/neptun_login/data/neptunApi.dart';
 
 class NeptunLogin extends StatefulWidget {
   const NeptunLogin({Key? key}) : super(key: key);
@@ -39,6 +41,7 @@ class _NeptunLoginState extends State<NeptunLogin> {
         passwordController.text = details['password'] ?? '';
         hasLoginData = true;
       });
+      fetchCalendar(details['url'], details['login'], details['password']);
     }
   }
 
@@ -51,6 +54,7 @@ class _NeptunLoginState extends State<NeptunLogin> {
 
   void _logout() async {
     await DatabaseHelper.instance.deleteNeptunLogin();
+    await DatabaseHelper.instance.clearAllEvents();
     setState(() {
       selectedUniversity = null;
       selectedUniversityUrl = null;
@@ -176,6 +180,10 @@ class _NeptunLoginState extends State<NeptunLogin> {
                                     neptunCode,
                                     password
                                   );
+
+                                  // neptun api
+                                  fetchAndUpdateApi();
+
                                   setState(() {
                                     hasLoginData = true;
                                   });
