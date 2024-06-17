@@ -16,7 +16,7 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('database39.db');
+    _database = await _initDB('database42.db');
     
     return _database!;
   }
@@ -65,7 +65,8 @@ class DatabaseHelper {
         start TEXT,
         end TEXT,
         summary TEXT,
-        location TEXT
+        location TEXT,
+        exam INTEGER
       )
     """);
 
@@ -98,13 +99,28 @@ class DatabaseHelper {
 
   Future<List<ExamModel>> getExams() async {
     final db = await instance.database;
-    final result = await db.query(
-      'exams',
-      orderBy: 'date ASC', // Sort by date in ascending order
-    );
     
-    return result.map((json) => ExamModel.fromMap(json)).toList();
+    // Query exams table
+    final examResults = await db.query(
+      'exams',
+      orderBy: 'date ASC',
+    );
+
+    // Query events table where exam is true
+    final eventResults = await db.query(
+      'events',
+      where: 'exam = ?',
+      whereArgs: [1], 
+    );
+    print(eventResults);
+    // Combine and return the list of exams and events
+    List<ExamModel> exams = examResults.map((json) => ExamModel.fromMap(json)).toList();
+    List<ExamModel> events = eventResults.map((json) => ExamModel.fromMapExam(json)).toList();
+    print(events);
+    // Assuming ExamModel has a way to distinguish between exams and events
+    return exams + events;
   }
+
 
   Future<void> updateExam(ExamModel exam) async {
     final db = await instance.database;
