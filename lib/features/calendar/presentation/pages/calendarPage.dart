@@ -67,6 +67,7 @@ class _CalendarPageState extends State<Calendar> {
       start: newStart,
       end: newEnd,
       location: event.location,
+      exam: event.exam,
     ));
   }
   return newEvents;
