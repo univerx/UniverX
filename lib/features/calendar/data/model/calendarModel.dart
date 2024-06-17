@@ -6,12 +6,14 @@ class EventModel {
   final DateTime end;
   final String summary;
   final String location;
+  final bool exam; 
 
   EventModel({
     required this.start,
     required this.end,
     required this.summary,
     required this.location,
+    required this.exam,
   });
 
 
@@ -21,6 +23,7 @@ class EventModel {
       'end': end.toIso8601String(),
       'summary': summary,
       'location': location,
+      'exam': exam? 1 : 0,
     };
     return map;
   }
@@ -31,6 +34,7 @@ class EventModel {
       end: DateTime.parse(map['end']),
       summary: map['summary'],
       location: map['location'],
+      exam: map['exam'] == 1,
     );
   }
 
@@ -59,6 +63,7 @@ class EventModel {
       end: end!,
       summary: summary!,
       location: location!,
+      exam: false,
     );
   }
 
