@@ -1,12 +1,55 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
+import 'dart:io';
 import 'package:univerx/features/calendar/data/model/calendarModel.dart';
 import 'package:univerx/database/database_helper.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:univerx/event_service.dart';
 
 
-Future<List<EventModel>> fetchCalendar(String neptunCode, String userLogin, String password) async {
-  final url = Uri.parse('https://neptun-web3.tr.pte.hu/hallgato/MobileService.svc/GetCalendarData');
+Future<bool?> checkLoginDetails(String url, String neptunCode, String password) async {
+
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+
+  List<EventModel> newEvents = await fetchCalendar(url, neptunCode, password);
+  if (newEvents.isEmpty) {
+    print("a");
+    return false;
+  }
+
+  await dbHelper.clearAllEvents();
+
+  for (EventModel newEvent in newEvents) {
+    await dbHelper.saveEvent(newEvent);
+  }
+  return true;
+}
+
+Future<void> fetchAndUpdateApi() async {
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+
+  dbHelper.getNeptunLogin().then((loginDetails) async {
+    if (loginDetails != null) {
+      var details = loginDetails as Map<String, dynamic>;
+      List<EventModel> newEvents = await fetchCalendar(details['url'], details['login'], details['password']);
+      
+      await dbHelper.clearAllEvents();
+
+      for (EventModel newEvent in newEvents) {
+        await dbHelper.saveEvent(newEvent);
+      }
+      return true;
+    }
+    else{
+      print("b");
+      return false;
+    }
+  });
+  print("c");
+}
+
+Future<List<EventModel>> fetchCalendar(String url, String neptunCode, String password) async {
+  print(url +" "+ neptunCode+" "+ password);
+  final final_url = Uri.parse(url + "/GetCalendarData");
   final headers = {'Content-Type': 'application/json'};
   final body = jsonEncode({
     'needAllDaylong': false,
@@ -21,7 +64,7 @@ Future<List<EventModel>> fetchCalendar(String neptunCode, String userLogin, Stri
     'startDate': "/Date(0000000000000)/",
     'endDate': "/Date(9999999999999)/",
     'entityLimit': 0,
-    'UserLogin': userLogin,
+    'UserLogin': neptunCode,
     'Password': password,
     'NeptunCode': neptunCode,
     'CurrentPage': 0,
@@ -32,7 +75,7 @@ Future<List<EventModel>> fetchCalendar(String neptunCode, String userLogin, Stri
     'MobileServiceVersion': 0
   });
 
-  final response = await http.post(url, headers: headers, body: body);
+  final response = await http.post(final_url, headers: headers, body: body);
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
@@ -40,7 +83,8 @@ Future<List<EventModel>> fetchCalendar(String neptunCode, String userLogin, Stri
     return parseICS(data);
     // Dolgozd fel a data változót itt
   } else {
-    throw Exception('Failed to load calendar data');
+    print("Failed to load calendar data");
+    return [];
   }
 }
 
@@ -54,6 +98,7 @@ List<EventModel> parseICS(final jsonData) {
         end: EventModel.parseApi(item['end']),
         summary: item['title'],
         location: item['location'],
+        exam: item['title'].toString().startsWith("[Vizsga]"),
       ));
     }
   } else {

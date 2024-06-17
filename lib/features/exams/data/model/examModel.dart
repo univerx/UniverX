@@ -23,6 +23,13 @@ class ExamModel {
       date: DateTime.parse(map['date']),
     );
   }
+  factory ExamModel.fromMapExam(Map<String, dynamic> map) {
+    return ExamModel(
+      id: -1,
+      name: map['summary'].toString().replaceAll("[Vizsga]", "").substring(0,10),
+      date: DateTime.parse(map['start']),
+    );
+  }
 
   String getFormattedDate() {
     final DateFormat formatter = DateFormat('MMM d');
