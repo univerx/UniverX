@@ -10,10 +10,11 @@ import 'package:univerx/features/calendar/presentation/pages/calendarPage.dart';
 import 'package:univerx/features/exams/presentation/pages/examsPage.dart';
 import 'package:univerx/features/assignments/presentation/pages/assignmentsPage.dart';
 import 'package:univerx/features/notes/presentation/pages/notesPage.dart';
+import 'package:univerx/features/neptun_login/presentation/pages/login.dart';
+import 'package:univerx/features/neptun_login/data/neptunApi.dart';
 
 import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.dart';
-import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateApi.dart';
 
 // ---------------------Other Packages--------------------------
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -65,6 +66,11 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  Future<bool> checkLoginStatus() async {
+    final result = await DatabaseHelper.instance.getNeptunLogin();
+    return result != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -79,7 +85,18 @@ class MyApp extends StatelessWidget {
 
 
       debugShowCheckedModeBanner: false,
-      home: const Home(),
+      home: FutureBuilder<bool>(
+        future: checkLoginStatus(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData && snapshot.data == true) {
+            return const Home();
+          } else {
+            return LoginPage();
+          }
+        },
+      ),
       navigatorObservers: [routeObserver], // Set the observer
       // ---------------------Routes--------------------------
       routes: {
