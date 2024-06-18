@@ -44,6 +44,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   table_calendar: ^3.0.5 
   calendar_view: ^1.2.0
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
