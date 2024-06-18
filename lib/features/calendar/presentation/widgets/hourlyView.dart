@@ -22,6 +22,7 @@ class HourlyView extends StatelessWidget {
           startTime: event.start,
           endTime: event.end, // Ensure the end time is correctly set
           title: event.summary,
+          description: event.location,
         ),
       );
     });
@@ -70,20 +71,38 @@ class HourlyView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start of the column
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8), // Add padding to the top for spacing
-                    child: Text(
-                      DateFormat("HH:mm").format(events.first.startTime!), // Placeholder for the location or time
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    children: [
+                      Text(
+                        DateFormat("HH:mm").format(events.first.startTime!), // Placeholder for the location or time
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 15), // Add some space between the two texts
+                      Container(
+                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                          margin: const EdgeInsets.only(top: 2),
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 84, 111, 178),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            '${events.first.description?.split(" ").first}',
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                      ),
+                    ],
+
                   ),
                   const SizedBox(height: 4), // Add some space between the two texts
                   Text(
-                    events.first.title.substring(0, min(15, events.first.title.length)), // Display the title of the event
+                    EventModel.getFormattedTitle(events.first.title), // Display the title of the event
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
