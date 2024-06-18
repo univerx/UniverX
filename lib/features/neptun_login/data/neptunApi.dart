@@ -12,7 +12,6 @@ Future<bool?> checkLoginDetails(String url, String neptunCode, String password) 
 
   List<EventModel> newEvents = await fetchCalendar(url, neptunCode, password);
   if (newEvents.isEmpty) {
-    print("a");
     return false;
   }
 
@@ -40,15 +39,12 @@ Future<void> fetchAndUpdateApi() async {
       return true;
     }
     else{
-      print("b");
       return false;
     }
   });
-  print("c");
 }
 
 Future<List<EventModel>> fetchCalendar(String url, String neptunCode, String password) async {
-  print(url +" "+ neptunCode+" "+ password);
   final final_url = Uri.parse(url + "/GetCalendarData");
   final headers = {'Content-Type': 'application/json'};
   final body = jsonEncode({
