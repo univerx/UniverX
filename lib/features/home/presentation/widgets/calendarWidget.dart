@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/features/calendar/data/model/calendarModel.dart';
 
+import 'package:univerx/event_service.dart';
+
 
 class CalendarWidget extends StatelessWidget {
   final Future<EventModel?> currentEvent;
@@ -16,7 +18,7 @@ class CalendarWidget extends StatelessWidget {
     required this.percentagePassedForEvent,
     required this.homeContext,
   });
-
+  final eventService = EventService('');
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -49,7 +51,7 @@ class CalendarWidget extends StatelessWidget {
                               final event = snapshot.data;
                               if (event != null) {
                                 return Text(
-                                  '${event.summary.substring(0, 15)}',
+                                  EventModel.getFormattedTitle(event.summary),
                                   style: const TextStyle(
                                     fontSize: 20.0,
                                     color: Colors.white,
@@ -109,7 +111,7 @@ class CalendarWidget extends StatelessWidget {
                               final event = snapshot.data;
                               if (event != null) {
                                 return Text(
-                                  '→ ${event.summary.substring(0, 15)}',
+                                  '→ ${EventModel.getFormattedTitle(event.summary)}',
                                   style: TextStyle(
                                     fontSize: 14.0,
                                     color: Colors.white,
