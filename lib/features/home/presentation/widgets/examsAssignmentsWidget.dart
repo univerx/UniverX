@@ -68,7 +68,7 @@ class ExamsAssignmentsWidget extends StatelessWidget {
             SizedBox(width: 10),
             Expanded(
               child: Text(
-                name,
+                name.substring(0,10),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
