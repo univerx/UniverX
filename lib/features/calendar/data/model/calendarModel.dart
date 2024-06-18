@@ -124,4 +124,18 @@ class EventModel {
     
     return date.isAfter(dstStart) && date.isBefore(dstEnd);
   }
+  static String getFormattedTitle(String title) {
+    if (title.startsWith('[Óra]')) {
+        title = title.substring(title.indexOf(']') + 2, title.length);
+        var sv = title.split(" ");
+        title = sv[0] + " " + sv[1];
+    } 
+    else if (title.startsWith('[Vizsga]')) {
+        var sv = title.split(" ");
+        title = sv[0] + " " + sv[1] + " " +sv[2];
+    }
+
+    
+    return title;
+  }
 }
