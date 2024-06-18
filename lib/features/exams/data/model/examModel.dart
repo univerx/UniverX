@@ -26,7 +26,7 @@ class ExamModel {
   factory ExamModel.fromMapExam(Map<String, dynamic> map) {
     return ExamModel(
       id: -1,
-      name: map['summary'].toString().replaceAll("[Vizsga]", "").substring(0,10),
+      name: map['summary'].toString().replaceAll("[Vizsga]", ""),
       date: DateTime.parse(map['start']),
     );
   }
