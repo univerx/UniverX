@@ -1,4 +1,4 @@
-// ---------------------Flutter Packages--------------------------
+// home.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,6 +24,9 @@ import 'package:univerx/features/home/presentation/widgets/calendarWidget.dart';
 import 'package:univerx/features/home/presentation/widgets/examsAssignmentsWidget.dart';
 import 'package:univerx/features/home/presentation/widgets/notesWidget.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
+import 'package:univerx/features/home/presentation/widgets/horizontal_scrollable_menu.dart';
+
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -38,7 +41,6 @@ class _HomeState extends State<Home> with RouteAware {
   List<AssignmentModel> _assignments = [];
   List<Note> _notes = [];
 
-
   late Future<EventModel?> currentEvent;
   late Future<EventModel?> upcomingEvent;
 
@@ -46,6 +48,9 @@ class _HomeState extends State<Home> with RouteAware {
   late Future<double?> percentagePassedForEvent;
 
   final eventService = EventService('');
+
+  // Initialize selected menu item
+  String _selectedMenuItem = "Összes";
 
   @override
   void initState() {
@@ -81,7 +86,6 @@ class _HomeState extends State<Home> with RouteAware {
       _notes = notes;
     });
   }
-    
 
   // ---------------------POP Observer To Refresh The Page--------------------------
   @override
@@ -125,73 +129,81 @@ class _HomeState extends State<Home> with RouteAware {
     return await Future<void>.delayed(const Duration(seconds: 0, milliseconds: 500));
   }
 
+  void _onMenuItemSelected(String item) {
+    setState(() {
+      _selectedMenuItem = item;
+    });
+  }
+
   // ---------------------Home Page Builder--------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
-        // ---------------------Header--------------------------
-        endDrawer: const DrawerMenu(), //Profile_menu pop up
+      backgroundColor: const Color.fromARGB(255, 20, 18, 32),
+      // ---------------------Header--------------------------
+      endDrawer: const DrawerMenu(), //Profile_menu pop up
 
-        body: CustomMaterialIndicator(
-          onRefresh: _handleRefresh,
-          indicatorBuilder: (context, controller) {
-            return RefreshIcon();
-          },
+      body: CustomMaterialIndicator(
+        onRefresh: _handleRefresh,
+        indicatorBuilder: (context, controller) {
+          return RefreshIcon();
+        },
 
-          // ---------------------Body--------------------------
-          child: CustomScrollView(
-            slivers: <Widget>[
-              DefaultAppBar(
-                title: "UniX-PTE-TTK",
-                showBackButton: false,
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    // --------------------------- Classes and events ---------------------------
-                    CalendarWidget(
-                      currentEvent: currentEvent,
-                      upcomingEvent: upcomingEvent,
-                      timeLeftForEvent: timeLeftForEvent,
-                      percentagePassedForEvent: percentagePassedForEvent,
-                      homeContext: context,
-                    ),
+        // ---------------------Body--------------------------
+        child: CustomScrollView(
+          slivers: <Widget>[
+            DefaultAppBar(
+              title: "UniX-PTE-TTK",
+              showBackButton: false,
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  // --------------------------- Classes and events ---------------------------
+                  CalendarWidget(
+                    currentEvent: currentEvent,
+                    upcomingEvent: upcomingEvent,
+                    timeLeftForEvent: timeLeftForEvent,
+                    percentagePassedForEvent: percentagePassedForEvent,
+                    homeContext: context,
+                  ),
 
-                    const SizedBox(height: 30), // space between the calendar and the (upcoming exams and assignments)
-                    Row(
+                  const SizedBox(height: 10),
+                  // --------------------------- Horizontal menu ---------------------------
+                  HorizontalScrollableMenu(
+                    menuItems: ["Összes", "Zh-k", "Vizsgák", "Leckekönyv"],
+                    onItemSelected: _onMenuItemSelected,
+                    selectedItem: _selectedMenuItem,
+                  ),
+                  // --------------------------- Add the title below the menu ---------------------------
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(width: 5),
-                        // ---------------------------------- exams ---------------------------
-                        ExamsAssignmentsWidget(
-                          title: "Exams",
-                          exams: _exams,
-                          routeName: '/zh',
-                          homeContext: context,
+                        const Text(
+                          'Közelgő események',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        const SizedBox(width: 10),
-                        // ---------------------------------- assignments ---------------------------
-                        ExamsAssignmentsWidget(
-                          title: "Assignments",
-                          assignments: _assignments,
-                          routeName: '/assignments',
-                          homeContext: context,
+                        SizedBox(height: 2.0),
+                        Container(
+                          width: double.infinity,
+                          height: 1.0,
+                          color: Color.fromARGB(36, 255, 255, 255),
                         ),
-                        const SizedBox(width: 5),
                       ],
                     ),
-                    const SizedBox(height: 30),
-                    // ---------------------------------- notes ---------------------------
-                    NotesWidget(
-                      notes: _notes,
-                      homeContext: context,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }
