@@ -158,7 +158,7 @@ class _HomeState extends State<Home> with RouteAware {
                       homeContext: context,
                     ),
 
-                    const SizedBox(height: 10), // space between the calendar and the (upcoming exams and assignments)
+                    const SizedBox(height: 30), // space between the calendar and the (upcoming exams and assignments)
                     Row(
                       children: [
                         const SizedBox(width: 5),
@@ -180,7 +180,7 @@ class _HomeState extends State<Home> with RouteAware {
                         const SizedBox(width: 5),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 30),
                     // ---------------------------------- notes ---------------------------
                     NotesWidget(
                       notes: _notes,
