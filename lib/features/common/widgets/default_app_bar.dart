@@ -45,7 +45,8 @@ class DefaultAppBar extends StatelessWidget {
           )
         : null,
 
-      backgroundColor: Colors.black,
+      //backgroundColor: const Color.fromARGB(255, 20, 18, 32),
+      backgroundColor: Colors.transparent,
       elevation: 0,
       actions: [
         if (icsButton != null) icsButton!,
@@ -55,7 +56,7 @@ class DefaultAppBar extends StatelessWidget {
             Scaffold.of(context).openEndDrawer();
           },
           icon: const CircleAvatar(
-            backgroundColor: Color.fromARGB(255, 20, 21, 27),
+            backgroundColor: Color.fromARGB(255, 38, 51, 70),
             child: Text(
               "D",
               style: TextStyle(color: Colors.white, fontFamily: "sfpro"),
