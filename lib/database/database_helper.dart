@@ -112,13 +112,15 @@ class DatabaseHelper {
       where: 'exam = ?',
       whereArgs: [1], 
     );
-    print(eventResults);
     // Combine and return the list of exams and events
     List<ExamModel> exams = examResults.map((json) => ExamModel.fromMap(json)).toList();
     List<ExamModel> events = eventResults.map((json) => ExamModel.fromMapExam(json)).toList();
-    print(events);
+    //merge and sort by time
+    exams.addAll(events);
+    exams.sort((a, b) => a.date.compareTo(b.date));
+    
     // Assuming ExamModel has a way to distinguish between exams and events
-    return exams + events;
+    return exams;
   }
 
 
