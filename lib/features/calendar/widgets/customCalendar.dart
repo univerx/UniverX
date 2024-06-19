@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:univerx/features/calendar/data/model/calendarModel.dart';
+import 'package:univerx/models/class.dart';
 
 class CustomCalendar extends StatelessWidget {
   final DateTime focusedDay;
   final DateTime? selectedDay;
-  final ValueNotifier<List<EventModel>> selectedEvents;
+  final ValueNotifier<List<Class>> selectedEvents;
   final Function(DateTime selectedDay, DateTime focusedDay) onDaySelected;
   final Function(DateTime focusedDay) onPageChanged;
-  final List<EventModel> Function(DateTime day) eventLoader;
+  final List<Class> Function(DateTime day) eventLoader;
 
   CustomCalendar({
     required this.focusedDay,
@@ -21,7 +21,7 @@ class CustomCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TableCalendar<EventModel>(
+    return TableCalendar<Class>(
       availableGestures: AvailableGestures.none,//THIS SHOULD BE TEMPORARY
 
       firstDay: DateTime.utc(2020, 1, 1),

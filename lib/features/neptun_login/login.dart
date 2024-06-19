@@ -5,8 +5,8 @@ import 'package:univerx/features/common/widgets/profile_menu.dart';
 import 'package:univerx/database/database_helper.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:univerx/features/home/presentation/pages/homePage.dart';
-import 'package:univerx/features/neptun_login/data/neptunApi.dart';
+import 'package:univerx/features/home/homePage.dart';
+import 'package:univerx/services/neptun_API_fetching.dart';
 import 'package:univerx/features/common/widgets/box_3d.dart'; // Import the custom decorations
 
 class LoginPage extends StatefulWidget {

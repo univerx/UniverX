@@ -1,17 +1,19 @@
 // home.dart
+import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // ---------------------Self Defined Packages--------------------------
-import 'package:univerx/features/exams/data/model/examModel.dart';
-import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
-import 'package:univerx/features/notes/data/model/noteModel.dart';
-import 'package:univerx/features/calendar/data/model/calendarModel.dart';
-
 import 'package:univerx/database/database_helper.dart';
-import 'package:univerx/event_service.dart';
+import 'package:univerx/features/home/widgets/upcoming_container.dart';
+import 'package:univerx/services/neptun_ICS_fetching.dart';
 
 import 'package:univerx/main.dart';
+
+// ---------------------Models--------------------------
+import 'package:univerx/models/assignment.dart';
+import 'package:univerx/models/exam.dart';
+import 'package:univerx/models/class.dart';
 
 // ---------------------Other Packages--------------------------
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
@@ -20,13 +22,11 @@ import 'package:vibration/vibration.dart';
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
 import 'package:univerx/features/common/widgets/refresh_app_icon.dart';
-import 'package:univerx/features/home/presentation/widgets/calendarWidget.dart';
-import 'package:univerx/features/home/presentation/widgets/examsAssignmentsWidget.dart';
-import 'package:univerx/features/home/presentation/widgets/notesWidget.dart';
+import 'package:univerx/features/home/widgets/calendarWidget.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
-import 'package:univerx/features/home/presentation/widgets/horizontal_scrollable_menu.dart';
+import 'package:univerx/features/home/widgets/horizontal_scrollable_menu.dart';
 
-
+import 'package:intl/intl.dart'; // Add this package for date formatting
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -37,12 +37,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with RouteAware {
   // ---------------------Initialize Variables--------------------------
-  List<ExamModel> _exams = [];
-  List<AssignmentModel> _assignments = [];
-  List<Note> _notes = [];
+  List<Exam> _exams = [];
+  List<Assignment> _assignments = [];
 
-  late Future<EventModel?> currentEvent;
-  late Future<EventModel?> upcomingEvent;
+  late Future<Class?> currentEvent;
+  late Future<Class?> upcomingEvent;
 
   late Future<String?> timeLeftForEvent;
   late Future<double?> percentagePassedForEvent;
@@ -57,7 +56,6 @@ class _HomeState extends State<Home> with RouteAware {
     super.initState();
     _loadExams();
     _loadAssignments();
-    _loadNotes();
 
     currentEvent = eventService.getCurrentEvent();
     upcomingEvent = eventService.getUpcomingEvent();
@@ -77,13 +75,6 @@ class _HomeState extends State<Home> with RouteAware {
     final assignments = await DatabaseHelper.instance.getAssignments();
     setState(() {
       _assignments = assignments;
-    });
-  }
-
-  Future<void> _loadNotes() async {
-    final notes = await DatabaseHelper.instance.getNotes();
-    setState(() {
-      _notes = notes;
     });
   }
 
@@ -118,7 +109,6 @@ class _HomeState extends State<Home> with RouteAware {
 
     _loadExams();
     _loadAssignments();
-    _loadNotes();
 
     currentEvent = eventService.getCurrentEvent();
     upcomingEvent = eventService.getUpcomingEvent();
@@ -135,9 +125,32 @@ class _HomeState extends State<Home> with RouteAware {
     });
   }
 
+  // Group exams by date
+  Map<String, List<Exam>> _groupExamsByDate(List<Exam> exams) {
+    final Map<String, List<Exam>> groupedExams = {};
+
+    for (final exam in exams) {
+      final String date = DateFormat('yyyy MMM d').format(exam.startTime);
+
+      if (groupedExams.containsKey(date)) {
+        groupedExams[date]!.add(exam);
+      } else {
+        groupedExams[date] = [exam];
+      }
+    }
+
+    return groupedExams;
+  }
+
   // ---------------------Home Page Builder--------------------------
   @override
   Widget build(BuildContext context) {
+    final groupedExams = _groupExamsByDate(_exams);
+
+    // Sort the entries by date
+    final sortedEntries = groupedExams.entries.toList()
+      ..sort((a, b) => DateFormat('yyyy MMM d').parse(a.key).compareTo(DateFormat('yyyy MMM d').parse(b.key)));
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 20, 18, 32),
       // ---------------------Header--------------------------
@@ -175,6 +188,7 @@ class _HomeState extends State<Home> with RouteAware {
                     onItemSelected: _onMenuItemSelected,
                     selectedItem: _selectedMenuItem,
                   ),
+
                   // --------------------------- Add the title below the menu ---------------------------
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
@@ -198,6 +212,34 @@ class _HomeState extends State<Home> with RouteAware {
                       ],
                     ),
                   ),
+
+                  // --------------------------- Upcoming events ---------------------------
+                  ...sortedEntries.map((entry) {
+                    final String date = entry.key;
+                    final List<Exam> exams = entry.value;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30, top: 15),
+                          child: Text(
+                            date,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        ...exams.map((exam) => UpcomingContainer(
+                          homeContext: context,
+                          title: Exam.getFormattedTitle(exam.title),
+                          date: date,
+                        )),
+                      ],
+                    );
+                  }).toList(),
                 ],
               ),
             ),

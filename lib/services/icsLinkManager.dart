@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/database/database_helper.dart';
-import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.dart';
+import 'package:univerx/services/neptun_ICS_fetching.dart';
 
 class CustomImportButton extends StatelessWidget {
   // add _loadevents required
@@ -41,16 +41,17 @@ class CustomImportButton extends StatelessWidget {
               onPressed: () async {
                 // ezt itt szebben kene EEEEEEEEEEEEEEEEEEEEEDTSADKSHFDAHSFLSAJFLKASJFLKSAJFKLS
                 String icsLink = icsLinkController.text;
+                EventService eventService = EventService(icsLink);
                 if (icsLink == '') {
                   DatabaseHelper.instance.updateCalendarICS(icsLink);
-                  DatabaseHelper.instance.clearAllEvents();
+                  DatabaseHelper.instance.deleteNeptunClasses();
                 }
                 else if (result == null) {
                   DatabaseHelper.instance.saveCalendarICS(icsLink);
-                  await fetchAndUpdateEventsFromIcs(icsLink);
+                  await eventService.fetchAndUpdateIcs(icsLink);
                 } else{
                   DatabaseHelper.instance.updateCalendarICS(icsLink);
-                  await fetchAndUpdateEventsFromIcs(icsLink);
+                  await eventService.fetchAndUpdateIcs(icsLink);
                 }
                 Navigator.of(context).pop(); // Close the dialog
                 loadEvents();

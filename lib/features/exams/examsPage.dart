@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/exams/data/model/examModel.dart';
 import 'package:univerx/database/database_helper.dart';
+import 'package:univerx/models/exam.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
@@ -18,7 +18,7 @@ class Zh extends StatefulWidget {
 }
 
 class _ZhState extends State<Zh> {
-  List<ExamModel> _exams = [];
+  List<Exam> _exams = [];
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _ZhState extends State<Zh> {
   }
 
   void _addExam() async {
-    final exam = await showDialog<ExamModel>(
+    final exam = await showDialog<Exam>(
       context: context,
       builder: (BuildContext context) {
         String examName = '';
@@ -78,7 +78,15 @@ class _ZhState extends State<Zh> {
             TextButton(
               onPressed: () {
                 if (examName.isNotEmpty && examDate != null) {
-                  Navigator.pop(context, ExamModel(name: examName, date: examDate!));
+                  Navigator.pop(context, Exam(
+                    classId: -1, // ----------- TODO: Implement classId ----------------
+                    title: examName,
+                    description: "",
+                    startTime: examDate!,
+                    endTime: examDate!,
+                    location: "",
+                    isUserCreated: true
+                  ));
                 }
               },
               child: Text('Add'),
@@ -114,9 +122,9 @@ class _ZhState extends State<Zh> {
                   itemBuilder: (context, index) {
                     final exam = _exams[index];
                     return ListTile(
-                      title: Text(exam.name, style: TextStyle(color: Colors.white)),
+                      title: Text(exam.title, style: TextStyle(color: Colors.white)),
                       subtitle: Text(
-                        'Date: ${exam.date.toLocal().toString().substring(0, 10)}',
+                        'Date: ${exam.startTime.toLocal().toString().substring(0, 10)}',
                         style: TextStyle(color: Colors.white70),
                       ),
                       trailing: IconButton(

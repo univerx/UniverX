@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:univerx/features/exams/data/model/examModel.dart';
-import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
-import 'package:univerx/features/notes/data/model/noteModel.dart';
-import 'package:univerx/features/calendar/data/model/calendarModel.dart';
+import 'dart:async';
+
+//------------------ Models ------------------
+import 'package:univerx/models/instructor.dart';
+import 'package:univerx/models/class.dart';
+import 'package:univerx/models/exam.dart';
+import 'package:univerx/models/assignment.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -16,7 +18,7 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('database42.db');
+    _database = await _initDB('test_2.db');
     
     return _database!;
   }
@@ -32,44 +34,56 @@ class DatabaseHelper {
     );  
   }
 
-  Future _createDB(Database db, int version) async {
-    await db.execute('''      
-      CREATE TABLE exams(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        date TEXT NOT NULL
+  Future<void> _createDB(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE Instructor (
+        instructor_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        email TEXT,
+        phone_number TEXT
       )
     ''');
 
-    await db.execute('''      
-      CREATE TABLE assignments(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        date TEXT NOT NULL
-      )
-    ''');
-
-    await db.execute('''      
-      CREATE TABLE notes(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        content TEXT NOT NULL,
-        createdAt TEXT NOT NULL,
-        isFavorite BOOLEAN NOT NULL
-      )
-    ''');
-
-
-    await db.execute("""
-      CREATE TABLE events(
-        start TEXT,
-        end TEXT,
-        summary TEXT,
+    await db.execute('''
+      CREATE TABLE Class (
+        class_id INTEGER,
+        title TEXT,
+        description TEXT,
+        start_time TEXT,
+        end_time TEXT,
         location TEXT,
-        exam INTEGER
+        instructor_id INTEGER,
+        is_user_created BOOLEAN DEFAULT FALSE,
+        FOREIGN KEY (instructor_id) REFERENCES Instructor(instructor_id)
       )
-    """);
+    ''');
 
+    await db.execute('''
+      CREATE TABLE Exam (
+        exam_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        class_id INTEGER,
+        title TEXT,
+        description TEXT,
+        date TEXT,
+        start_time TEXT,
+        end_time TEXT,
+        location TEXT,
+        is_user_created BOOLEAN DEFAULT FALSE,
+        FOREIGN KEY (class_id) REFERENCES Class(class_id)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE Assignment (
+        assignment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        class_id INTEGER,
+        title TEXT,
+        description TEXT,
+        due_date TEXT,
+        is_user_created BOOLEAN DEFAULT FALSE,
+        FOREIGN KEY (class_id) REFERENCES Class(class_id)
+      )
+    ''');
     await db.execute('''
       CREATE TABLE calendarICS(
         url TEXT NOT NULL
@@ -84,174 +98,164 @@ class DatabaseHelper {
         password TEXT NOT NULL
       )
     ''');
-
   }
 
-  // ----------------------- Exam methods ------------------------
-  Future<void> insertExam(ExamModel exam) async {
-    final db = await instance.database;
-    await db.insert(
-      'exams',
+
+  // --------------------- Instructor CRUD operations --------------------------
+  Future<int> insertInstructor(Instructor instructor) async {
+    Database db = await database;
+    return await db.insert('Instructor', instructor.toMap());
+  }
+
+  Future<List<Instructor>> getInstructors() async {
+    Database db = await database;
+    List<Map<String, dynamic>> maps = await db.query('Instructor');
+    return List.generate(maps.length, (i) {
+      return Instructor.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> updateInstructor(Instructor instructor) async {
+    Database db = await database;
+    return await db.update(
+      'Instructor',
+      instructor.toMap(),
+      where: 'instructor_id = ?',
+      whereArgs: [instructor.id],
+    );
+  }
+
+  Future<int> deleteInstructors() async {
+    Database db = await database;
+    return await db.delete('Instructor');
+  }
+
+
+  // --------------------- Class CRUD operations --------------------------
+  Future<int> insertClass(Class classObj) async {
+    Database db = await database;
+    return await db.insert('Class', classObj.toMap());
+  }
+
+  Future<List<Class>> getClasses() async {
+    Database db = await database;
+    List<Map<String, dynamic>> maps = await db.query('Class');
+    return List.generate(maps.length, (i) {
+      return Class.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> updateClass(Class classObj) async {
+    Database db = await database;
+    return await db.update(
+      'Class',
+      classObj.toMap(),
+      where: 'class_id = ?',
+      whereArgs: [classObj.id],
+    );
+  }
+
+  Future<int> deleteClass(int id) async {
+    Database db = await database;
+    return await db.delete(
+      'Class',
+      where: 'class_id = ? AND is_user_created = 1', // Only delete user-created classes
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> deleteNeptunClasses() async {
+    Database db = await database;
+    return await db.delete(
+      'Class',
+      where: 'is_user_created = 0', // Only delete non user-created exams
+    );
+  }
+  
+
+  // --------------------- Exam CRUD operations --------------------------
+  Future<int> insertExam(Exam exam) async {
+    Database db = await database;
+    return await db.insert('Exam', exam.toMap());
+  }
+
+  Future<List<Exam>> getExams() async {
+    Database db = await database;
+    List<Map<String, dynamic>> maps = await db.query('Exam');
+    return List.generate(maps.length, (i) {
+      return Exam.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> updateExam(Exam exam) async {
+    Database db = await database;
+    return await db.update(
+      'Exam',
       exam.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<List<ExamModel>> getExams() async {
-    final db = await instance.database;
-    
-    // Query exams table
-    final examResults = await db.query(
-      'exams',
-      orderBy: 'date ASC',
-    );
-
-    // Query events table where exam is true
-    final eventResults = await db.query(
-      'events',
-      where: 'exam = ?',
-      whereArgs: [1], 
-    );
-    // Combine and return the list of exams and events
-    List<ExamModel> exams = examResults.map((json) => ExamModel.fromMap(json)).toList();
-    List<ExamModel> events = eventResults.map((json) => ExamModel.fromMapExam(json)).toList();
-    //merge and sort by time
-    exams.addAll(events);
-    exams.sort((a, b) => a.date.compareTo(b.date));
-    
-    // Assuming ExamModel has a way to distinguish between exams and events
-    return exams;
-  }
-
-
-  Future<void> updateExam(ExamModel exam) async {
-    final db = await instance.database;
-    await db.update(
-      'exams',
-      exam.toMap(),
-      where: 'id = ?',
+      where: 'exam_id = ?',
       whereArgs: [exam.id],
     );
   }
 
-  Future<void> deleteExam(int id) async {
-    final db = await instance.database;
-    await db.delete(
-      'exams',
-      where: 'id = ?',
+  Future<int> deleteExam(int id) async {
+    Database db = await database;
+    return await db.delete(
+      'Exam',
+      where: 'exam_id = ? AND is_user_created = 1', // Only delete user-created exams
       whereArgs: [id],
     );
   }
-  // ----------------------- Assignment methods ------------------------
-  Future<void> insertAssignment(AssignmentModel assignment) async {
-    final db = await instance.database;
-    await db.insert(
-      'assignments',
-      assignment.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+
+  Future<int> deleteNeptunExams() async {
+    Database db = await database;
+    return await db.delete(
+      'Exam',
+      where: 'is_user_created = 0', // Only delete non user-created exams
     );
   }
 
-  Future<List<AssignmentModel>> getAssignments() async {
-    final db = await instance.database;
-    final result = await db.query(
-      'assignments',
-      orderBy: 'date ASC', // Sort by date in ascending order
-    );
-    return result.map((json) => AssignmentModel.fromMap(json)).toList();
+  // --------------------- Assignment CRUD operations --------------------------
+  Future<int> insertAssignment(Assignment assignment) async {
+    Database db = await database;
+    return await db.insert('Assignment', assignment.toMap());
   }
 
-  Future<void> updateAssignment(AssignmentModel assignment) async {
-    final db = await instance.database;
-    await db.update(
-      'assignments',
+  Future<List<Assignment>> getAssignments() async {
+    Database db = await database;
+    List<Map<String, dynamic>> maps = await db.query('Assignment');
+    return List.generate(maps.length, (i) {
+      return Assignment.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> updateAssignment(Assignment assignment) async {
+    Database db = await database;
+    return await db.update(
+      'Assignment',
       assignment.toMap(),
-      where: 'id = ?',
+      where: 'assignment_id = ?',
       whereArgs: [assignment.id],
     );
   }
 
-  Future<void> deleteAssignment(int id) async {
-    final db = await instance.database;
-    await db.delete(
-      'assignments',
-      where: 'id = ?',
+  Future<int> deleteAssignment(int id) async {
+    Database db = await database;
+    return await db.delete(
+      'Assignment',
+      where: 'assignment_id = ? AND is_user_created = 1', // Only delete user-created assignments
       whereArgs: [id],
     );
   }
 
-  // ----------------------- notes methods ------------------------
-  Future<void> insertNote(Note note) async {
-    final db = await instance.database;
-    await db.insert(
-      'notes',
-      note.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+  Future<int> deleteNeptunAssignments() async {
+    Database db = await database;
+    return await db.delete(
+      'Assignment',
+      where: 'is_user_created = 0', // Only delete non user-created exams
     );
   }
 
-  Future<List<Note>> getNotes() async {
-    final db = await instance.database;
-    final result = await db.query(
-      'notes',
-      orderBy: 'isFavorite DESC', // Sorting by createdAt, descending
-    );
-    return result.map((json) => Note.fromMap(json)).toList();
-  }
-
-  Future<void> updateNote(Note note) async {
-    final db = await instance.database;
-    await db.update(
-      'notes',
-      note.toMap(),
-      where: 'id = ?',
-      whereArgs: [note.id],
-    );
-  }
-
-  Future<void> deleteNote(int id) async {
-    final db = await instance.database;
-    await db.delete(
-      'notes',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  // ----------------------- events methods ------------------------
-  Future<int> saveEvent(EventModel event) async {
-    var dbClient = await instance.database;
-    int res = await dbClient.insert("events", event.toMap());
-    return res;
-  }
-
-  Future<List<EventModel>> getAllEvents() async {
-    var dbClient = await instance.database;
-    var result = await dbClient.rawQuery('SELECT * FROM events');
-    List<EventModel> events = result.map((e) => EventModel.fromMap(e)).toList();
-    return events;
-  }
-
-  Future<int> updateEvent(EventModel event) async {
-    var dbClient = await instance.database;
-    return await dbClient.update("events", event.toMap(),
-        where: "start = ? AND end = ? AND summary = ?",
-        whereArgs: [event.start.toIso8601String(), event.end.toIso8601String(), event.summary]);
-  }
-
-  Future<int> deleteEvent(EventModel event) async {
-    var dbClient = await instance.database;
-    return await dbClient.delete("events",
-        where: "start = ? AND end = ? AND summary = ?",
-        whereArgs: [event.start.toIso8601String(), event.end.toIso8601String(), event.summary]);
-  }
-
-  Future<void> clearAllEvents() async {
-    var dbClient = await instance.database;
-    await dbClient.delete("events");
-
-  }
-
+  
   // ----------------------- calendarICS methods ------------------------
   Future<int> saveCalendarICS(String url) async {
     var dbClient = await instance.database;
@@ -301,5 +305,4 @@ class DatabaseHelper {
     var dbClient = await instance.database;
     return await dbClient.delete("NeptunLogin");
   }
-
 }

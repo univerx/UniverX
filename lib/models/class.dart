@@ -1,69 +1,74 @@
 import 'package:intl/intl.dart';
 
-
-class EventModel {
-  final DateTime start;
-  final DateTime end;
-  final String summary;
+class Class {
+  final int id;
+  final String title;
+  final String description;
+  final DateTime startTime;
+  final DateTime endTime;
   final String location;
-  final bool exam; 
+  final int instructorId;
+  final bool isUserCreated;
 
-  EventModel({
-    required this.start,
-    required this.end,
-    required this.summary,
-    required this.location,
-    required this.exam,
-  });
+  Class({required this.id, required this.title, required this.description, required this.startTime, required this.endTime, required this.location, required this.instructorId, required this.isUserCreated});
 
-
+  // Convert a Class into a Map.
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
-      'start': start.toIso8601String(),
-      'end': end.toIso8601String(),
-      'summary': summary,
+    return {
+      'class_id': id,
+      'title': title,
+      'description': description,
+      'start_time': startTime.toIso8601String(),
+      'end_time': endTime.toIso8601String(),
       'location': location,
-      'exam': exam? 1 : 0,
+      'instructor_id': instructorId,
+      'is_user_created': isUserCreated ? 1 : 0,
     };
-    return map;
   }
 
-  factory EventModel.fromMap(Map<String, dynamic> map) {
-    return EventModel(
-      start: DateTime.parse(map['start']),
-      end: DateTime.parse(map['end']),
-      summary: map['summary'],
+  // Convert a Map into a Class.
+  factory Class.fromMap(Map<String, dynamic> map) {
+    return Class(
+      id: map['class_id'],
+      title: map['title'],
+      description: map['description'],
+      startTime: DateTime.parse(map['start_time']),
+      endTime: DateTime.parse(map['end_time']),
       location: map['location'],
-      exam: map['exam'] == 1,
+      instructorId: map['instructor_id'],
+      isUserCreated: map['is_user_created'] == 1,
     );
   }
 
-
-  factory EventModel.fromICS(String icsData) {
+  // ------------------ Helper functions ------------------
+  factory Class.fromICS(String icsData) {
     final lines = icsData.split('\n');
-    DateTime? start;
-    DateTime? end;
-    String? summary;
+    DateTime? startTime;
+    DateTime? endTime;
+    String? title;
     String? location;
 
     for (final line in lines) {
       if (line.startsWith('DTSTART')) {
-        start = _parseDate(line.split(':')[1]);
+        startTime = _parseDate(line.split(':')[1]);
       } else if (line.startsWith('DTEND')) {
-        end = _parseDate(line.split(':')[1]);
+        endTime = _parseDate(line.split(':')[1]);
       } else if (line.startsWith('SUMMARY')) {
-        summary = line.split(':')[1];
+        title = line.split(':')[1];
       } else if (line.startsWith('LOCATION')) {
         location = line.split(':')[1];
       }
     }
 
-    return EventModel(
-      start: start!,
-      end: end!,
-      summary: summary!,
+    return Class(
+      id: -1,
+      title: title!,
+      description: "",
+      startTime: startTime!,
+      endTime: endTime!,
       location: location!,
-      exam: false,
+      instructorId: -1,
+      isUserCreated: false,
     );
   }
 
@@ -83,7 +88,7 @@ class EventModel {
     }
   }
 
-  static DateTime parseApi(String date) {
+  static DateTime parseApiTime(String date) {
     // Use a regular expression to extract the timestamp
     RegExp regExp = RegExp(r'/Date\((\d+)\)/');
     Match? match = regExp.firstMatch(date);

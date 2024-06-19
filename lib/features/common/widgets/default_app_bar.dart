@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/home/presentation/pages/homePage.dart';
+import 'package:univerx/features/home/homePage.dart';
 
 class DefaultAppBar extends StatelessWidget {
   final String title;

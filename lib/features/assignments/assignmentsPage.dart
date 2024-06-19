@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/assignments/data/model/assignmentModel.dart';
+import 'package:univerx/models/assignment.dart';
 import 'package:univerx/database/database_helper.dart';
 
 // ---------------------Widgets--------------------------
@@ -14,7 +14,7 @@ class Assignments extends StatefulWidget {
 }
 
 class _AssignmentsState extends State<Assignments> {
-  List<AssignmentModel> _assignments = [];
+  List<Assignment> _assignments = [];
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _AssignmentsState extends State<Assignments> {
   }
 
   void _addAssignment() async {
-    final assignment = await showDialog<AssignmentModel>(
+    final assignment = await showDialog<Assignment>(
       context: context,
       builder: (BuildContext context) {
         String assignmentName = '';
@@ -74,7 +74,13 @@ class _AssignmentsState extends State<Assignments> {
             TextButton(
               onPressed: () {
                 if (assignmentName.isNotEmpty && assignmentDate != null) {
-                  Navigator.pop(context, AssignmentModel(name: assignmentName, date: assignmentDate!));
+                  Navigator.pop(context, Assignment(
+                    classId: -1, //--------------------TODO: Implement classId------------------------------
+                    title: assignmentName,
+                    description: "",
+                    dueDate: assignmentDate!,
+                    isUserCreated: true,
+                  ));
                 }
               },
               child: Text('Add'),
@@ -110,9 +116,9 @@ class _AssignmentsState extends State<Assignments> {
                   itemBuilder: (context, index) {
                     final assignment = _assignments[index];
                     return ListTile(
-                      title: Text(assignment.name, style: TextStyle(color: Colors.white)),
+                      title: Text(assignment.title, style: TextStyle(color: Colors.white)),
                       subtitle: Text(
-                        'Date: ${assignment.date.toLocal().toString().substring(0, 10)}',
+                        'Date: ${assignment.dueDate.toLocal().toString().substring(0, 10)}',
                         style: TextStyle(color: Colors.white70),
                       ),
                       trailing: IconButton(

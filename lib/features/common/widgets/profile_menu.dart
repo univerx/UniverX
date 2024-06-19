@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/neptun_login/presentation/pages/login.dart';
-import 'package:univerx/features/settings/presentation/pages/settingsPage.dart';
+import 'package:univerx/features/neptun_login/login.dart';
+import 'package:univerx/features/settings/settingsPage.dart';
 import 'package:univerx/features/neptun_login/data/logout.dart';
 import 'package:univerx/database/database_helper.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import for launching URLs

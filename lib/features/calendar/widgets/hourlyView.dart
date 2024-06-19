@@ -2,10 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:intl/intl.dart';
-import 'package:univerx/features/calendar/data/model/calendarModel.dart'; // Adjust this import based on your project structure
+import 'package:univerx/models/class.dart';
 
 class HourlyView extends StatelessWidget {
-  final List<EventModel> events;
+  final List<Class> events;
   final DateTime initialDate;
 
   HourlyView({required this.events, required this.initialDate});
@@ -18,21 +18,21 @@ class HourlyView extends StatelessWidget {
     events.forEach((event) {
       eventController.add(
         CalendarEventData(
-          date: event.start,
-          startTime: event.start,
-          endTime: event.end, // Ensure the end time is correctly set
-          title: event.summary,
+          date: event.startTime,
+          startTime: event.startTime,
+          endTime: event.endTime, // Ensure the end time is correctly set
+          title: event.title,
           description: event.location,
         ),
       );
     });
 
-    int calculatedStartHour = (events.isNotEmpty && events.first.start.hour - 1 > 0)
-        ? events.first.start.hour - 1
+    int calculatedStartHour = (events.isNotEmpty && events.first.startTime.hour - 1 > 0)
+        ? events.first.startTime.hour - 1
         : 0;
 
-    int calculatedEndHour = (events.isNotEmpty && events.last.end.hour + 1 < 24)
-        ? events.last.end.hour + 1
+    int calculatedEndHour = (events.isNotEmpty && events.last.endTime.hour + 1 < 24)
+        ? events.last.endTime.hour + 1
         : 24;
 
     return ScrollConfiguration(
@@ -102,7 +102,7 @@ class HourlyView extends StatelessWidget {
                   ),
                   const SizedBox(height: 4), // Add some space between the two texts
                   Text(
-                    EventModel.getFormattedTitle(events.first.title), // Display the title of the event
+                    Class.getFormattedTitle(events.first.title), // Display the title of the event
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:univerx/features/home/presentation/pages/homePage.dart';
 import 'package:univerx/database/database_helper.dart';
-import 'package:univerx/features/calendar/data/model/calendarModel.dart';
-import 'package:univerx/event_service.dart'; // Assuming you have a model for assignments
-import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.dart'; // Assuming you have a model for assignments
+import 'package:univerx/models/class.dart';
+
 
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -12,10 +9,10 @@ import 'package:calendar_view/calendar_view.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
-import 'package:univerx/features/calendar/presentation/widgets/icsLinkManager.dart';
+import 'package:univerx/services/icsLinkManager.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
-import 'package:univerx/features/calendar/presentation/widgets/customCalendar.dart';
-import 'package:univerx/features/calendar/presentation/widgets/hourlyView.dart';
+import 'package:univerx/features/calendar/widgets/customCalendar.dart';
+import 'package:univerx/features/calendar/widgets/hourlyView.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -25,10 +22,10 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<Calendar> {
-  late final ValueNotifier<List<EventModel>> _selectedEvents;
+  late final ValueNotifier<List<Class>> _selectedEvents;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  List<EventModel> _allEvents = [];
+  List<Class> _allEvents = [];
   DateTime initialDate = DateTime.now();
 
   @override
@@ -49,33 +46,37 @@ class _CalendarPageState extends State<Calendar> {
   }
 
   Future<void> _loadEvents() async {
-    _allEvents = await DatabaseHelper.instance.getAllEvents();
+    _allEvents = await DatabaseHelper.instance.getClasses();
 
     setState(() {
       _selectedEvents.value = _getEventsForDay(_selectedDay!);
     });
   }
 
-  List<EventModel> _changeDateForInitialBUG(List<EventModel> events) {
-  List<EventModel> newEvents = [];
+  List<Class> _changeDateForInitialBUG(List<Class> events) {
+  List<Class> newEvents = [];
   DateTime now = DateTime.now();
-  for (EventModel event in events) {
-    DateTime newStart = DateTime(now.year, now.month, now.day, event.start.hour, event.start.minute);
-    DateTime newEnd = DateTime(now.year, now.month, now.day, event.end.hour, event.end.minute);
-    newEvents.add(EventModel(
-      summary: event.summary,
-      start: newStart,
-      end: newEnd,
+  for (Class event in events) {
+    DateTime newStart = DateTime(now.year, now.month, now.day, event.startTime.hour, event.startTime.minute);
+    DateTime newEnd = DateTime(now.year, now.month, now.day, event.endTime.hour, event.endTime.minute);
+    newEvents.add(Class(
+      id:event.id,
+      title: event.title,
+      description: "",
+      startTime: newStart,
+      endTime: newEnd,
       location: event.location,
-      exam: event.exam,
+      instructorId: -1,
+      //exam: event.exam,
+      isUserCreated: false
     ));
   }
   return newEvents;
 }
 
 
-  List<EventModel> _getEventsForDay(DateTime day) {
-    return _allEvents.where((event) => isSameDay(event.start, day)).toList();
+  List<Class> _getEventsForDay(DateTime day) {
+    return _allEvents.where((event) => isSameDay(event.startTime, day)).toList();
   }
 
   void _goToToday() {
@@ -110,12 +111,12 @@ class _CalendarPageState extends State<Calendar> {
                   selectedEvents: _selectedEvents,
                   onDaySelected: (selectedDay, focusedDay) {
                     if (!isSameDay(_selectedDay, selectedDay)) {
-                      List<EventModel> __selectedEvents = _getEventsForDay(selectedDay);
+                      List<Class> __selectedEvents = _getEventsForDay(selectedDay);
                       setState(() {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
 
-                        initialDate = __selectedEvents.isNotEmpty ? __selectedEvents.first.start : DateTime.now();
+                        initialDate = __selectedEvents.isNotEmpty ? __selectedEvents.first.startTime : DateTime.now();
                         _selectedEvents.value = _changeDateForInitialBUG(__selectedEvents);
                       });
                     }
@@ -130,7 +131,7 @@ class _CalendarPageState extends State<Calendar> {
 
                 // -----------------------SELECTED EVENTS-----------------------
 
-                ValueListenableBuilder<List<EventModel>>(
+                ValueListenableBuilder<List<Class>>(
                   valueListenable: _selectedEvents,
                   builder: (context, value, _) {
                     return Container(

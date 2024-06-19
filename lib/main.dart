@@ -5,16 +5,15 @@ import 'dart:io'; // Needed to detect platform
 
 
 // ---------------------Self Defined Packages--------------------------
-import 'package:univerx/features/home/presentation/pages/homePage.dart';
-import 'package:univerx/features/calendar/presentation/pages/calendarPage.dart';
-import 'package:univerx/features/exams/presentation/pages/examsPage.dart';
-import 'package:univerx/features/assignments/presentation/pages/assignmentsPage.dart';
-import 'package:univerx/features/notes/presentation/pages/notesPage.dart';
-import 'package:univerx/features/neptun_login/presentation/pages/login.dart';
-import 'package:univerx/features/neptun_login/data/neptunApi.dart';
+import 'package:univerx/features/home/homePage.dart';
+import 'package:univerx/features/calendar/calendarPage.dart';
+import 'package:univerx/features/exams/examsPage.dart';
+import 'package:univerx/features/assignments/assignmentsPage.dart';
+import 'package:univerx/features/neptun_login/login.dart';
+import 'package:univerx/services/neptun_API_fetching.dart';
 
 import 'package:univerx/database/database_helper.dart';
-import 'package:univerx/features/calendar/data/datasources/fetchAndUpdateEvents.dart';
+import 'package:univerx/services/neptun_ICS_fetching.dart';
 
 // ---------------------Other Packages--------------------------
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -103,7 +102,6 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const Home(),
         '/zh': (context) => const Zh(),
         '/assignments': (context) => const Assignments(),
-        '/notes': (context) => const Notes(),
         '/events': (context) => const Calendar(),
       },
       onGenerateRoute: (settings) {

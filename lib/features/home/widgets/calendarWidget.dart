@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/calendar/data/model/calendarModel.dart';
-import 'package:univerx/event_service.dart';
+import 'package:univerx/services/neptun_ICS_fetching.dart';
 import 'package:univerx/features/common/widgets/box_3d.dart';
+import 'package:univerx/models/class.dart';
 
 class CalendarWidget extends StatelessWidget {
-  final Future<EventModel?> currentEvent;
-  final Future<EventModel?> upcomingEvent;
+  final Future<Class?> currentEvent;
+  final Future<Class?> upcomingEvent;
   final Future<String?> timeLeftForEvent;
   final Future<double?> percentagePassedForEvent;
   final BuildContext homeContext;
@@ -46,7 +46,7 @@ class CalendarWidget extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          FutureBuilder<EventModel?>(
+                          FutureBuilder<Class?>(
                             future: currentEvent,
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
@@ -55,7 +55,7 @@ class CalendarWidget extends StatelessWidget {
                                 final event = snapshot.data;
                                 if (event != null) {
                                   return Text(
-                                    EventModel.getFormattedTitle(event.summary),
+                                    Class.getFormattedTitle(event.title),
                                     style: const TextStyle(
                                       fontSize: 20.0,
                                       color: Colors.white,
@@ -77,7 +77,7 @@ class CalendarWidget extends StatelessWidget {
                               color: const Color.fromARGB(255, 20, 18, 32),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: FutureBuilder<EventModel?>(
+                            child: FutureBuilder<Class?>(
                               future: currentEvent,
                               builder: (context, snapshot) {
                                 if (snapshot.hasError) {
@@ -106,7 +106,7 @@ class CalendarWidget extends StatelessWidget {
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          FutureBuilder<EventModel?>(
+                          FutureBuilder<Class?>(
                             future: upcomingEvent,
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
@@ -115,7 +115,7 @@ class CalendarWidget extends StatelessWidget {
                                 final event = snapshot.data;
                                 if (event != null) {
                                   return Text(
-                                    '→ ${EventModel.getFormattedTitle(event.summary)}',
+                                    '→ ${Class.getFormattedTitle(event.title)}',
                                     style: TextStyle(
                                       fontSize: 14.0,
                                       color: Colors.white,
@@ -137,7 +137,7 @@ class CalendarWidget extends StatelessWidget {
                               color: const Color.fromARGB(255, 20, 18, 32),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: FutureBuilder<EventModel?>(
+                            child: FutureBuilder<Class?>(
                               future: upcomingEvent,
                               builder: (context, snapshot) {
                                 if (snapshot.hasError) {
