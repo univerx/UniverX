@@ -1,0 +1,109 @@
+{
+  "buildCommand" : {
+    "command" : "prepareForIndexing",
+    "enableIndexBuildArena" : false,
+    "targets" : null
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd429da425bb6d6d5d8dbb95e4afffb82217"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd42312b4bc59bbbe2c06c205bf4da6737f5"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd42483832d3c820398e9d40e1a6904b03fe"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd42d41ce0bf2141365ff0288286787936d9"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd42583f48d08e567205bb589ccf43c23e63"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd4222a19f6c224a402387a233be75a6e268"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd4261233620df33996cccf430ed75b4a999"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd4230037b09fee48cfce1f8562d753688c8"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd427ea64ee8d53085bf9edd1a57aaf8cbb5"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd423786431ce548989b846bbf1a7384f58e"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd4294b6f514aa32ee4cfdd7fc11c1ff5321"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd42903e66fa03d6d27edaa18126a82c20fd"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd4291b3b8cc56823cdea4b418e009a423b2"
+    },
+    {
+      "guid" : "8699adb1dd336b26511df848a716bd42e89b0c2b50c07920aa58b86e182619bc"
+    },
+    {
+      "guid" : "18c1723432283e0cc55f10a6dcfd9e0288a783a885d8b0b3beb2e9f90bde3f49"
+    },
+    {
+      "guid" : "18c1723432283e0cc55f10a6dcfd9e02b835f5f63276aec8d000a1f39e912778"
+    }
+  ],
+  "containerPath" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/Runner.xcworkspace",
+  "continueBuildingAfterErrors" : true,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "undefined_arch",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : true,
+      "platform" : "iphoneos",
+      "sdk" : "iphoneos18.0",
+      "sdkVariant" : "iphoneos",
+      "supportedArchitectures" : [
+        "armv4t",
+        "armv5",
+        "armv6",
+        "armv7",
+        "armv7f",
+        "armv7s",
+        "armv7k",
+        "arm64",
+        "arm64e"
+      ],
+      "targetArchitecture" : "undefined_arch"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "",
+      "buildProductsPath" : "",
+      "derivedDataPath" : "/Users/benceszilagyi/Library/Developer/Xcode/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/benceszilagyi/Library/Developer/Xcode/DerivedData/Runner-agpoaqaopzjzpvfcclpagpwiecfo/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/benceszilagyi/Library/Developer/Xcode/DerivedData/Runner-agpoaqaopzjzpvfcclpagpwiecfo/Index.noindex/PrecompiledHeaders",
+      "pchPath" : ""
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "NO"
+        }
+      }
+    }
+  },
+  "qos" : "default",
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : true,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

@@ -1,0 +1,18 @@
+{
+  "" : {
+    "diagnostics" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/vibration-master.dia",
+    "emit-module-dependencies" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/vibration-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/vibration-master-emit-module.dia",
+    "swift-dependencies" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/vibration-master.swiftdeps"
+  },
+  "/Users/benceszilagyi/.pub-cache/hosted/pub.dev/vibration-1.9.0/ios/Classes/VibrationPluginSwift.swift" : {
+    "const-values" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/VibrationPluginSwift.swiftconstvalues",
+    "dependencies" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/VibrationPluginSwift.d",
+    "diagnostics" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/VibrationPluginSwift.dia",
+    "index-unit-output-path" : "/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/VibrationPluginSwift.o",
+    "llvm-bc" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/VibrationPluginSwift.bc",
+    "object" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/VibrationPluginSwift.o",
+    "swift-dependencies" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/VibrationPluginSwift.swiftdeps",
+    "swiftmodule" : "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/vibration.build/Objects-normal/arm64/VibrationPluginSwift~partial.swiftmodule"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Debug-iphoneos/url_launcher_ios/url_launcher_ios.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/url_launcher_ios.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Debug-iphoneos/url_launcher_ios/url_launcher_ios.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "url_launcher_ios-Swift.h",
+      'external-contents': "/Users/benceszilagyi/Development/IOS Apps/UniverX/ios/build/Pods.build/Debug-iphoneos/url_launcher_ios.build/unextended-interface-header.h",
+    }]
+    }]
+}

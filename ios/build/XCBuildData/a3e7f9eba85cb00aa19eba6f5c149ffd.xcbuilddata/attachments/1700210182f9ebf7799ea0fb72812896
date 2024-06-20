@@ -1,0 +1,10 @@
+framework module vibration {
+  umbrella header "vibration-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module vibration.__Swift {
+  exclude header "vibration-Swift.h"
+}
