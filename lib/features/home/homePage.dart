@@ -1,4 +1,3 @@
-// home.dart
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -116,7 +115,7 @@ class _HomeState extends State<Home> with RouteAware {
     timeLeftForEvent = eventService.timeLeftForCurrentEvent();
     percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
 
-    return await Future<void>.delayed(const Duration(seconds: 0, milliseconds: 500));
+    return await Future<void>.delayed(const Duration(milliseconds: 500));
   }
 
   void _onMenuItemSelected(String item) {
@@ -125,32 +124,107 @@ class _HomeState extends State<Home> with RouteAware {
     });
   }
 
-  // Group exams by date
-  Map<String, List<Exam>> _groupExamsByDate(List<Exam> exams) {
-    final Map<String, List<Exam>> groupedExams = {};
+  // Group exams and assignments by date
+  Map<String, List<Widget>> _groupEventsByDate(List<Exam> exams, List<Assignment> assignments) {
+    final Map<String, List<Widget>> groupedEvents = {};
 
     for (final exam in exams) {
       final String date = DateFormat('yyyy MMM d').format(exam.startTime);
-
-      if (groupedExams.containsKey(date)) {
-        groupedExams[date]!.add(exam);
+      if (groupedEvents.containsKey(date)) {
+        groupedEvents[date]!.add(UpcomingContainer(
+          homeContext: context,
+          title: Exam.getFormattedTitle(exam.title),
+          date: date,
+          isExam: true, // Pass true if it's an exam
+        ));
       } else {
-        groupedExams[date] = [exam];
+        groupedEvents[date] = [
+          UpcomingContainer(
+            homeContext: context,
+            title: Exam.getFormattedTitle(exam.title),
+            date: date,
+            isExam: true, // Pass true if it's an exam
+          )
+        ];
       }
     }
 
-    return groupedExams;
+    for (final assignment in assignments) {
+      final String date = DateFormat('yyyy MMM d').format(assignment.dueDate);
+      if (groupedEvents.containsKey(date)) {
+        groupedEvents[date]!.add(UpcomingContainer(
+          homeContext: context,
+          title: assignment.title,
+          date: date,
+          isExam: false, // Pass false if it's an assignment
+        ));
+      } else {
+        groupedEvents[date] = [
+          UpcomingContainer(
+            homeContext: context,
+            title: assignment.title,
+            date: date,
+            isExam: false, // Pass false if it's an assignment
+          )
+        ];
+      }
+    }
+
+    return groupedEvents;
+  }
+
+  // Filter events based on the selected menu item
+  List<Widget> _buildUpcomingEvents() {
+    List<Exam> filteredExams;
+    List<Assignment> filteredAssignments;
+
+    if (_selectedMenuItem == "Összes") {
+      filteredExams = _exams;
+      filteredAssignments = _assignments;
+    } else if (_selectedMenuItem == "Zh-k") {
+      filteredExams = [];
+      filteredAssignments = _assignments;
+    } else if (_selectedMenuItem == "Vizsgák") {
+      filteredExams = _exams;
+      filteredAssignments = [];
+    } else {
+      filteredExams = [];
+      filteredAssignments = [];
+    }
+
+    final groupedEvents = _groupEventsByDate(filteredExams, filteredAssignments);
+
+    // Sort the entries by date
+    final sortedEntries = groupedEvents.entries.toList()
+      ..sort((a, b) => DateFormat('yyyy MMM d').parse(a.key).compareTo(DateFormat('yyyy MMM d').parse(b.key)));
+
+    return sortedEntries.map((entry) {
+      final String date = entry.key;
+      final List<Widget> events = entry.value;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30, top: 15),
+            child: Text(
+              date,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ...events,
+        ],
+      );
+    }).toList();
   }
 
   // ---------------------Home Page Builder--------------------------
   @override
   Widget build(BuildContext context) {
-    final groupedExams = _groupExamsByDate(_exams);
-
-    // Sort the entries by date
-    final sortedEntries = groupedExams.entries.toList()
-      ..sort((a, b) => DateFormat('yyyy MMM d').parse(a.key).compareTo(DateFormat('yyyy MMM d').parse(b.key)));
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 20, 18, 32),
       // ---------------------Header--------------------------
@@ -184,7 +258,7 @@ class _HomeState extends State<Home> with RouteAware {
                   const SizedBox(height: 10),
                   // --------------------------- Horizontal menu ---------------------------
                   HorizontalScrollableMenu(
-                    menuItems: ["Összes", "Zh-k", "Vizsgák", "Leckekönyv"],
+                    menuItems: ["Összes", "Zh-k", "Vizsgák"],
                     onItemSelected: _onMenuItemSelected,
                     selectedItem: _selectedMenuItem,
                   ),
@@ -214,32 +288,7 @@ class _HomeState extends State<Home> with RouteAware {
                   ),
 
                   // --------------------------- Upcoming events ---------------------------
-                  ...sortedEntries.map((entry) {
-                    final String date = entry.key;
-                    final List<Exam> exams = entry.value;
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30, top: 15),
-                          child: Text(
-                            date,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        ...exams.map((exam) => UpcomingContainer(
-                          homeContext: context,
-                          title: Exam.getFormattedTitle(exam.title),
-                          date: date,
-                        )),
-                      ],
-                    );
-                  }).toList(),
+                  ..._buildUpcomingEvents(),
                 ],
               ),
             ),
