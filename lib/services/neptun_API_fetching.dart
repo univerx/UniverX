@@ -20,6 +20,7 @@ Future<bool?> checkLoginDetails(String url, String neptunCode, String password) 
 
   ParsedData parsed = await fetchCalendar(url, neptunCode, password);
   List<Class> newEvents = parsed.events;
+  List<Exam> newExams = parsed.exams;
 
   if (newEvents.isEmpty) {
     return false;
@@ -29,6 +30,10 @@ Future<bool?> checkLoginDetails(String url, String neptunCode, String password) 
 
   for (Class newEvent in newEvents) {
     await dbHelper.insertClass(newEvent);
+  }
+  await dbHelper.deleteNeptunExams();
+  for (Exam newExam in newExams) {
+    await dbHelper.insertExam(newExam);
   }
   return true;
 }
