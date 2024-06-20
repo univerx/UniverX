@@ -1,17 +1,17 @@
-// lib/widgets/calendar_widget.dart
-
 import 'package:flutter/material.dart';
 import 'package:univerx/features/common/widgets/box_3d.dart';
 
 class UpcomingContainer extends StatelessWidget {
   final BuildContext homeContext;
   final String title;
-  final String date; // Add a date parameter
+  final String date;
+  final bool isExam; // Add a parameter to indicate if it's an exam
 
   UpcomingContainer({
     required this.homeContext,
     required this.title,
     required this.date,
+    required this.isExam, // Initialize the new parameter
   });
 
   @override
@@ -37,18 +37,23 @@ class UpcomingContainer extends StatelessWidget {
                   ),
                   padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0), // Adjust this value to change the border width
                   alignment: Alignment.centerLeft,
-
-                  
-
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        isExam ? Icons.assignment_rounded : Icons.shopping_bag, // Choose icon based on the event type
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  
                 ),
               ),
             ),
