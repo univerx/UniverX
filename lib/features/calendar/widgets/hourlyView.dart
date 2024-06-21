@@ -38,7 +38,6 @@ class HourlyView extends StatelessWidget {
     return ScrollConfiguration(
       behavior: NoScrollBehavior(),
       child: Container(
-        color: Colors.black, // Set the background color to black
         child: DayView(
           controller: eventController,
           eventTileBuilder: (date, events, boundary, start, end) {
@@ -113,7 +112,8 @@ class HourlyView extends StatelessWidget {
               ),
             );
           },
-          backgroundColor: Colors.black,
+          backgroundColor: const Color.fromARGB(255, 20, 18, 32),
+
           showVerticalLine: true,
           showLiveTimeLineInAllDays: true,
           minDay: DateTime(1990),
@@ -127,7 +127,6 @@ class HourlyView extends StatelessWidget {
           keepScrollOffset: true,
           timeLineBuilder: (date) {
             return Container(
-              color: Colors.black,
               child: Center(
                 child: Text(
                   DateFormat('HH:mm').format(date),

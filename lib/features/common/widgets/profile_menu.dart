@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:univerx/features/assignments/assignmentsPage.dart';
+import 'package:univerx/features/exams/examsPage.dart';
 import 'package:univerx/features/neptun_login/login.dart';
 import 'package:univerx/features/settings/settingsPage.dart';
 import 'package:univerx/features/neptun_login/data/logout.dart';
 import 'package:univerx/database/database_helper.dart';
+import 'package:univerx/models/assignment.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import for launching URLs
 
 class DrawerMenu extends StatelessWidget {
@@ -83,6 +86,22 @@ class DrawerMenu extends StatelessWidget {
                 )),
             onTap: () {
               Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.shopping_bag, color: Colors.white),
+            title: const Text('Assignments',
+                style: TextStyle(
+                  letterSpacing: 2,
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontFamily: "sfpro",
+                )),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Assignments()),
+              );
             },
           ),
           ListTile(

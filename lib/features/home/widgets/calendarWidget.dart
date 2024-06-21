@@ -164,7 +164,6 @@ class CalendarWidget extends StatelessWidget {
                           ),
                         ],
                       ),
-                      //const SizedBox(height: 0),
                       FutureBuilder<String?>(
                         future: timeLeftForEvent,
                         builder: (context, snapshot) {
@@ -199,11 +198,8 @@ class CalendarWidget extends StatelessWidget {
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
-                          } else {
-                            var percentagePassed = snapshot.data;
-                            if (percentagePassed == null) {
-                              percentagePassed = 0;
-                            }
+                          } else if (snapshot.hasData && snapshot.data != null && snapshot.data! > 0) {
+                            var percentagePassed = snapshot.data!;
                             return SizedBox(
                               height: 10,
                               child: LinearProgressIndicator(
@@ -213,6 +209,8 @@ class CalendarWidget extends StatelessWidget {
                                 value: percentagePassed,
                               ),
                             );
+                          } else {
+                            return Container(); // Return an empty container if there's no current event
                           }
                         },
                       ),

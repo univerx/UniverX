@@ -90,6 +90,8 @@ class _CalendarPageState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 20, 18, 32),
+
       body: CustomScrollView(
         slivers: <Widget>[
           DefaultAppBar(
