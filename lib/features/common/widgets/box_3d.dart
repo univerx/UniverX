@@ -15,6 +15,7 @@ BoxDecoration Box3D() {
       stops: [0.0, 0.84, 1.0],
     ),
     boxShadow: [
+      
       BoxShadow(
         color: Color(0xFF2B3445).withOpacity(0.5),
         offset: Offset(0, -20),

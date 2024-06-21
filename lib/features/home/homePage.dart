@@ -24,6 +24,7 @@ import 'package:univerx/features/common/widgets/refresh_app_icon.dart';
 import 'package:univerx/features/home/widgets/calendarWidget.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
 import 'package:univerx/features/home/widgets/horizontal_scrollable_menu.dart';
+import 'package:univerx/features/common/widgets/custom_bottom_navigation_bar.dart';
 
 import 'package:intl/intl.dart'; // Add this package for date formatting
 
@@ -124,49 +125,53 @@ class _HomeState extends State<Home> with RouteAware {
     });
   }
 
-  // Group exams and assignments by date
   Map<String, List<Widget>> _groupEventsByDate(List<Exam> exams, List<Assignment> assignments) {
     final Map<String, List<Widget>> groupedEvents = {};
+    final now = DateTime(2024, 4, 30, 11, 30);
 
     for (final exam in exams) {
-      final String date = DateFormat('yyyy MMM d').format(exam.startTime);
-      if (groupedEvents.containsKey(date)) {
-        groupedEvents[date]!.add(UpcomingContainer(
-          homeContext: context,
-          title: Exam.getFormattedTitle(exam.title),
-          date: date,
-          isExam: true, // Pass true if it's an exam
-        ));
-      } else {
-        groupedEvents[date] = [
-          UpcomingContainer(
+      if (exam.startTime.isAfter(now) || exam.startTime.isAtSameMomentAs(now)) {
+        final String date = DateFormat('yyyy MMM d').format(exam.startTime);
+        if (groupedEvents.containsKey(date)) {
+          groupedEvents[date]!.add(UpcomingContainer(
             homeContext: context,
             title: Exam.getFormattedTitle(exam.title),
             date: date,
             isExam: true, // Pass true if it's an exam
-          )
-        ];
+          ));
+        } else {
+          groupedEvents[date] = [
+            UpcomingContainer(
+              homeContext: context,
+              title: Exam.getFormattedTitle(exam.title),
+              date: date,
+              isExam: true, // Pass true if it's an exam
+            )
+          ];
+        }
       }
     }
 
     for (final assignment in assignments) {
-      final String date = DateFormat('yyyy MMM d').format(assignment.dueDate);
-      if (groupedEvents.containsKey(date)) {
-        groupedEvents[date]!.add(UpcomingContainer(
-          homeContext: context,
-          title: assignment.title,
-          date: date,
-          isExam: false, // Pass false if it's an assignment
-        ));
-      } else {
-        groupedEvents[date] = [
-          UpcomingContainer(
+      if (assignment.dueDate.isAfter(now) || assignment.dueDate.isAtSameMomentAs(now)) {
+        final String date = DateFormat('yyyy MMM d').format(assignment.dueDate);
+        if (groupedEvents.containsKey(date)) {
+          groupedEvents[date]!.add(UpcomingContainer(
             homeContext: context,
             title: assignment.title,
             date: date,
             isExam: false, // Pass false if it's an assignment
-          )
-        ];
+          ));
+        } else {
+          groupedEvents[date] = [
+            UpcomingContainer(
+              homeContext: context,
+              title: assignment.title,
+              date: date,
+              isExam: false, // Pass false if it's an assignment
+            )
+          ];
+        }
       }
     }
 
@@ -295,6 +300,7 @@ class _HomeState extends State<Home> with RouteAware {
           ],
         ),
       ),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 }

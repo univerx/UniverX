@@ -35,7 +35,7 @@ class DrawerMenu extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 30.0), // Space between top and text
+          const SizedBox(height: 60.0), // Space between top and text
           FutureBuilder<String>(
             future: _getUsername(),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -194,7 +194,7 @@ class DrawerMenu extends StatelessWidget {
                 ),
                 SizedBox(height: 10.0),
                 Text(
-                  'v0.2.5 alpha',
+                  'v0.2.7 alpha',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.0,
