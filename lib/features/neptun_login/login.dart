@@ -20,6 +20,8 @@ class _LoginPageState extends State<LoginPage> {
   List<dynamic> universities = [];
   String? selectedUniversity;
   String? selectedUniversityUrl;
+  bool loginEnabled = true;
+  bool loggingIn = false;
 
   @override
   void initState() {
@@ -149,27 +151,29 @@ class _LoginPageState extends State<LoginPage> {
                       color: Color.fromARGB(255, 38, 51, 70),
                     ),
                     child: ElevatedButton(
-                      onPressed: () async {
+                      onPressed: loginEnabled ? () async {
+                        setState(() {
+                          loginEnabled = false;
+                          loggingIn = true;
+                        });
+
                         final neptunCode = neptunController.text;
                         final password = passwordController.text;
-                    
+
                         if (selectedUniversityUrl != null && neptunCode.isNotEmpty && password.isNotEmpty) {
-                          if(await checkLoginDetails(selectedUniversityUrl!, neptunCode, password) == true){
+                          if (await checkLoginDetails(selectedUniversityUrl!, neptunCode, password) == true) {
                             await DatabaseHelper.instance.saveNeptunLogin(
                               selectedUniversity!,
                               selectedUniversityUrl!,
                               neptunCode,
                               password,
                             );
-                            //exit this page and load homepage
                             // Navigate to the home page
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => const Home()), // Ensure Home is correctly imported
                             );
-                    
-                          }
-                          else {
+                          } else {
                             print('Wrong details');
                             _showWrongPasswordPopup();
                           }
@@ -177,7 +181,12 @@ class _LoginPageState extends State<LoginPage> {
                           print('Missing details');
                           _showWrongPasswordPopup();
                         }
-                      },
+
+                        setState(() {
+                          loginEnabled = true;
+                          loggingIn = false;
+                        });
+                      } : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -186,13 +195,22 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         elevation: 0, // Remove button shadow
                       ),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                      ),
+                      child: loggingIn
+                          ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              'Login',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
+                              ),
+                            ),
                     ),
                   ),
                 ),
