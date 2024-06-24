@@ -40,7 +40,7 @@ class UpcomingContainer extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        isExam ? Icons.assignment_rounded : Icons.shopping_bag, // Choose icon based on the event type
+                        isExam ? Icons.school_rounded : Icons.assignment_rounded, // Choose icon based on the event type
                         color: Colors.white,
                       ),
                       const SizedBox(width: 10),
