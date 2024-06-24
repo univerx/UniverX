@@ -8,7 +8,7 @@ import 'dart:io'; // Needed to detect platform
 import 'package:univerx/features/home/homePage.dart';
 import 'package:univerx/features/calendar/calendarPage.dart';
 import 'package:univerx/features/exams/examsPage.dart';
-import 'package:univerx/features/assignments/assignmentsPage.dart';
+import 'package:univerx/features/appointment/appointmentPage.dart';
 import 'package:univerx/features/neptun_login/login.dart';
 import 'package:univerx/services/neptun_API_fetching.dart';
 
@@ -101,7 +101,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const Home(),
         '/zh': (context) => const Zh(),
-        '/assignments': (context) => const Assignments(),
+        '/assignments': (context) => const Appointment(),
         '/events': (context) => const Calendar(),
       },
       onGenerateRoute: (settings) {
