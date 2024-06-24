@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 //----------------------- pages ----------------------
-import 'package:univerx/features/assignments/assignmentsPage.dart';
+import 'package:univerx/features/appointment/appointmentPage.dart';
 import 'package:univerx/features/common/widgets/box_3d.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -39,7 +39,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   void _navigateToAssignments() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Assignments()),
+      MaterialPageRoute(builder: (context) => const Appointment()),
     );
   }
 
@@ -82,7 +82,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             _buildBottomNavigationBarItem(Icons.home, 'Home'),
-            _buildBottomNavigationBarItem(Icons.shopping_bag, 'Assignments'),
+            _buildBottomNavigationBarItem(Icons.manage_search, 'Appointment'),
             _buildBottomNavigationBarItem(Icons.note, 'Nothing'),
           ],
           currentIndex: _selectedIndex,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/assignments/assignmentsPage.dart';
+import 'package:univerx/features/appointment/appointmentPage.dart';
 import 'package:univerx/features/exams/examsPage.dart';
 import 'package:univerx/features/neptun_login/login.dart';
 import 'package:univerx/features/settings/settingsPage.dart';
@@ -100,7 +100,7 @@ class DrawerMenu extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Assignments()),
+                MaterialPageRoute(builder: (context) => const Appointment()),
               );
             },
           ),
