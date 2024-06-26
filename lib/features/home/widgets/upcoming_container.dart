@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:univerx/features/calendar/calendarPage.dart';
 import 'package:univerx/features/common/widgets/box_3d.dart';
 
 class UpcomingContainer extends StatelessWidget {
@@ -24,7 +26,7 @@ class UpcomingContainer extends StatelessWidget {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
-              onTap: () => Navigator.pushNamed(homeContext, '/events'),
+              onTap: () => Navigator.push(homeContext, MaterialPageRoute(builder: (context) => Calendar(focusedDay: DateFormat("yyyy MMM dd").parse(date)))),
               child: Container(
                 margin: EdgeInsets.only(left: 10, right: 10, top: 10), // Added top margin here
                 height: 52,
