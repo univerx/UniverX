@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:univerx/models/class.dart';
 
 class Assignment {
   final int? id;
@@ -36,5 +37,18 @@ class Assignment {
   String getFormattedDate() {
     final DateFormat formatter = DateFormat('MMM d');
     return formatter.format(dueDate);
+  }
+
+  Class convertAssignmentToClass() {
+    return Class(
+      id: classId,
+      title: title,
+      description: description,
+      startTime: dueDate,
+      endTime: dueDate.add(Duration(hours: 1)), // Assuming 1 hour duration for assignment due date
+      location: '',
+      instructorId: -1, // Or provide an appropriate value if available
+      isUserCreated: isUserCreated,
+    );
   }
 }

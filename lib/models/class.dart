@@ -139,8 +139,6 @@ class Class {
         var sv = title.split(" ");
         title = sv[0] + " " + sv[1] + " " +sv[2];
     }
-
-    
     return title;
   }
 }

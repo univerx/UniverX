@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:univerx/models/class.dart';
 
 class Exam {
   final int? id;
@@ -57,5 +58,17 @@ class Exam {
 
     
     return title;
+  }
+  Class convertExamToClass() {
+    return Class(
+      id: classId,
+      title: title,
+      description: description,
+      startTime: startTime,
+      endTime: endTime,
+      location: location,
+      instructorId: -1, // Or provide an appropriate value if available
+      isUserCreated: isUserCreated,
+    );
   }
 }
