@@ -26,7 +26,7 @@ class HourlyView extends StatelessWidget {
         ),
       );
     });
-
+    
     int calculatedStartHour = (events.isNotEmpty && events.first.startTime.hour - 1 > 0)
         ? events.first.startTime.hour - 1
         : 0;
@@ -34,7 +34,6 @@ class HourlyView extends StatelessWidget {
     int calculatedEndHour = (events.isNotEmpty && events.last.endTime.hour + 1 < 24)
         ? events.last.endTime.hour + 1
         : 24;
-
     return ScrollConfiguration(
       behavior: NoScrollBehavior(),
       child: Container(
