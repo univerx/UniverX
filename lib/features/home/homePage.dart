@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 // ---------------------Self Defined Packages--------------------------
 import 'package:univerx/database/database_helper.dart';
+import 'package:univerx/features/appointment/appointmentPage.dart';
 import 'package:univerx/features/home/widgets/upcoming_container.dart';
 import 'package:univerx/services/neptun_ICS_fetching.dart';
 
@@ -300,7 +301,27 @@ class _HomeState extends State<Home> with RouteAware {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      bottomNavigationBar: Builder(
+        builder: (context) {
+          return CustomBottomNavigationBar(
+            button1: () async {
+              // Handle navigation to Home
+              print('Navigating to Home');
+            },
+            button2: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Appointment()),
+              );
+            },
+            button3: () {
+              // Open drawer menu
+              Scaffold.of(context).openEndDrawer();
+              print('Navigating to Menu');
+            },
+          );
+        },
+      ),
     );
   }
 }
