@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/database/database_helper.dart';
+import 'package:univerx/models/assignment.dart';
 import 'package:univerx/models/class.dart';
 
 
@@ -9,13 +10,19 @@ import 'package:calendar_view/calendar_view.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
+import 'package:univerx/models/exam.dart';
 import 'package:univerx/services/icsLinkManager.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
 import 'package:univerx/features/calendar/widgets/customCalendar.dart';
 import 'package:univerx/features/calendar/widgets/hourlyView.dart';
 
 class Calendar extends StatefulWidget {
-  const Calendar({super.key});
+  final DateTime? focusedDay;
+
+  const Calendar({
+    Key? key,
+    this.focusedDay,
+  }) : super(key: key);
 
   @override
   _CalendarPageState createState() => _CalendarPageState();
@@ -23,20 +30,23 @@ class Calendar extends StatefulWidget {
 
 class _CalendarPageState extends State<Calendar> {
   late final ValueNotifier<List<Class>> _selectedEvents;
-  DateTime _focusedDay = DateTime.now();
+  late DateTime _focusedDay;
   DateTime? _selectedDay;
   List<Class> _allEvents = [];
-  DateTime initialDate = DateTime.now();
+  late DateTime initialDate;
 
   @override
   void initState() {
     super.initState();
 
-    _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
-    
     // Load events
     _loadEvents();
+    
+    // Set _focusedDay to the provided focusedDay or default to DateTime.now()
+    _focusedDay = DateTime.now();
+    _selectedDay = _focusedDay;
+    initialDate = DateTime.now();
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
 
   @override
@@ -46,33 +56,59 @@ class _CalendarPageState extends State<Calendar> {
   }
 
   Future<void> _loadEvents() async {
-    _allEvents = await DatabaseHelper.instance.getClasses();
+  // Fetch classes, exams, and assignments concurrently
+  final classesFuture = DatabaseHelper.instance.getClasses();
+  final examsFuture = DatabaseHelper.instance.getExams();
+  final assignmentsFuture = DatabaseHelper.instance.getAssignments();
 
-    setState(() {
-      _selectedEvents.value = _getEventsForDay(_selectedDay!);
-    });
+  // Wait for all futures to complete
+  final results = await Future.wait([classesFuture, examsFuture, assignmentsFuture]);
+
+  // Extract the results
+  final classes = results[0] as List<Class>;
+  final exams = results[1] as List<Exam>;
+  final assignments = results[2] as List<Assignment>;
+
+  // Convert exams and assignments to classes and combine all events into _allEvents
+  _allEvents = [
+    ...classes,
+    ...exams.map((exam) => exam.convertExamToClass()),
+    ...assignments.map((assignment) => assignment.convertAssignmentToClass()),
+  ];
+  for (Class event in _allEvents) {
+    print(event.title);
+    print(event.startTime);
+    print(event.endTime);
+    print(event.location);
+    print("-----------------");
   }
+  
+  setState(() {
+    _selectedEvents.value = _getEventsForDay(_selectedDay!);
+  });
+}
+
 
   List<Class> _changeDateForInitialBUG(List<Class> events) {
-  List<Class> newEvents = [];
-  DateTime now = DateTime.now();
-  for (Class event in events) {
-    DateTime newStart = DateTime(now.year, now.month, now.day, event.startTime.hour, event.startTime.minute);
-    DateTime newEnd = DateTime(now.year, now.month, now.day, event.endTime.hour, event.endTime.minute);
-    newEvents.add(Class(
-      id:event.id,
-      title: event.title,
-      description: "",
-      startTime: newStart,
-      endTime: newEnd,
-      location: event.location,
-      instructorId: -1,
-      //exam: event.exam,
-      isUserCreated: false
-    ));
+    List<Class> newEvents = [];
+    DateTime now = DateTime.now();
+    for (Class event in events) {
+      DateTime newStart = DateTime(now.year, now.month, now.day, event.startTime.hour, event.startTime.minute);
+      DateTime newEnd = DateTime(now.year, now.month, now.day, event.endTime.hour, event.endTime.minute);
+      newEvents.add(Class(
+        id:event.id,
+        title: event.title,
+        description: "",
+        startTime: newStart,
+        endTime: newEnd,
+        location: event.location,
+        instructorId: -1,
+        //exam: event.exam,
+        isUserCreated: false
+      ));
+    }
+    return newEvents;
   }
-  return newEvents;
-}
 
 
   List<Class> _getEventsForDay(DateTime day) {
