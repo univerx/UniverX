@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-//----------------------- pages ----------------------
 import 'package:univerx/features/appointment/appointmentPage.dart';
 import 'package:univerx/features/common/widgets/box_3d.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar({Key? key}) : super(key: key);
+  final VoidCallback button1;
+  final VoidCallback button2;
+  final VoidCallback button3;
+
+  const CustomBottomNavigationBar({
+    Key? key,
+    required this.button1,
+    required this.button2,
+    required this.button3,
+  }) : super(key: key);
 
   @override
   _CustomBottomNavigationBarState createState() => _CustomBottomNavigationBarState();
@@ -20,34 +28,16 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
     switch (index) {
       case 0:
-        _navigateToHome();
+        widget.button1();
         break;
       case 1:
-        _navigateToAssignments();
+        widget.button2();
         break;
       case 2:
-        _navigateToNotes();
+        widget.button3();
         break;
     }
   }
-
-  void _navigateToHome() {
-    // Handle navigation to Home
-    print('Navigating to Home');
-  }
-
-  void _navigateToAssignments() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Appointment()),
-    );
-  }
-
-  void _navigateToNotes() {
-    // Handle navigation to Notes
-    print('Navigating to Notes');
-  }
-
 
   BottomNavigationBarItem _buildBottomNavigationBarItem(
       IconData iconData, String label) {
@@ -70,37 +60,26 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.0),
-          width: double.infinity,
-          height: 1.0,
-          color: Color.fromARGB(36, 255, 255, 255),
-        ),
-        BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            _buildBottomNavigationBarItem(Icons.home, 'Home'),
-            _buildBottomNavigationBarItem(Icons.manage_search, 'Appointment'),
-            _buildBottomNavigationBarItem(Icons.note, 'Nothing'),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white,
-          backgroundColor: const Color.fromARGB(255, 20, 18, 32),
-          selectedLabelStyle: const TextStyle(
-            fontFamily: 'sfpro',
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelStyle: const TextStyle(
-            fontFamily: 'sfpro',
-            fontWeight: FontWeight.bold,
-          ),
-          onTap: _onItemTapped,
-          type: BottomNavigationBarType.fixed,
-        ),
+    return BottomNavigationBar(
+      items: <BottomNavigationBarItem>[
+        _buildBottomNavigationBarItem(Icons.home, 'Home'),
+        _buildBottomNavigationBarItem(Icons.manage_search, 'Appointment'),
+        _buildBottomNavigationBarItem(Icons.menu, 'Menu'),
       ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 20, 18, 32),
+      selectedLabelStyle: const TextStyle(
+        fontFamily: 'sfpro',
+        fontWeight: FontWeight.bold,
+      ),
+      unselectedLabelStyle: const TextStyle(
+        fontFamily: 'sfpro',
+        fontWeight: FontWeight.bold,
+      ),
+      onTap: _onItemTapped,
+      type: BottomNavigationBarType.fixed,
     );
   }
 }
