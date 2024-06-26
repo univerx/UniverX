@@ -399,6 +399,8 @@ class _AssignmentsState extends State<Appointment> {
                               selectedTime.minute,
                             );
                             startDateTimeController.text = DateFormat('yyyy-MM-dd – kk:mm').format(startTime!);
+                            endDateTimeController.text = ''; // Reset end date time controller
+                            endTime = null; // Reset end time
                           });
                         }
                       }
@@ -422,28 +424,41 @@ class _AssignmentsState extends State<Appointment> {
                       ),
                     ),
                     onTap: () async {
+                      if (startTime == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Please set the start date and time first.')),
+                        );
+                        return;
+                      }
                       final selectedDate = await showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2100),
+                        initialDate: startTime!,
+                        firstDate: startTime!,
+                        lastDate: DateTime(startTime!.year, startTime!.month, startTime!.day),
                       );
                       if (selectedDate != null) {
                         final selectedTime = await showTimePicker(
                           context: context,
-                          initialTime: TimeOfDay.now(),
+                          initialTime: TimeOfDay.fromDateTime(startTime!),
                         );
                         if (selectedTime != null) {
-                          setState(() {
-                            endTime = DateTime(
-                              selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                              selectedTime.hour,
-                              selectedTime.minute,
+                          final selectedDateTime = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            selectedTime.hour,
+                            selectedTime.minute,
+                          );
+                          if (selectedDateTime.isAfter(startTime!)) {
+                            setState(() {
+                              endTime = selectedDateTime;
+                              endDateTimeController.text = DateFormat('yyyy-MM-dd – kk:mm').format(endTime!);
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('End time must be after start time.')),
                             );
-                            endDateTimeController.text = DateFormat('yyyy-MM-dd – kk:mm').format(endTime!);
-                          });
+                          }
                         }
                       }
                     },
@@ -508,6 +523,7 @@ class _AssignmentsState extends State<Appointment> {
       _loadData(); // Refresh the list of exams
     }
   }
+
 
 
   @override
