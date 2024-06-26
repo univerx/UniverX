@@ -219,13 +219,13 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          Positioned(
+          const Positioned(
             bottom: 16.0,
             left: 0,
             right: 0,
-            child: const Center(
+            child: Center(
               child: Text(
-                'v0.3.0 beta',
+                'v0.3.1 beta',
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 12.0,
