@@ -104,6 +104,7 @@ class DrawerMenu extends StatelessWidget {
               );
             },
           ),
+          /*
           ListTile(
             leading: const Icon(Icons.settings, color: Colors.white),
             title: const Text('Settings',
@@ -121,6 +122,7 @@ class DrawerMenu extends StatelessWidget {
               );
             },
           ),
+          */
           ListTile(
             leading: const Icon(Icons.logout, color: Color.fromARGB(255, 175, 38, 38)),
             title: const Text('Logout',
@@ -194,7 +196,7 @@ class DrawerMenu extends StatelessWidget {
                 ),
                 SizedBox(height: 10.0),
                 const Text(
-                  'v0.3.0 beta',
+                  'v0.3.1 beta',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.0,
