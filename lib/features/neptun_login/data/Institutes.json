@@ -235,7 +235,7 @@
         "Name": "Neumann János Egyetem",
         "NeptunMobileServiceVersion": 0,
         "OMCode": "FI96377",
-        "Url": null
+        "Url": "https://neptun.nje.hu/hallgato/MobileService.svc"
     },
     {
         "Languages": "HU,EN,DE",
