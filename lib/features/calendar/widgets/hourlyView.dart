@@ -27,13 +27,26 @@ class HourlyView extends StatelessWidget {
       );
     });
     
-    int calculatedStartHour = (events.isNotEmpty && events.first.startTime.hour - 1 > 0)
-        ? events.first.startTime.hour - 1
+    int calculatedStartHour = (events.isNotEmpty && events.first.startTime.hour - 1 > 0)// felesleges
+        ? events.first.startTime.hour -1
         : 0;
 
     int calculatedEndHour = (events.isNotEmpty && events.last.endTime.hour + 1 < 24)
         ? events.last.endTime.hour + 1
         : 24;
+    //if event contains an event less than 1 hour 30 minutes, set heightPerMinute to 2.1, else 0.7
+    double heightPerMinute = 0.7;
+    for (Class event in events) {
+      if (event.endTime.difference(event.startTime).inMinutes < 90) {
+        heightPerMinute = 1.4;
+      }
+    }
+    for (Class event in events) {
+      if (event.endTime.difference(event.startTime).inMinutes < 60) {
+        heightPerMinute = 2.1;
+      }
+    }
+    
     return ScrollConfiguration(
       behavior: NoScrollBehavior(),
       child: Container(
@@ -118,7 +131,7 @@ class HourlyView extends StatelessWidget {
           minDay: DateTime(1990),
           maxDay: DateTime(2050),
           initialDay: initialDate,
-          heightPerMinute: 0.7,
+          heightPerMinute: heightPerMinute,
           eventArranger: SideEventArranger(),
           startHour: calculatedStartHour, // Adjust the start hour as needed
           endHour: calculatedEndHour,  // Adjust the end hour as needed
