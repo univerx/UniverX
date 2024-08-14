@@ -1,6 +1,7 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sqflite/sqflite.dart';
 
 // ---------------------Self Defined Packages--------------------------
 import 'package:univerx/database/database_helper.dart';
@@ -140,7 +141,9 @@ class _HomeState extends State<Home> with RouteAware {
             homeContext: context,
             title: Exam.getFormattedTitle(exam.title),
             date: date,
-            isExam: true, // Pass true if it's an exam
+            isExam: true,
+            onDelete: () => _deleteExam(exam),
+            onEdit: () => _editExam(exam),
           ));
         } else {
           groupedEvents[date] = [
@@ -148,7 +151,9 @@ class _HomeState extends State<Home> with RouteAware {
               homeContext: context,
               title: Exam.getFormattedTitle(exam.title),
               date: date,
-              isExam: true, // Pass true if it's an exam
+              isExam: true,
+              onDelete: () => _deleteExam(exam),
+              onEdit: () => _editExam(exam),
             )
           ];
         }
@@ -163,7 +168,9 @@ class _HomeState extends State<Home> with RouteAware {
             homeContext: context,
             title: assignment.title,
             date: date,
-            isExam: false, // Pass false if it's an assignment
+            isExam: false,
+            onDelete: () => _deleteAssignment(assignment),
+            onEdit: () => _editAssignment(assignment),
           ));
         } else {
           groupedEvents[date] = [
@@ -171,7 +178,9 @@ class _HomeState extends State<Home> with RouteAware {
               homeContext: context,
               title: assignment.title,
               date: date,
-              isExam: false, // Pass false if it's an assignment
+              isExam: false,
+              onDelete: () => _deleteAssignment(assignment),
+              onEdit: () => _editAssignment(assignment),
             )
           ];
         }
@@ -180,6 +189,31 @@ class _HomeState extends State<Home> with RouteAware {
 
     return groupedEvents;
   }
+
+  void _deleteExam(Exam exam) {
+    setState(() {
+      _exams.remove(exam);
+    });
+    print(exam.id);
+    DatabaseHelper.instance.deleteExam(exam.id!);
+
+  }
+
+  void _editExam(Exam exam) {
+    // Implement edit functionality here
+  }
+
+  void _deleteAssignment(Assignment assignment) {
+    setState(() {
+      _assignments.remove(assignment);
+    });
+    DatabaseHelper.instance.deleteAssignment(assignment.id!);
+  }
+
+  void _editAssignment(Assignment assignment) {
+    // Implement edit functionality here
+  }
+
 
   // Filter events based on the selected menu item
   List<Widget> _buildUpcomingEvents() {
