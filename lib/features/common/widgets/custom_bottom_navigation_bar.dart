@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/appointment/appointmentPage.dart';
+import 'package:univerx/features/appointment/OLD_appointmentPage.dart';
 import 'package:univerx/features/common/widgets/box_3d.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -63,7 +63,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     return BottomNavigationBar(
       items: <BottomNavigationBarItem>[
         _buildBottomNavigationBarItem(Icons.home, 'Home'),
-        _buildBottomNavigationBarItem(Icons.manage_search, 'Appointment'),
+        _buildBottomNavigationBarItem(Icons.add, 'New'),
         _buildBottomNavigationBarItem(Icons.menu, 'Menu'),
       ],
       currentIndex: _selectedIndex,

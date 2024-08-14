@@ -5,7 +5,8 @@ import 'package:univerx/models/class.dart';
 
 class EventService {
   final String url;
-  final now = DateTime(2024, 4, 30, 11, 30);
+  //final now = DateTime(2024, 4, 30, 11, 30);
+  final now = DateTime.now();
   EventService(this.url);
 
   Future<void> fetchAndUpdateIcs(String filePath) async {
@@ -75,7 +76,9 @@ class EventService {
   Future<Class?> getUpcomingEvent() async {
     final events = await DatabaseHelper.instance.getClasses();
     // final now = DateTime.now();
+    print(now);
     for (final event in events) {
+      print(event.startTime);
       if (event.startTime.isAfter(now)) {
         return event;
       }

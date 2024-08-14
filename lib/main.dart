@@ -8,7 +8,7 @@ import 'dart:io'; // Needed to detect platform
 import 'package:univerx/features/home/homePage.dart';
 import 'package:univerx/features/calendar/calendarPage.dart';
 import 'package:univerx/features/exams/examsPage.dart';
-import 'package:univerx/features/appointment/appointmentPage.dart';
+import 'package:univerx/features/appointment/OLD_appointmentPage.dart';
 import 'package:univerx/features/neptun_login/login.dart';
 import 'package:univerx/services/neptun_API_fetching.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 // ---------------------Self Defined Packages--------------------------
 import 'package:univerx/database/database_helper.dart';
-import 'package:univerx/features/appointment/appointmentPage.dart';
+import 'package:univerx/features/appointment/OLD_appointmentPage.dart';
 import 'package:univerx/features/home/widgets/upcoming_container.dart';
 import 'package:univerx/services/neptun_ICS_fetching.dart';
 
@@ -26,6 +26,8 @@ import 'package:univerx/features/home/widgets/calendarWidget.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
 import 'package:univerx/features/home/widgets/horizontal_scrollable_menu.dart';
 import 'package:univerx/features/common/widgets/custom_bottom_navigation_bar.dart';
+
+import 'package:univerx/features/appointment/appointmentManager.dart';
 
 import 'package:intl/intl.dart'; // Add this package for date formatting
 
@@ -188,11 +190,11 @@ class _HomeState extends State<Home> with RouteAware {
       filteredExams = _exams;
       filteredAssignments = _assignments;
     } else if (_selectedMenuItem == "Zh-k") {
-      filteredExams = [];
-      filteredAssignments = _assignments;
-    } else if (_selectedMenuItem == "Vizsgák") {
       filteredExams = _exams;
       filteredAssignments = [];
+    } else if (_selectedMenuItem == "Beadandók") {
+      filteredExams = [];
+      filteredAssignments = _assignments;
     } else {
       filteredExams = [];
       filteredAssignments = [];
@@ -264,7 +266,7 @@ class _HomeState extends State<Home> with RouteAware {
                   const SizedBox(height: 10),
                   // --------------------------- Horizontal menu ---------------------------
                   HorizontalScrollableMenu(
-                    menuItems: ["Összes", "Zh-k", "Vizsgák"],
+                    menuItems: ["Összes", "Zh-k", "Beadandók"],
                     onItemSelected: _onMenuItemSelected,
                     selectedItem: _selectedMenuItem,
                   ),
@@ -309,10 +311,8 @@ class _HomeState extends State<Home> with RouteAware {
               print('Navigating to Home');
             },
             button2: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Appointment()),
-              );
+              addAssignmentOrExam(context);
+              _handleRefresh();
             },
             button3: () {
               // Open drawer menu

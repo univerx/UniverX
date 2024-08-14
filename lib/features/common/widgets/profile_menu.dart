@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:univerx/features/appointment/appointmentPage.dart';
+import 'package:univerx/features/appointment/OLD_appointmentPage.dart';
 import 'package:univerx/features/exams/examsPage.dart';
 import 'package:univerx/features/neptun_login/login.dart';
 import 'package:univerx/features/settings/settingsPage.dart';
@@ -196,7 +196,7 @@ class DrawerMenu extends StatelessWidget {
                 ),
                 SizedBox(height: 10.0),
                 const Text(
-                  'v0.3.1 beta',
+                  'v0.4.0 beta',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.0,
