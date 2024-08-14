@@ -205,6 +205,11 @@ class _HomeState extends State<Home> with RouteAware {
     // Sort the entries by date
     final sortedEntries = groupedEvents.entries.toList()
       ..sort((a, b) => DateFormat('yyyy MMM d').parse(a.key).compareTo(DateFormat('yyyy MMM d').parse(b.key)));
+    // remove events from sorted entries that are in the past
+    sortedEntries.removeWhere((entry) {
+      final date = DateFormat('yyyy MMM d').parse(entry.key);
+      return date.isBefore(DateTime.now());
+    });
 
     return sortedEntries.map((entry) {
       final String date = entry.key;

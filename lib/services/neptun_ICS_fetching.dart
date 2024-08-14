@@ -76,9 +76,7 @@ class EventService {
   Future<Class?> getUpcomingEvent() async {
     final events = await DatabaseHelper.instance.getClasses();
     // final now = DateTime.now();
-    print(now);
     for (final event in events) {
-      print(event.startTime);
       if (event.startTime.isAfter(now)) {
         return event;
       }
