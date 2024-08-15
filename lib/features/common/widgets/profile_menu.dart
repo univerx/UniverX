@@ -14,9 +14,10 @@ class DrawerMenu extends StatelessWidget {
   Future<String> _getUsername() async {
     var result = await DatabaseHelper.instance.getNeptunLogin();
     if (result != null && result is Map<String, dynamic>) {
-      return result["login"] as String;
+      String username = result["login"] as String;
+      return username.isNotEmpty ? username : "-";
     }
-    return "";
+    return "-";
   }
 
   // Function to launch URLs
@@ -47,15 +48,16 @@ class DrawerMenu extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontFamily: "sfpro"),
                 );
               } else {
+                String usernameInitial = snapshot.data ?? '-';
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     children: [
-                      const CircleAvatar(
-                        backgroundColor: Color.fromARGB(255, 38, 51, 70),
+                      CircleAvatar(
+                        backgroundColor: const Color.fromARGB(255, 38, 51, 70),
                         child: Text(
-                          "D",
-                          style: TextStyle(color: Colors.white, fontFamily: "sfpro"),
+                          usernameInitial[0],
+                          style: const TextStyle(color: Colors.white, fontFamily: "sfpro"),
                         ),
                       ),
                       const SizedBox(width: 20.0), // Adjust the width as needed
@@ -196,7 +198,7 @@ class DrawerMenu extends StatelessWidget {
                 ),
                 SizedBox(height: 10.0),
                 const Text(
-                  'v0.4.1 beta',
+                  'v0.4.2 beta',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.0,
