@@ -132,6 +132,7 @@ class _HomeState extends State<Home> with RouteAware {
   Map<String, List<Widget>> _groupEventsByDate(List<Exam> exams, List<Assignment> assignments) {
     final Map<String, List<Widget>> groupedEvents = {};
     final now = DateTime(2024, 4, 30, 11, 30);
+    
 
     for (final exam in exams) {
       if (exam.startTime.isAfter(now) || exam.startTime.isAtSameMomentAs(now)) {
