@@ -18,8 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController neptunController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   List<dynamic> universities = [];
-  String? selectedUniversity;
-  String? selectedUniversityUrl;
+  String? selectedUniversity = "Pécsi Tudományegyetem";
+  String? selectedUniversityUrl = "https://neptun-web4.tr.pte.hu/hallgato/MobileService.svc";
   bool loginEnabled = true;
   bool loggingIn = false;
 
@@ -95,15 +95,17 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       );
                     }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedUniversity = value;
-                        selectedUniversityUrl = universities.firstWhere(
-                          (uni) => uni['Name'] == value,
-                          orElse: () => {'Url': null}
-                        )['Url'];
-                      });
-                    },
+                    onChanged: loggingIn
+                        ? null
+                        : (value) {
+                            setState(() {
+                              selectedUniversity = value;
+                              selectedUniversityUrl = universities.firstWhere(
+                                (uni) => uni['Name'] == value,
+                                orElse: () => {'Url': null},
+                              )['Url'];
+                            });
+                          },
                   ),
                   const SizedBox(height: 24.0),
                   TextField(
@@ -121,6 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
+                    enabled: !loggingIn,
                   ),
                   const SizedBox(height: 24.0),
                   TextField(
@@ -139,6 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     obscureText: true,
+                    enabled: !loggingIn,
                   ),
                   const SizedBox(height: 30.0),
                   Container(
@@ -152,42 +156,46 @@ class _LoginPageState extends State<LoginPage> {
                         color: Color.fromARGB(255, 38, 51, 70),
                       ),
                       child: ElevatedButton(
-                        onPressed: loginEnabled ? () async {
-                          setState(() {
-                            loginEnabled = false;
-                            loggingIn = true;
-                          });
+                        onPressed: loginEnabled
+                            ? () async {
+                                setState(() {
+                                  loginEnabled = false;
+                                  loggingIn = true;
+                                });
 
-                          final neptunCode = neptunController.text;
-                          final password = passwordController.text;
+                                final neptunCode = neptunController.text;
+                                final password = passwordController.text;
 
-                          if (selectedUniversityUrl != null && neptunCode.isNotEmpty && password.isNotEmpty) {
-                            if (await checkLoginDetails(selectedUniversityUrl!, neptunCode, password) == true) {
-                              await DatabaseHelper.instance.saveNeptunLogin(
-                                selectedUniversity!,
-                                selectedUniversityUrl!,
-                                neptunCode,
-                                password,
-                              );
-                              // Navigate to the home page
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => const Home()), // Ensure Home is correctly imported
-                              );
-                            } else {
-                              print('Wrong details');
-                              _showWrongPasswordPopup();
-                            }
-                          } else {
-                            print('Missing details');
-                            _showWrongPasswordPopup();
-                          }
+                                if (selectedUniversityUrl != null &&
+                                    neptunCode.isNotEmpty &&
+                                    password.isNotEmpty) {
+                                  if (await checkLoginDetails(selectedUniversityUrl!, neptunCode, password) == true) {
+                                    await DatabaseHelper.instance.saveNeptunLogin(
+                                      selectedUniversity!,
+                                      selectedUniversityUrl!,
+                                      neptunCode,
+                                      password,
+                                    );
+                                    // Navigate to the home page
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const Home()), // Ensure Home is correctly imported
+                                    );
+                                  } else {
+                                    print('Wrong details');
+                                    _showWrongPasswordPopup();
+                                  }
+                                } else {
+                                  print('Missing details');
+                                  _showWrongPasswordPopup();
+                                }
 
-                          setState(() {
-                            loginEnabled = true;
-                            loggingIn = false;
-                          });
-                        } : null,
+                                setState(() {
+                                  loginEnabled = true;
+                                  loggingIn = false;
+                                });
+                              }
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -225,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
             right: 0,
             child: Center(
               child: Text(
-                'v0.4.1 beta',
+                'v0.4.2 beta',
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 12.0,
