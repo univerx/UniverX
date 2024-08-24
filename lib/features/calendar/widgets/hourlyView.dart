@@ -50,7 +50,7 @@ class HourlyView extends StatelessWidget {
 
     bool doEventsCollide(Class event1, DateTime start, DateTime end) {
       return (event1.startTime.isBefore(end) &&
-          start.isBefore(event1.endTime)) || event1.startTime == start || event1.endTime == start  || (start.isBefore(event1.endTime) &&
+          start.isBefore(event1.endTime)) || event1.startTime == start || event1.endTime == end  || (start.isBefore(event1.endTime) &&
           event1.startTime.isBefore(end));
     }
 
@@ -130,7 +130,7 @@ class HourlyView extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    Class.getFormattedTitle(EventService.formatText(isOverlapping ? 17 : 35, events.first.title)),
+                    Class.getFormattedTitle(EventService.formatText(isOverlapping ? 16 : 35, events.first.title)),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16 , // Adjust font size if overlapping
