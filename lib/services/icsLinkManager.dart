@@ -48,10 +48,10 @@ class CustomImportButton extends StatelessWidget {
                 }
                 else if (result == null) {
                   DatabaseHelper.instance.saveCalendarICS(icsLink);
-                  await eventService.fetchAndUpdateIcs(icsLink);
+                  await eventService.fetchAndUpdateIcs();
                 } else{
                   DatabaseHelper.instance.updateCalendarICS(icsLink);
-                  await eventService.fetchAndUpdateIcs(icsLink);
+                  await eventService.fetchAndUpdateIcs();
                 }
                 Navigator.of(context).pop(); // Close the dialog
                 loadEvents();
