@@ -35,27 +35,23 @@ void main() async {
   await DatabaseHelper.instance.database;
 
   // ---------------------Fetch and Update Events--------------------------
-  /*
+  
   final result = await DatabaseHelper.instance.getCalendarICS();
 
   if (result != null) { // If there is value in the database
-    if (result.toString() == ''){ // '' means it was removed by the user
-      await DatabaseHelper.instance.clearAllEvents();
-    } 
-    else { // If there is a ICS link in the database
-      String icsFilePath = result.toString();
-      await fetchAndUpdateEventsFromIcs(icsFilePath);
-    }
+    String icsFilePath = result.toString();
+    EventService eventService = EventService(icsFilePath);
+    await eventService.fetchAndUpdateIcs();
   }
-  */
-
+  
+  /*
   // ---------------------Fetch and Update Api--------------------------
   final result = await DatabaseHelper.instance.getNeptunLogin();
 
   if (result != null) { // If there is value in the database
     await fetchAndUpdateApi();
   }
-
+  */
   // ---------------------Run the App--------------------------
   runApp(
     const MyApp(),
@@ -66,7 +62,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   Future<bool> checkLoginStatus() async {
-    final result = await DatabaseHelper.instance.getNeptunLogin();
+    final result = await DatabaseHelper.instance.getCalendarICS();
     return result != null;
   }
 
