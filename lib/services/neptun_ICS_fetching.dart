@@ -86,8 +86,14 @@ class EventService {
   static String formatText(int limit, String text) {
     var words = text.split(' ');
     var result = '';  
+
+    if (words[0].length > limit){
+      return  words[0].substring(0,limit-3) + "...";
+    }
+
+
     for (var word in words) {
-      if (result.length + word.length < limit) {
+      if (result.length + word.length <= limit) {
         result += word + ' ';
       } else {
         //result += '...';
