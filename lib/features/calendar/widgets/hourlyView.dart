@@ -3,64 +3,82 @@ import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:intl/intl.dart';
 import 'package:univerx/models/class.dart';
+import 'package:univerx/services/neptun_ICS_fetching.dart';
 
 class HourlyView extends StatelessWidget {
-  final List<Class> events;
+  final List<Class> allEvents;
   final DateTime initialDate;
 
-  HourlyView({required this.events, required this.initialDate});
+  HourlyView({required this.allEvents, required this.initialDate});
 
   @override
   Widget build(BuildContext context) {
     EventController eventController = EventController();
 
     // Map EventModel to CalendarEventData and add to controller
-    events.forEach((event) {
+    allEvents.forEach((event) {
       eventController.add(
         CalendarEventData(
           date: event.startTime,
           startTime: event.startTime,
-          endTime: event.endTime, // Ensure the end time is correctly set
+          endTime: event.endTime,
           title: event.title,
           description: event.location,
         ),
       );
     });
-    
-    int calculatedStartHour = (events.isNotEmpty && events.first.startTime.hour - 1 > 0)// felesleges
-        ? events.first.startTime.hour -1
+
+    int calculatedStartHour = (allEvents.isNotEmpty && allEvents.first.startTime.hour - 1 > 0)
+        ? allEvents.first.startTime.hour - 1
         : 0;
 
-    int calculatedEndHour = (events.isNotEmpty && events.last.endTime.hour + 1 < 24)
-        ? events.last.endTime.hour + 1
+    int calculatedEndHour = (allEvents.isNotEmpty && allEvents.last.endTime.hour + 1 < 24)
+        ? allEvents.last.endTime.hour + 1
         : 24;
-    //if event contains an event less than 1 hour 30 minutes, set heightPerMinute to 2.1, else 0.7
-    double heightPerMinute = 0.7;
-    for (Class event in events) {
+
+    double heightPerMinute = 0.8;
+    for (Class event in allEvents) {
       if (event.endTime.difference(event.startTime).inMinutes < 90) {
-        heightPerMinute = 1.4;
+        heightPerMinute = 1.5;
       }
     }
-    for (Class event in events) {
+    for (Class event in allEvents) {
       if (event.endTime.difference(event.startTime).inMinutes < 60) {
         heightPerMinute = 2.1;
       }
     }
-    
+
+    bool doEventsCollide(Class event1, DateTime start, DateTime end) {
+      return (event1.startTime.isBefore(end) &&
+          start.isBefore(event1.endTime)) || event1.startTime == start || event1.endTime == end  || (start.isBefore(event1.endTime) &&
+          event1.startTime.isBefore(end));
+    }
+
     return ScrollConfiguration(
       behavior: NoScrollBehavior(),
       child: Container(
         child: DayView(
           controller: eventController,
           eventTileBuilder: (date, events, boundary, start, end) {
-            // Ensure events are available to display
             if (events.isEmpty) {
               return Container();
             }
-            // Build the event tile
+
+            // Check for overlapping events
+            print(events);
+            bool isOverlapping = false;
+            for (int i = 0; i < allEvents.length; i++) {
+              if (events[0].title != allEvents[i].title) {
+                if (doEventsCollide(allEvents[i], events[0].startTime!, events[0].endTime!)) {
+                  isOverlapping = true;
+                  break;
+                }
+              }
+            }
+
             return Container(
               margin: const EdgeInsets.all(2),
-              padding: const EdgeInsets.only(left: 8), // Adding padding on the left
+              padding: const EdgeInsets.only(left: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: const Color.fromARGB(255, 36, 63, 109).withOpacity(0.8),
@@ -69,54 +87,53 @@ class HourlyView extends StatelessWidget {
                     color: const Color.fromARGB(255, 152, 152, 152).withOpacity(0.3),
                     spreadRadius: 2,
                     blurRadius: 5,
-                    offset: const Offset(0, 3), // Positioning the shadow
+                    offset: const Offset(0, 3),
                   ),
                 ],
                 border: const Border(
                   left: BorderSide(
-                    color: Color.fromARGB(255, 84, 111, 178), // Change this to the color you want
-                    width: 4, // Adjust the width of the border as needed
+                    color: Color.fromARGB(255, 84, 111, 178),
+                    width: 4,
                   ),
                 ),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start of the column
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       Text(
-                        DateFormat("HH:mm").format(events.first.startTime!), // Placeholder for the location or time
+                        DateFormat("HH:mm").format(events.first.startTime!),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(width: 15), // Add some space between the two texts
+                      const SizedBox(width: 15),
                       Container(
-                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                          margin: const EdgeInsets.only(top: 2),
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 84, 111, 178),
-                            borderRadius: BorderRadius.circular(10),
+                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        margin: const EdgeInsets.only(top: 2),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 84, 111, 178),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '${events.first.description?.split(" ").first}',
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            fontWeight: FontWeight.bold,
                           ),
-                          child: Text(
-                            '${events.first.description?.split(" ").first}',
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
+                        ),
                       ),
                     ],
-
                   ),
-                  const SizedBox(height: 4), // Add some space between the two texts
+                  const SizedBox(height: 4),
                   Text(
-                    Class.getFormattedTitle(events.first.title), // Display the title of the event
-                    style: const TextStyle(
+                    Class.getFormattedTitle(EventService.formatText(isOverlapping ? 16 : 35, events.first.title)),
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 16 , // Adjust font size if overlapping
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -125,7 +142,6 @@ class HourlyView extends StatelessWidget {
             );
           },
           backgroundColor: const Color.fromARGB(255, 20, 18, 32),
-
           showVerticalLine: true,
           showLiveTimeLineInAllDays: true,
           minDay: DateTime(1990),
@@ -133,9 +149,9 @@ class HourlyView extends StatelessWidget {
           initialDay: initialDate,
           heightPerMinute: heightPerMinute,
           eventArranger: SideEventArranger(),
-          startHour: calculatedStartHour, // Adjust the start hour as needed
-          endHour: calculatedEndHour,  // Adjust the end hour as needed
-          dayTitleBuilder: DayHeader.hidden, // Hide day header
+          startHour: calculatedStartHour,
+          endHour: calculatedEndHour,
+          dayTitleBuilder: DayHeader.hidden,
           keepScrollOffset: true,
           timeLineBuilder: (date) {
             return Container(
@@ -148,12 +164,12 @@ class HourlyView extends StatelessWidget {
             );
           },
           hourIndicatorSettings: const HourIndicatorSettings(
-            color: Color.fromARGB(255, 97, 97, 97), // Set your desired color here
-            height: 0.7, // Set your desired thickness here
+            color: Color.fromARGB(255, 97, 97, 97),
+            height: 0.7,
           ),
           liveTimeIndicatorSettings: const LiveTimeIndicatorSettings(
-            color: Color.fromARGB(255, 84, 111, 178), // Set your desired color here
-            height: 2.0, // Set your desired thickness here
+            color: Color.fromARGB(255, 84, 111, 178),
+            height: 2.0,
           ),
         ),
       ),

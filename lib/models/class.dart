@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 class Class {
   final int id;
-  final String title;
+  late String title;
   final String description;
   final DateTime startTime;
   final DateTime endTime;

@@ -75,6 +75,7 @@ class _CalendarPageState extends State<Calendar> {
     ...exams.map((exam) => exam.convertExamToClass()),
     ...assignments.map((assignment) => assignment.convertAssignmentToClass()),
   ];
+  /*
   for (Class event in _allEvents) {
     print(event.title);
     print(event.startTime);
@@ -82,7 +83,7 @@ class _CalendarPageState extends State<Calendar> {
     print(event.location);
     print("-----------------");
   }
-  
+  */
   setState(() {
     _selectedEvents.value = _getEventsForDay(_selectedDay!);
   });
@@ -174,7 +175,7 @@ class _CalendarPageState extends State<Calendar> {
                   builder: (context, value, _) {
                     return Container(
                       height: 1000,  // Adjust the height as needed
-                      child: HourlyView(events: value, initialDate: initialDate),
+                      child: HourlyView(allEvents: value, initialDate: initialDate),
                     );
                   },
                 ),
