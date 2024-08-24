@@ -5,15 +5,14 @@ import 'package:univerx/models/class.dart';
 
 class EventService {
   final String url;
-  //final now = DateTime(2024, 4, 30, 11, 30);
-  final now = DateTime.now();
+  final now = DateTime(2024, 9, 2, 10, 05);
+  //final now = DateTime.now();
   EventService(this.url);
 
-  Future<void> fetchAndUpdateIcs(String filePath) async {
-  final eventService = EventService(filePath);
+  Future<void> fetchAndUpdateIcs() async {
 
   // Fetch events from .ics file
-  List<Class> newEvents = await eventService.fetchEvents();
+  List<Class> newEvents = await fetchEvents();
   if (newEvents.isEmpty) {
     return;
   }
@@ -67,22 +66,38 @@ class EventService {
     // final now = DateTime.now(); //-------------------------------REMOVE COMMENT TO ENABLE LIVE TIME-----------------------------
     for (final event in events) {
       if (event.startTime.isBefore(now) && event.endTime.isAfter(now)) {
-        return event;
-      }
+        event.title = formatText(20, event.title);
+        return event;      }
     }
     return null; // No event currently happening
   }
 
   Future<Class?> getUpcomingEvent() async {
-    final events = await DatabaseHelper.instance.getClasses();
-    // final now = DateTime.now();
+    var events = await DatabaseHelper.instance.getClasses();
     for (final event in events) {
       if (event.startTime.isAfter(now)) {
+        event.title = formatText(30, event.title);
         return event;
       }
     }
     return null; // No upcoming events
   }
+
+  static String formatText(int limit, String text) {
+    var words = text.split(' ');
+    var result = '';  
+    for (var word in words) {
+      if (result.length + word.length < limit) {
+        result += word + ' ';
+      } else {
+        //result += '...';
+        break;
+      }
+    }
+  
+    return result;
+  }
+
   String formatTimeLeft(int minutes) {
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
