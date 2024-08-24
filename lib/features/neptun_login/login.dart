@@ -7,7 +7,8 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:univerx/features/home/homePage.dart';
 import 'package:univerx/services/neptun_API_fetching.dart';
-import 'package:univerx/features/common/widgets/box_3d.dart'; // Import the custom decorations
+import 'package:univerx/features/common/widgets/box_3d.dart';
+import 'package:univerx/services/neptun_ICS_fetching.dart'; // Import the custom decorations
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,26 +16,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController neptunController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  List<dynamic> universities = [];
-  String? selectedUniversity = "Pécsi Tudományegyetem";
-  String? selectedUniversityUrl = "https://neptun-web4.tr.pte.hu/hallgato/MobileService.svc";
+  final TextEditingController icsController = TextEditingController();
+  
   bool loginEnabled = true;
   bool loggingIn = false;
 
   @override
   void initState() {
     super.initState();
-    _loadUniversities();
   }
 
-  Future<void> _loadUniversities() async {
-    String data = await rootBundle.loadString('lib/features/neptun_login/data/Institutes.json');
-    setState(() {
-      universities = json.decode(data);
-    });
-  }
+  
 
   void _showWrongPasswordPopup() {
     showDialog(
@@ -69,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    'Login',
+                    'UniverX',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -78,40 +70,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 24.0), // Space between the title and the first input field
-                  DropdownButton<String>(
-                    value: selectedUniversity,
-                    dropdownColor: Colors.grey[800],
-                    hint: Text(
-                      'Select University',
-                      style: TextStyle(color: Colors.grey[500]),
-                    ),
-                    isExpanded: true,
-                    items: universities.map<DropdownMenuItem<String>>((university) {
-                      return DropdownMenuItem<String>(
-                        value: university['Name'],
-                        child: Text(
-                          university['Name'],
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: loggingIn
-                        ? null
-                        : (value) {
-                            setState(() {
-                              selectedUniversity = value;
-                              selectedUniversityUrl = universities.firstWhere(
-                                (uni) => uni['Name'] == value,
-                                orElse: () => {'Url': null},
-                              )['Url'];
-                            });
-                          },
-                  ),
-                  const SizedBox(height: 24.0),
+
                   TextField(
-                    controller: neptunController,
+                    controller: icsController,
                     decoration: InputDecoration(
-                      hintText: 'neptun code',
+                      hintText: 'exportált naptár link',
                       hintStyle: const TextStyle(
                         color: Colors.grey, // Placeholder text color
                         fontSize: 16.0, // Placeholder text size
@@ -123,25 +86,6 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
-                    enabled: !loggingIn,
-                  ),
-                  const SizedBox(height: 24.0),
-                  TextField(
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      hintText: 'password',
-                      hintStyle: const TextStyle(
-                        color: Colors.grey, // Placeholder text color
-                        fontSize: 16.0, // Placeholder text size
-                        letterSpacing: 1.5,
-                      ),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                    ),
-                    obscureText: true,
                     enabled: !loggingIn,
                   ),
                   const SizedBox(height: 30.0),
@@ -163,28 +107,20 @@ class _LoginPageState extends State<LoginPage> {
                                   loggingIn = true;
                                 });
 
-                                final neptunCode = neptunController.text;
-                                final password = passwordController.text;
+                                final icsLink = icsController.text;
 
-                                if (selectedUniversityUrl != null &&
-                                    neptunCode.isNotEmpty &&
-                                    password.isNotEmpty) {
-                                  if (await checkLoginDetails(selectedUniversityUrl!, neptunCode, password) == true) {
-                                    await DatabaseHelper.instance.saveNeptunLogin(
-                                      selectedUniversity!,
-                                      selectedUniversityUrl!,
-                                      neptunCode,
-                                      password,
+                                if (icsLink != "") {
+                                  if (true) {
+                                    await DatabaseHelper.instance.saveCalendarICS(
+                                      icsLink
                                     );
-                                    // Navigate to the home page
+                                    EventService eventService = EventService(icsLink);
+                                    await eventService.fetchAndUpdateIcs();                                    
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(builder: (context) => const Home()), // Ensure Home is correctly imported
                                     );
-                                  } else {
-                                    print('Wrong details');
-                                    _showWrongPasswordPopup();
-                                  }
+                                  } 
                                 } else {
                                   print('Missing details');
                                   _showWrongPasswordPopup();
