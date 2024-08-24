@@ -12,15 +12,16 @@ Future<void> addAssignmentOrExam(BuildContext context, ) async {
     builder: (BuildContext context) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(30),
         ),
+        backgroundColor: const Color.fromARGB(255, 38, 51, 70),
         title: Center(
           child: Text(
-            'Add Event',
+            'Create Event',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Colors.black,
+              color: const Color.fromARGB(255, 255, 255, 255),
             ),
           ),
         ),
@@ -32,7 +33,7 @@ Future<void> addAssignmentOrExam(BuildContext context, ) async {
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color.fromARGB(125, 199, 218, 246),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -42,14 +43,14 @@ Future<void> addAssignmentOrExam(BuildContext context, ) async {
                     Navigator.pop(context);
                     _showAssignmentDialog(context);
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.assignment, color: Colors.white),
                       SizedBox(width: 10),
                       Text(
-                        'Add Assignment',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        'Assignment',
+                        style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                     ],
                   ),
@@ -59,7 +60,7 @@ Future<void> addAssignmentOrExam(BuildContext context, ) async {
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color.fromARGB(129, 199, 218, 246),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -69,14 +70,14 @@ Future<void> addAssignmentOrExam(BuildContext context, ) async {
                     Navigator.pop(context);
                     _showExamDialog(context);
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.school, color: Colors.white),
                       SizedBox(width: 10),
                       Text(
-                        'Add Exam',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        'Exam',
+                        style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                     ],
                   ),
@@ -104,13 +105,14 @@ Future<void> _showAssignmentDialog(BuildContext context) async {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        title: Center(
+        backgroundColor: const Color.fromARGB(255, 38, 51, 70),
+        title: const Center(
           child: Text(
             'Add Assignment',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Colors.black,
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
           ),
         ),
@@ -205,7 +207,7 @@ Future<void> _showAssignmentDialog(BuildContext context) async {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor:Color.fromARGB(129, 199, 218, 246),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -229,7 +231,7 @@ Future<void> _showAssignmentDialog(BuildContext context) async {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor:Color.fromARGB(129, 199, 218, 246),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -269,13 +271,14 @@ Future<void> _showExamDialog(BuildContext context) async {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
+        backgroundColor: const Color.fromARGB(255, 38, 51, 70),
         title: Center(
           child: Text(
             'Add Exam',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Colors.black,
+              color: const Color.fromARGB(255, 253, 253, 253),
             ),
           ),
         ),
@@ -445,7 +448,7 @@ Future<void> _showExamDialog(BuildContext context) async {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor:Color.fromARGB(129, 199, 218, 246),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -471,7 +474,7 @@ Future<void> _showExamDialog(BuildContext context) async {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: Color.fromARGB(129, 199, 218, 246),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
