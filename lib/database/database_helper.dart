@@ -18,7 +18,7 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('test_11.db');
+    _database = await _initDB('test_12.db');
     
     return _database!;
   }
@@ -60,7 +60,7 @@ class DatabaseHelper {
 
     await db.execute('''
       CREATE TABLE Exam (
-        exam_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        exam_id INTEGER,
         class_id INTEGER,
         title TEXT,
         description TEXT,
