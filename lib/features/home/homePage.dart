@@ -131,11 +131,8 @@ class _HomeState extends State<Home> with RouteAware {
 
   Map<String, List<Widget>> _groupEventsByDate(List<Exam> exams, List<Assignment> assignments) {
     final Map<String, List<Widget>> groupedEvents = {};
-    final now = DateTime(2000, 1, 1, 1, 1);
+    final now = DateTime.now();
     //print exams
-    for (final exam in exams) {
-      print(exam.title);
-    }
 
     for (final exam in exams) {
       if (exam.startTime.isAfter(now) || exam.startTime.isAtSameMomentAs(now)) {
@@ -143,7 +140,7 @@ class _HomeState extends State<Home> with RouteAware {
         if (groupedEvents.containsKey(date)) {
           groupedEvents[date]!.add(UpcomingContainer(
             homeContext: context,
-            title: Exam.getFormattedTitle(exam.title),
+            title: Exam.formatText(30,exam.title),
             date: date,
             isExam: true,
             onDelete: () => _deleteExam(exam),
@@ -153,7 +150,7 @@ class _HomeState extends State<Home> with RouteAware {
           groupedEvents[date] = [
             UpcomingContainer(
               homeContext: context,
-              title: Exam.getFormattedTitle(exam.title),
+              title: Exam.formatText(40,exam.title),
               date: date,
               isExam: true,
               onDelete: () => _deleteExam(exam),
@@ -245,7 +242,7 @@ class _HomeState extends State<Home> with RouteAware {
     // remove events from sorted entries that are in the past
     sortedEntries.removeWhere((entry) {
       final date = DateFormat('yyyy MMM d').parse(entry.key);
-      return date.isBefore(DateTime(2022));
+      return date.isBefore(DateTime.now());
     });
 
     return sortedEntries.map((entry) {
