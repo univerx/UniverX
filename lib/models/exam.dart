@@ -45,20 +45,7 @@ class Exam {
     return formatter.format(startTime);
   }
   
-  static String getFormattedTitle(String title) {
-    if (title.startsWith('[Óra]')) {
-        title = title.substring(title.indexOf(']') + 2, title.length);
-        var sv = title.split(" ");
-        title = sv[0] + " " + sv[1];
-    } 
-    else if (title.startsWith('[Vizsga]')) {
-        var sv = title.split(" ");
-        title = sv[0] + " " + sv[1] + " " +sv[2];
-    }
-
-    
-    return title;
-  }
+  
   Class convertExamToClass() {
     return Class(
       id: classId,
@@ -70,5 +57,28 @@ class Exam {
       instructorId: -1, // Or provide an appropriate value if available
       isUserCreated: isUserCreated,
     );
+  }
+  static String formatText(int limit, String text) {
+    var words = text.split(' ');
+    var result = '';  
+
+    if (words[0].length > limit){
+      return  words[0].substring(0,limit-3) + "...";
+    }
+
+
+    for (var word in words) {
+      if (result.length + word.length <= limit) {
+        result += word + ' ';
+      } else {
+        //result += '...';
+        break;
+      }
+    }
+    //if last character is a comma, remove it
+    if (result[result.length - 2] == ',') {
+      result = result.substring(0, result.length - 2);
+    }
+    return result;
   }
 }

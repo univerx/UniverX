@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:univerx/models/exam.dart';
 
 class Class {
   final int id;
@@ -41,7 +42,7 @@ class Class {
   }
 
   // ------------------ Helper functions ------------------
-  factory Class.fromICS(String icsData) {
+  static Object fromICS(String icsData) {
     final lines = icsData.split('\n');
     DateTime? startTime;
     DateTime? endTime;
@@ -58,6 +59,19 @@ class Class {
       } else if (line.startsWith('LOCATION')) {
         location = line.split(':')[1];
       }
+    }
+    //if title starts with vizsga return with Exam()
+    if (title!.contains('Vizsga')) {
+      return Exam(
+        id: -1,
+        classId: -1,
+        title: title!,
+        description: "",
+        startTime: startTime!,
+        endTime: endTime!,
+        location: location!,
+        isUserCreated: false,
+      );
     }
 
     return Class(
