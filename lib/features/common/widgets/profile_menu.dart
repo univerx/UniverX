@@ -198,7 +198,7 @@ class DrawerMenu extends StatelessWidget {
                 ),
                 SizedBox(height: 10.0),
                 const Text(
-                  'v0.4.3 beta',
+                  'v1.0.0',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.0,

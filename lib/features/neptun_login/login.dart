@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
             right: 0,
             child: Center(
               child: Text(
-                'v0.4.3 beta',
+                'v1.0.0',
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 12.0,

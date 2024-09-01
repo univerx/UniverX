@@ -15,8 +15,7 @@ class ParsedData {
 
 class EventService {
   final String url;
-  final now = DateTime(2024, 9, 2, 10, 05);
-  //final now = DateTime.now();
+  final now = DateTime.now();
   EventService(this.url);
 
   Future<void> fetchAndUpdateIcs() async {
