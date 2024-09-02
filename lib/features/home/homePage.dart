@@ -1,3 +1,4 @@
+import 'dart:async'; // Import for Timer
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,6 +58,8 @@ class _HomeState extends State<Home> with RouteAware {
   // Initialize selected menu item
   String _selectedMenuItem = "Összes";
 
+  Timer? _refreshTimer; // Declare a Timer
+
   @override
   void initState() {
     super.initState();
@@ -68,6 +71,49 @@ class _HomeState extends State<Home> with RouteAware {
 
     timeLeftForEvent = eventService.timeLeftForCurrentEvent();
     percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
+
+    // Calculate seconds until the next minute
+    _startRefreshTimer();
+  }
+
+  @override
+  void dispose() {
+    // Cancel the timer when the widget is disposed
+    _refreshTimer?.cancel();
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  void _startRefreshTimer() {
+    final now = DateTime.now();
+    final secondsUntilNextMinute = 60 - now.second;
+
+    // Wait until the next minute and then start periodic refresh
+    Future.delayed(Duration(seconds: secondsUntilNextMinute), () {
+      _handleRefresh();
+      // Set up the timer to refresh every minute
+      _refreshTimer = Timer.periodic(const Duration(minutes: 1), (Timer timer) {
+        _handleRefresh();
+      });
+    });
+  }
+
+  Future<void> _handleRefresh() async {
+    bool? hasVibrator = await Vibration.hasVibrator();
+    if (hasVibrator == true) {
+      HapticFeedback.heavyImpact();
+    }
+
+    _loadExams();
+    _loadAssignments();
+
+    currentEvent = eventService.getCurrentEvent();
+    upcomingEvent = eventService.getUpcomingEvent();
+
+    timeLeftForEvent = eventService.timeLeftForCurrentEvent();
+    percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
+
+    return await Future<void>.delayed(const Duration(milliseconds: 500));
   }
 
   Future<void> _loadExams() async {
@@ -101,30 +147,6 @@ class _HomeState extends State<Home> with RouteAware {
     _handleRefresh();
   }
 
-  @override
-  void dispose() {
-    routeObserver.unsubscribe(this);
-    super.dispose();
-  }
-
-  Future<void> _handleRefresh() async {
-    bool? hasVibrator = await Vibration.hasVibrator();
-    if (hasVibrator == true) {
-      HapticFeedback.heavyImpact();
-    }
-
-    _loadExams();
-    _loadAssignments();
-
-    currentEvent = eventService.getCurrentEvent();
-    upcomingEvent = eventService.getUpcomingEvent();
-
-    timeLeftForEvent = eventService.timeLeftForCurrentEvent();
-    percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
-
-    return await Future<void>.delayed(const Duration(milliseconds: 500));
-  }
-
   void _onMenuItemSelected(String item) {
     setState(() {
       _selectedMenuItem = item;
@@ -135,7 +157,6 @@ class _HomeState extends State<Home> with RouteAware {
     CurrentTime time = CurrentTime();
     final Map<String, List<Widget>> groupedEvents = {};
     final now = time.get_time();
-    //print exams
 
     for (final exam in exams) {
       if (exam.startTime.isAfter(now) || exam.startTime.isAtSameMomentAs(now)) {
@@ -143,7 +164,7 @@ class _HomeState extends State<Home> with RouteAware {
         if (groupedEvents.containsKey(date)) {
           groupedEvents[date]!.add(UpcomingContainer(
             homeContext: context,
-            title: Exam.formatText(30,exam.title),
+            title: Exam.formatText(30, exam.title),
             date: date,
             isExam: true,
             onDelete: () => _deleteExam(exam),
@@ -153,7 +174,7 @@ class _HomeState extends State<Home> with RouteAware {
           groupedEvents[date] = [
             UpcomingContainer(
               homeContext: context,
-              title: Exam.formatText(40,exam.title),
+              title: Exam.formatText(40, exam.title),
               date: date,
               isExam: true,
               onDelete: () => _deleteExam(exam),
@@ -199,7 +220,6 @@ class _HomeState extends State<Home> with RouteAware {
       _exams.remove(exam);
     });
     DatabaseHelper.instance.deleteExam(exam.id!);
-
   }
 
   void _editExam(Exam exam) {
@@ -216,7 +236,6 @@ class _HomeState extends State<Home> with RouteAware {
   void _editAssignment(Assignment assignment) {
     // Implement edit functionality here
   }
-
 
   // Filter events based on the selected menu item
   List<Widget> _buildUpcomingEvents() {
