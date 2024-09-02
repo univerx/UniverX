@@ -5,6 +5,8 @@ import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/models/class.dart';
 import 'package:univerx/models/exam.dart';
 import 'package:univerx/services/neptun_API_fetching.dart';
+import 'package:univerx/database/appdata.dart';
+
 
 class ParsedData {
   final List<Class> classes;
@@ -15,7 +17,7 @@ class ParsedData {
 
 class EventService {
   final String url;
-  final now = DateTime.now();
+  var now;
   EventService(this.url);
 
   Future<void> fetchAndUpdateIcs() async {
@@ -89,8 +91,10 @@ class EventService {
   }
 
   Future<Class?> getCurrentEvent() async {
+    CurrentTime time = CurrentTime();
+    now = time.get_time();
+    print(now);
     final events = await DatabaseHelper.instance.getClasses();
-    // final now = DateTime.now(); //-------------------------------REMOVE COMMENT TO ENABLE LIVE TIME-----------------------------
     for (final event in events) {
       if (event.startTime.isBefore(now) && event.endTime.isAfter(now)) {
         event.title = formatText(20, event.title);
@@ -100,6 +104,8 @@ class EventService {
   }
 
   Future<Class?> getUpcomingEvent() async {
+    CurrentTime time = CurrentTime();
+    now = time.get_time();
     var events = await DatabaseHelper.instance.getClasses();
     for (final event in events) {
       if (event.startTime.isAfter(now)) {
@@ -134,32 +140,50 @@ class EventService {
     return result;
   }
 
-  String formatTimeLeft(int minutes) {
+  String formatTimeLeft(int minutes, bool current) {
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
-    return '${hours}h ${mins}m';
+    String prefix = current ? 'Ends in: ' : 'Starts in:';
+    if (hours == 0) {
+      return '${prefix} ${mins}m';
+    }
+    return '${prefix} ${hours}h ${mins}m';
   }
 
   Future<String?> timeLeftForCurrentEvent() async {
+    CurrentTime time = CurrentTime();
+    now = time.get_time();
     final currentEvent = await getCurrentEvent();
+    final upcomingEvent = await getUpcomingEvent();
     if (currentEvent != null) {
-      // final now = DateTime.now(); //-------------------------------REMOVE COMMENT TO ENABLE LIVE TIME-----------------------------
-
       final timeLeft = currentEvent.endTime.difference(now).inMinutes;
-      return formatTimeLeft(timeLeft);
+      return formatTimeLeft(timeLeft, true);
+    }
+    else if(upcomingEvent != null) {
+      final timeLeft = upcomingEvent.startTime.difference(now).inMinutes;
+      return formatTimeLeft(timeLeft, false);
     }
     return null; // No event currently happening
   }
 
   Future<double?> percentagePassedOfCurrentEvent() async {
+    CurrentTime time = CurrentTime();
+    now = time.get_time();
     final currentEvent = await getCurrentEvent();
+    final upcomingEvent = await getUpcomingEvent();
     if (currentEvent != null) {
-      //final now = DateTime.now(); //-------------------------------REMOVE COMMENT TO ENABLE LIVE TIME-----------------------------
-
       final duration = currentEvent.endTime.difference(currentEvent.startTime).inMinutes;
       final timePassed = now.difference(currentEvent.startTime).inMinutes;
       final percentagePassed = timePassed / duration;
       return percentagePassed;
+    }
+    else if (upcomingEvent != null) {
+      // time till upcoming event start, from last class, if there is no class, from 8:00
+      final timeTillNextClass = upcomingEvent.startTime.difference(now).inMinutes;
+      final timeTillNextClassFrom8 = upcomingEvent.startTime.difference(DateTime(now.year, now.month, now.day, 8, 0)).inMinutes;
+      final percentagePassed = 1 - timeTillNextClass / timeTillNextClassFrom8;
+      return percentagePassed;
+      
     }
     return null; // No event currently happening
   }
