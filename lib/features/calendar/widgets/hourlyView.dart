@@ -65,7 +65,6 @@ class HourlyView extends StatelessWidget {
             }
 
             // Check for overlapping events
-            print(events);
             bool isOverlapping = false;
             for (int i = 0; i < allEvents.length; i++) {
               if (events[0].title != allEvents[i].title) {

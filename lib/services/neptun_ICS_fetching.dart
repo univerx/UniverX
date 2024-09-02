@@ -29,8 +29,6 @@ class EventService {
     //classes and exams
     List<Class> newClasses = newEvents.classes;
     List<Exam> newExams = newEvents.exams;
-    print(newExams);
-    print(newClasses);
 
     // Fetch existing events from database
     DatabaseHelper dbHelper = DatabaseHelper.instance;
