@@ -8,7 +8,9 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:univerx/features/home/homePage.dart';
 import 'package:univerx/services/neptun_API_fetching.dart';
 import 'package:univerx/features/common/widgets/box_3d.dart';
-import 'package:univerx/services/neptun_ICS_fetching.dart'; // Import the custom decorations
+import 'package:univerx/services/neptun_ICS_fetching.dart'; // Ixport the custom decorations
+import 'package:univerx/database/appdata.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -169,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
             right: 0,
             child: Center(
               child: Text(
-                'v1.0.0',
+                version_number,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 12.0,
