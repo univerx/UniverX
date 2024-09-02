@@ -8,13 +8,14 @@ import 'package:univerx/services/neptun_ICS_fetching.dart';
 class HourlyView extends StatelessWidget {
   final List<Class> allEvents;
   final DateTime initialDate;
+  final bool isToday;
 
-  HourlyView({required this.allEvents, required this.initialDate});
+  HourlyView({required this.allEvents, required this.initialDate, required this.isToday});
 
   @override
   Widget build(BuildContext context) {
     EventController eventController = EventController();
-
+    
     // Map EventModel to CalendarEventData and add to controller
     allEvents.forEach((event) {
       eventController.add(
@@ -53,6 +54,8 @@ class HourlyView extends StatelessWidget {
           start.isBefore(event1.endTime)) || event1.startTime == start || event1.endTime == end  || (start.isBefore(event1.endTime) &&
           event1.startTime.isBefore(end));
     }
+
+    final liveTimeIndicatorColor = isToday ? const Color.fromARGB(255, 84, 111, 178) : Colors.transparent;
 
     return ScrollConfiguration(
       behavior: NoScrollBehavior(),
@@ -166,8 +169,8 @@ class HourlyView extends StatelessWidget {
             color: Color.fromARGB(255, 97, 97, 97),
             height: 0.7,
           ),
-          liveTimeIndicatorSettings: const LiveTimeIndicatorSettings(
-            color: Color.fromARGB(255, 84, 111, 178),
+          liveTimeIndicatorSettings:  LiveTimeIndicatorSettings(
+            color: liveTimeIndicatorColor,
             height: 2.0,
           ),
         ),

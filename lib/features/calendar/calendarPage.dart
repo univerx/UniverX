@@ -169,7 +169,7 @@ class _CalendarPageState extends State<Calendar> {
                   builder: (context, value, _) {
                     return Container(
                       height: 1000,  // Adjust the height as needed
-                      child: HourlyView(allEvents: value, initialDate: initialDate),
+                      child: HourlyView(allEvents: value, initialDate: initialDate, isToday: isSameDay(_selectedDay!, CurrentTime().get_time())),
                     );
                   },
                 ),
