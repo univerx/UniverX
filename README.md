@@ -1,10 +1,9 @@
 # UniverX
-- A működő Neptun
+- A legjobb egyetem manager
 
 # Team
-- [@31b4](https://www.github.com/31b4) - head dev, project manager
-- [@nvirs20](https://www.github.com/nvirs20) - dev, designer
-- [@GreGamingHUN](https://www.github.com/GreGamingHUN) - [Neptun API](https://github.com/GreGamingHUN/Neptun-API), law
+- [@31b4](https://www.github.com/31b4) - head dev, designer, project manager
+- [@nvirs20](https://www.github.com/nvirs20) - dev
 
 # Preview
 
