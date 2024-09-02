@@ -93,7 +93,6 @@ class EventService {
   Future<Class?> getCurrentEvent() async {
     CurrentTime time = CurrentTime();
     now = time.get_time();
-    print(now);
     final events = await DatabaseHelper.instance.getClasses();
     for (final event in events) {
       if (event.startTime.isBefore(now) && event.endTime.isAfter(now)) {
