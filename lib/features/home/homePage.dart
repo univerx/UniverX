@@ -19,6 +19,7 @@ import 'package:univerx/models/class.dart';
 // ---------------------Other Packages--------------------------
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:vibration/vibration.dart';
+import 'package:univerx/services/titleGenerator.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
@@ -287,7 +288,7 @@ class _HomeState extends State<Home> with RouteAware {
         child: CustomScrollView(
           slivers: <Widget>[
             DefaultAppBar(
-              title: "UniX-PTE-TTK",
+              title: welcomeGenerator(),
               showBackButton: false,
             ),
             SliverList(
@@ -347,7 +348,6 @@ class _HomeState extends State<Home> with RouteAware {
           return CustomBottomNavigationBar(
             button1: () async {
               // Handle navigation to Home
-              print('Navigating to Home');
             },
             button2: () {
               addAssignmentOrExam(context);
@@ -356,7 +356,6 @@ class _HomeState extends State<Home> with RouteAware {
             button3: () {
               // Open drawer menu
               Scaffold.of(context).openEndDrawer();
-              print('Navigating to Menu');
             },
           );
         },

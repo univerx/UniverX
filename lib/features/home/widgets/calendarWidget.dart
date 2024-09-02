@@ -115,10 +115,10 @@ class CalendarWidget extends StatelessWidget {
                                 final event = snapshot.data;
                                 if (event != null) {
                                   return Text(
-                                    '→ ${Class.getFormattedTitle(event.title)}',
+                                    '→ ${event.startTime.hour}:${event.startTime.minute == 0 ? "00" : event.startTime.minute} ${Class.getFormattedTitle(event.title)}',
                                     style: TextStyle(
                                       fontSize: 14.0,
-                                      color: Colors.white,
+                                      color: const Color.fromARGB(255, 188, 188, 188),
                                       fontFamily: "sfpro",
                                     ),
                                   );
