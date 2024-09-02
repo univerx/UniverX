@@ -39,8 +39,8 @@ class DefaultAppBar extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16.0,
+              color: Color.fromARGB(255, 188, 188, 188),
+              fontSize: 24.0,
               fontFamily: "sfpro",
             ),
           ),

@@ -7,6 +7,8 @@ import 'package:univerx/features/neptun_login/data/logout.dart';
 import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/models/assignment.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import for launching URLs
+import 'package:univerx/database/appdata.dart';
+
 
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({Key? key}) : super(key: key);
@@ -198,7 +200,7 @@ class DrawerMenu extends StatelessWidget {
                 ),
                 SizedBox(height: 10.0),
                 const Text(
-                  'v1.0.0',
+                  version_number,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.0,

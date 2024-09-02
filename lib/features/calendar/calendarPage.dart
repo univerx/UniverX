@@ -15,6 +15,8 @@ import 'package:univerx/services/icsLinkManager.dart';
 import 'package:univerx/features/common/widgets/profile_menu.dart';
 import 'package:univerx/features/calendar/widgets/customCalendar.dart';
 import 'package:univerx/features/calendar/widgets/hourlyView.dart';
+import 'package:univerx/database/appdata.dart';
+
 
 class Calendar extends StatefulWidget {
   final DateTime? focusedDay;
@@ -41,11 +43,10 @@ class _CalendarPageState extends State<Calendar> {
 
     // Load events
     _loadEvents();
-    
-    // Set _focusedDay to the provided focusedDay or default to DateTime.now()
-    _focusedDay = DateTime.now();
+    CurrentTime time = CurrentTime();
+    _focusedDay = time.get_time();
     _selectedDay = _focusedDay;
-    initialDate = DateTime.now();
+    initialDate = time.get_time();
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
 
@@ -75,15 +76,6 @@ class _CalendarPageState extends State<Calendar> {
     ...exams.map((exam) => exam.convertExamToClass()),
     ...assignments.map((assignment) => assignment.convertAssignmentToClass()),
   ];
-  /*
-  for (Class event in _allEvents) {
-    print(event.title);
-    print(event.startTime);
-    print(event.endTime);
-    print(event.location);
-    print("-----------------");
-  }
-  */
   setState(() {
     _selectedEvents.value = _getEventsForDay(_selectedDay!);
   });
@@ -91,8 +83,9 @@ class _CalendarPageState extends State<Calendar> {
 
 
   List<Class> _changeDateForInitialBUG(List<Class> events) {
+    CurrentTime time = CurrentTime();
     List<Class> newEvents = [];
-    DateTime now = DateTime.now();
+    DateTime now = time.get_time();
     for (Class event in events) {
       DateTime newStart = DateTime(now.year, now.month, now.day, event.startTime.hour, event.startTime.minute);
       DateTime newEnd = DateTime(now.year, now.month, now.day, event.endTime.hour, event.endTime.minute);
@@ -117,8 +110,9 @@ class _CalendarPageState extends State<Calendar> {
   }
 
   void _goToToday() {
+    CurrentTime time = CurrentTime();
     setState(() {
-      _focusedDay = DateTime.now();
+      _focusedDay = time.get_time() ;
       _selectedDay = _focusedDay;
     });
     _selectedEvents.value = _getEventsForDay(_selectedDay!);
@@ -155,7 +149,7 @@ class _CalendarPageState extends State<Calendar> {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
 
-                        initialDate = __selectedEvents.isNotEmpty ? __selectedEvents.first.startTime : DateTime.now();
+                        initialDate = __selectedEvents.isNotEmpty ? __selectedEvents.first.startTime : CurrentTime().get_time();
                         _selectedEvents.value = _changeDateForInitialBUG(__selectedEvents);
                       });
                     }
@@ -175,7 +169,7 @@ class _CalendarPageState extends State<Calendar> {
                   builder: (context, value, _) {
                     return Container(
                       height: 1000,  // Adjust the height as needed
-                      child: HourlyView(allEvents: value, initialDate: initialDate),
+                      child: HourlyView(allEvents: value, initialDate: initialDate, isToday: isSameDay(_selectedDay!, CurrentTime().get_time())),
                     );
                   },
                 ),

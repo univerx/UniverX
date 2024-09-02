@@ -19,6 +19,8 @@ import 'package:univerx/models/class.dart';
 // ---------------------Other Packages--------------------------
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:vibration/vibration.dart';
+import 'package:univerx/services/titleGenerator.dart';
+import 'package:univerx/database/appdata.dart';
 
 // ---------------------Widgets--------------------------
 import 'package:univerx/features/common/widgets/default_app_bar.dart';
@@ -130,8 +132,9 @@ class _HomeState extends State<Home> with RouteAware {
   }
 
   Map<String, List<Widget>> _groupEventsByDate(List<Exam> exams, List<Assignment> assignments) {
+    CurrentTime time = CurrentTime();
     final Map<String, List<Widget>> groupedEvents = {};
-    final now = DateTime.now();
+    final now = time.get_time();
     //print exams
 
     for (final exam in exams) {
@@ -235,14 +238,14 @@ class _HomeState extends State<Home> with RouteAware {
     }
 
     final groupedEvents = _groupEventsByDate(filteredExams, filteredAssignments);
-
+    CurrentTime time = CurrentTime();
     // Sort the entries by date
     final sortedEntries = groupedEvents.entries.toList()
       ..sort((a, b) => DateFormat('yyyy MMM d').parse(a.key).compareTo(DateFormat('yyyy MMM d').parse(b.key)));
     // remove events from sorted entries that are in the past
     sortedEntries.removeWhere((entry) {
       final date = DateFormat('yyyy MMM d').parse(entry.key);
-      return date.isBefore(DateTime.now());
+      return date.isBefore(time.get_time());
     });
 
     return sortedEntries.map((entry) {
@@ -287,7 +290,7 @@ class _HomeState extends State<Home> with RouteAware {
         child: CustomScrollView(
           slivers: <Widget>[
             DefaultAppBar(
-              title: "UniX-PTE-TTK",
+              title: welcomeGenerator(),
               showBackButton: false,
             ),
             SliverList(
@@ -305,7 +308,7 @@ class _HomeState extends State<Home> with RouteAware {
                   const SizedBox(height: 10),
                   // --------------------------- Horizontal menu ---------------------------
                   HorizontalScrollableMenu(
-                    menuItems: ["Összes", "Zh-k", "Beadandók"],
+                    menuItems: ["Összes", "Zh-k", "Beadandók", "Vizsga időszak", "Szünetek"],
                     onItemSelected: _onMenuItemSelected,
                     selectedItem: _selectedMenuItem,
                   ),
@@ -347,7 +350,6 @@ class _HomeState extends State<Home> with RouteAware {
           return CustomBottomNavigationBar(
             button1: () async {
               // Handle navigation to Home
-              print('Navigating to Home');
             },
             button2: () {
               addAssignmentOrExam(context);
@@ -356,7 +358,6 @@ class _HomeState extends State<Home> with RouteAware {
             button3: () {
               // Open drawer menu
               Scaffold.of(context).openEndDrawer();
-              print('Navigating to Menu');
             },
           );
         },

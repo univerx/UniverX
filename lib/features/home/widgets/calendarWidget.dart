@@ -115,10 +115,10 @@ class CalendarWidget extends StatelessWidget {
                                 final event = snapshot.data;
                                 if (event != null) {
                                   return Text(
-                                    '→ ${Class.getFormattedTitle(event.title)}',
+                                    '→ ${event.startTime.hour}:${event.startTime.minute == 0 ? "00" : event.startTime.minute} ${Class.getFormattedTitle(event.title)}',
                                     style: TextStyle(
                                       fontSize: 14.0,
-                                      color: Colors.white,
+                                      color: const Color.fromARGB(255, 188, 188, 188),
                                       fontFamily: "sfpro",
                                     ),
                                   );
@@ -132,7 +132,7 @@ class CalendarWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 5),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 20, 18, 32),
                               borderRadius: BorderRadius.circular(8),
@@ -148,7 +148,7 @@ class CalendarWidget extends StatelessWidget {
                                     return Text(
                                       '${event.location.split(" ").first}',
                                       style: const TextStyle(
-                                        color: Color.fromARGB(255, 255, 255, 255),
+                                        color: Color.fromARGB(255, 188, 188, 188),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 10,
                                       ),
@@ -164,6 +164,7 @@ class CalendarWidget extends StatelessWidget {
                           ),
                         ],
                       ),
+                      SizedBox(height: 8),
                       FutureBuilder<String?>(
                         future: timeLeftForEvent,
                         builder: (context, snapshot) {
@@ -176,7 +177,7 @@ class CalendarWidget extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text(
-                                    "Time left: ${timeLeft}",
+                                    "${timeLeft}",
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
@@ -209,8 +210,17 @@ class CalendarWidget extends StatelessWidget {
                                 value: percentagePassed,
                               ),
                             );
-                          } else {
-                            return Container(); // Return an empty container if there's no current event
+                          } else { //ha jelenleg nincs ora, kovetkezo oraig az ido
+                            var percentagePassed = 1.0;
+                            return SizedBox(
+                              height: 10,
+                              child: LinearProgressIndicator(
+                                backgroundColor: const Color.fromARGB(255, 20, 18, 32),
+                                valueColor: const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(20),
+                                value: percentagePassed,
+                              ),
+                            ); // Return an empty container if there's no current event
                           }
                         },
                       ),
