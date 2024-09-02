@@ -126,7 +126,7 @@ class _CalendarPageState extends State<Calendar> {
       body: CustomScrollView(
         slivers: <Widget>[
           DefaultAppBar(
-            title: "UniX-Exams",
+            title: "UniX-Calendar",
             showBackButton: true,
             /*
             icsButton: CustomImportButton(
