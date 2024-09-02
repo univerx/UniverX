@@ -1,5 +1,5 @@
 # UniverX
-- A működő Neptun
+- A legjobb egyetem manager
 
 # Team
 - [@31b4](https://www.github.com/31b4) - head dev, designer, project manager
