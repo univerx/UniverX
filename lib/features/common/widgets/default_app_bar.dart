@@ -26,7 +26,7 @@ class DefaultAppBar extends StatelessWidget {
       String username = result["login"] as String;
       return username.isNotEmpty ? username[0] : "-";
     }
-    return "-";
+    return "B";
   }
 
   // ---------------------AppBar--------------------------
