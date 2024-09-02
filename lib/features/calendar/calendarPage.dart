@@ -75,15 +75,6 @@ class _CalendarPageState extends State<Calendar> {
     ...exams.map((exam) => exam.convertExamToClass()),
     ...assignments.map((assignment) => assignment.convertAssignmentToClass()),
   ];
-  /*
-  for (Class event in _allEvents) {
-    print(event.title);
-    print(event.startTime);
-    print(event.endTime);
-    print(event.location);
-    print("-----------------");
-  }
-  */
   setState(() {
     _selectedEvents.value = _getEventsForDay(_selectedDay!);
   });
