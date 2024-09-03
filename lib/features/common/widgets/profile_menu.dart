@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/features/appointment/OLD_appointmentPage.dart';
+import 'package:univerx/features/calculator/calculatorPage.dart';
 import 'package:univerx/features/common/widgets/logout.dart';
 import 'package:univerx/features/exams/examsPage.dart';
 import 'package:univerx/features/login/login.dart';
@@ -106,6 +107,23 @@ class DrawerMenu extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Appointment()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.calculate_rounded, color: Colors.white),
+            title: const Text('KKI Calculator',
+                style: TextStyle(
+                  letterSpacing: 2,
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontFamily: "sfpro",
+                )),
+            onTap: () {
+              // Handle navigation to Settings
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Calculator()),
               );
             },
           ),
