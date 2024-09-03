@@ -17,17 +17,67 @@ class Calculator extends StatefulWidget {
 
 class _CalculatorState extends State<Calculator> {
   late Future<List<Class>> _classesFuture;
+  final List<TextEditingController> _creditsControllers = [];
+  final List<TextEditingController> _gradeControllers = [];
 
   @override
   void initState() {
     super.initState();
-    // Initialize the future when the widget is created
     _classesFuture = _getClasses();
   }
 
   Future<List<Class>> _getClasses() async {
     return await DatabaseHelper.instance.getUniqueClasses();
   }
+
+  void _calculate() {
+    double totalCredits = 0;
+    double weightedSum = 0;
+    double summaTeljesitetKreditXerdemjegy = 0;
+    int completedCredits = 0;
+    int allCredits = 0;
+
+    for (int i = 0; i < _creditsControllers.length; i++) {
+      int credits = int.tryParse(_creditsControllers[i].text) ?? 0;
+      int grade = int.tryParse(_gradeControllers[i].text) ?? 0;
+
+      if (grade > 1) {
+        summaTeljesitetKreditXerdemjegy += grade * credits;
+        completedCredits += credits;
+      }
+      allCredits += credits;
+    }
+
+    double sa = completedCredits > 0 ? (summaTeljesitetKreditXerdemjegy / completedCredits) : 0;
+    double ki = summaTeljesitetKreditXerdemjegy / 30;
+    double kki = (ki * (completedCredits / allCredits)).toDouble();
+
+    // Display results using a dialog or Snackbar
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Results'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("SA: ${sa.toStringAsFixed(2)}"),
+            Text("KKI: ${kki.toStringAsFixed(2)}"),
+            Text("KI: ${ki.toStringAsFixed(2)}"),
+            Text("All Credits: $allCredits"),
+            Text("Completed Credits: $completedCredits"),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +92,13 @@ class _CalculatorState extends State<Calculator> {
             showDoneButton: false,
           ),
           SliverFillRemaining(
-            child: SingleChildScrollView( // This makes the whole page scrollable
+            child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 30),
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0,),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -66,7 +116,7 @@ class _CalculatorState extends State<Calculator> {
                               'Credit',
                               style: TextStyle(color: Colors.white),
                             ),
-                            SizedBox(width: 45), // Spacing between Credit and Jegy
+                            SizedBox(width: 45),
                             Text(
                               'Jegy',
                               style: TextStyle(color: Colors.white),
@@ -88,14 +138,36 @@ class _CalculatorState extends State<Calculator> {
                         return Center(child: Text('No classes found.'));
                       } else {
                         List<Class> classes = snapshot.data!;
-                        return Column( // Changed from ListView to Column to avoid nested scrolling
-                          children: classes.map((clazz) {
-                            return ClassItem(
-                              title: Exam.formatText(16, clazz.title),
-                              creditsController: TextEditingController(text: '1'), // Example initial value
-                              gradeController: TextEditingController(text: '1'),   // Example initial value
-                            );
-                          }).toList(),
+                        _creditsControllers.clear();
+                        _gradeControllers.clear();
+                        return Column(
+                          children: [
+                            ...classes.map((clazz) {
+                              TextEditingController creditsController = TextEditingController(text: '1');
+                              TextEditingController gradeController = TextEditingController(text: '1');
+                              _creditsControllers.add(creditsController);
+                              _gradeControllers.add(gradeController);
+                              return ClassItem(
+                                title: Exam.formatText(16, clazz.title),
+                                creditsController: creditsController,
+                                gradeController: gradeController,
+                              );
+                            }).toList(),
+                            SizedBox(height: 20),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: ElevatedButton(
+                                onPressed: _calculate,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                child: Center(child: Text('Calculate')),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                          ],
                         );
                       }
                     },
