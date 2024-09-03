@@ -7,6 +7,6 @@
 
 # Preview
 
-<img width="200" alt="Screenshot 2024-06-15 at 15 18 29" src="https://github.com/univerx/UniverX/assets/75566095/780fab7f-e7ca-4fa2-93dd-60af685eaf00">
-<img width="200" alt="Screenshot 2024-06-15 at 15 18 29" src="https://github.com/univerx/UniverX/assets/75566095/f4e0d495-944f-4b2e-b4ce-9fce33da9793">
-<img width="200" alt="Screenshot 2024-06-15 at 15 18 29" src="https://github.com/univerx/UniverX/assets/75566095/b91a5566-9d1f-43ef-a13a-31a332920194">
+<img width="200" alt="Screenshot 2024-06-15 at 15 18 29" src="https://github.com/user-attachments/assets/13684967-7721-408c-a3c0-c9ea1f793c94">
+<img width="200" alt="Screenshot 2024-06-15 at 15 18 29" src="https://github.com/user-attachments/assets/c8f90754-ca97-4596-a103-e6cef8c94961">
+<img width="200" alt="Screenshot 2024-06-15 at 15 18 29" src="https://github.com/user-attachments/assets/0b11496c-380e-4251-a6ea-bb7c9b1a9d42">
