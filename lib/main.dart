@@ -9,7 +9,7 @@ import 'package:univerx/features/home/homePage.dart';
 import 'package:univerx/features/calendar/calendarPage.dart';
 import 'package:univerx/features/exams/examsPage.dart';
 import 'package:univerx/features/appointment/OLD_appointmentPage.dart';
-import 'package:univerx/features/neptun_login/login.dart';
+import 'package:univerx/features/login/login.dart';
 import 'package:univerx/services/neptun_API_fetching.dart';
 
 import 'package:univerx/database/database_helper.dart';
@@ -17,6 +17,7 @@ import 'package:univerx/services/neptun_ICS_fetching.dart';
 
 // ---------------------Other Packages--------------------------
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:univerx/services/notification_service.dart.dart';
 
 // --------------------- Pop Observer--------------------------
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -52,6 +53,11 @@ void main() async {
     await fetchAndUpdateApi();
   }
   */
+ 
+  // ---------------------Notification Service--------------------------
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
+
   // ---------------------Run the App--------------------------
   runApp(
     const MyApp(),
