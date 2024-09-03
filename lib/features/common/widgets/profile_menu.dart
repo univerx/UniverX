@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:univerx/features/appointment/OLD_appointmentPage.dart';
+import 'package:univerx/features/calculator/calculatorPage.dart';
+import 'package:univerx/features/common/widgets/logout.dart';
 import 'package:univerx/features/exams/examsPage.dart';
-import 'package:univerx/features/neptun_login/login.dart';
+import 'package:univerx/features/login/login.dart';
 import 'package:univerx/features/settings/settingsPage.dart';
-import 'package:univerx/features/neptun_login/data/logout.dart';
+import 'package:univerx/features/login/data/logout.dart';
 import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/models/assignment.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import for launching URLs
@@ -108,7 +110,24 @@ class DrawerMenu extends StatelessWidget {
               );
             },
           ),
-          /*
+          ListTile(
+            leading: const Icon(Icons.calculate_rounded, color: Colors.white),
+            title: const Text('KKI Calculator',
+                style: TextStyle(
+                  letterSpacing: 2,
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontFamily: "sfpro",
+                )),
+            onTap: () {
+              // Handle navigation to Settings
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Calculator()),
+              );
+            },
+          ),
+          
           ListTile(
             leading: const Icon(Icons.settings, color: Colors.white),
             title: const Text('Settings',
@@ -126,7 +145,7 @@ class DrawerMenu extends StatelessWidget {
               );
             },
           ),
-          */
+          
           ListTile(
             leading: const Icon(Icons.logout, color: Color.fromARGB(255, 175, 38, 38)),
             title: const Text('Logout',
@@ -137,37 +156,10 @@ class DrawerMenu extends StatelessWidget {
                   fontFamily: "sfpro",
                 )),
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Confirm Logout'),
-                    content: Text('Are you sure you want to logout?'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Dismiss the dialog
-                        },
-                      ),
-                      TextButton(
-                        child: Text('Logout'),
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Dismiss the dialog
-                          // Handle navigation to Logout
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => LoginPage()),
-                          );
-                          // Add navigation code here
-                          logout();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+              showLogoutDialog(context, () {
+                // Define your logout function here
+                print('User logged out');
+              });
             },
           ),
           Spacer(), // Push the footer to the bottom

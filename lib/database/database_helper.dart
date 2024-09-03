@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:univerx/database/appdata.dart';
 import 'dart:async';
 
 //------------------ Models ------------------
@@ -144,6 +145,60 @@ class DatabaseHelper {
       return Class.fromMap(maps[i]);
     });
   }
+
+  Future<List<Class>> getUniqueClasses() async {
+    Database db = await database;
+    List<Map<String, dynamic>> maps = await db.rawQuery('SELECT * FROM Class');
+
+    // Determine current semester
+    CurrentTime time = CurrentTime();
+    DateTime now = time.get_time();
+    int currentYear = now.year;
+    DateTime semesterStart;
+    DateTime semesterEnd;
+
+    if (now.month >= 2 && now.month <= 7) {
+      // Second semester: February to July
+      semesterStart = DateTime(currentYear, 2, 1);  // February 1
+      semesterEnd = DateTime(currentYear, 7, 31);   // July 31
+    } else {
+      // First semester: September to January
+      semesterStart = DateTime(currentYear, 9, 1);  // September 1
+      semesterEnd = DateTime(currentYear+1, 1, 31);   // January 31 of next year
+      // Adjust for January of the next year
+      if (now.month <= 1) {
+        semesterEnd = semesterEnd.add(Duration(days: 31));
+      }
+    }
+
+    // Use a map to ensure unique titles within parentheses
+    Map<String, Class> uniqueClasses = {};
+
+    for (var map in maps) {
+      Class clazz = Class.fromMap(map);
+      String title = clazz.title;
+      DateTime classDate = clazz.startTime;  // Ensure `clazz.date` is in a valid format
+
+      // Use RegExp to find the content inside parentheses
+      RegExp regExp = RegExp(r'\(([^)]+)\)');
+      Iterable<RegExpMatch> matches = regExp.allMatches(title);
+
+      if (matches.isNotEmpty) {
+        // Extract the content inside the parentheses
+        String uniquePart = matches.first.group(1) ?? '';
+
+        // Filter classes by the current semester
+        if (classDate.isAfter(semesterStart) && classDate.isBefore(semesterEnd)) {
+          // Add to map with unique key (overwriting if duplicate found)
+          uniqueClasses[uniquePart] = clazz;
+        }
+      }
+    }
+    // Convert the map values back to a list
+    return uniqueClasses.values.toList();
+  }
+
+
 
   Future<int> updateClass(Class classObj) async {
     Database db = await database;
