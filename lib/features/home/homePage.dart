@@ -42,7 +42,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with RouteAware {
+class _HomeState extends State<Home> with WidgetsBindingObserver, RouteAware {
   // ---------------------Initialize Variables--------------------------
   List<Exam> _exams = [];
   List<Assignment> _assignments = [];
@@ -63,6 +63,7 @@ class _HomeState extends State<Home> with RouteAware {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this); // Add the observer
     _loadExams();
     _loadAssignments();
 
@@ -80,11 +81,23 @@ class _HomeState extends State<Home> with RouteAware {
   void dispose() {
     // Cancel the timer when the widget is disposed
     _refreshTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this); // Remove the observer
     routeObserver.unsubscribe(this);
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _startRefreshTimer();
+    } else if (state == AppLifecycleState.paused) {
+      _refreshTimer?.cancel();
+    }
+  }
+
   void _startRefreshTimer() {
+    _refreshTimer?.cancel(); // Cancel any existing timer
+
     final now = DateTime.now();
     final secondsUntilNextMinute = 60 - now.second;
 
@@ -99,35 +112,48 @@ class _HomeState extends State<Home> with RouteAware {
   }
 
   Future<void> _handleRefresh() async {
-    bool? hasVibrator = await Vibration.hasVibrator();
-    if (hasVibrator == true) {
-      HapticFeedback.heavyImpact();
+    // bool? hasVibrator = await Vibration.hasVibrator();
+    // if (hasVibrator == true) {
+    //   HapticFeedback.heavyImpact();
+    // }
+
+    try {
+      await _loadExams();
+      await _loadAssignments();
+
+      setState(() {
+        currentEvent = eventService.getCurrentEvent();
+        upcomingEvent = eventService.getUpcomingEvent();
+
+        timeLeftForEvent = eventService.timeLeftForCurrentEvent();
+        percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
+      });
+    } catch (e) {
+      // Handle any errors during refresh
+      print('Error during refresh: $e');
     }
-
-    _loadExams();
-    _loadAssignments();
-
-    currentEvent = eventService.getCurrentEvent();
-    upcomingEvent = eventService.getUpcomingEvent();
-
-    timeLeftForEvent = eventService.timeLeftForCurrentEvent();
-    percentagePassedForEvent = eventService.percentagePassedOfCurrentEvent();
-
-    return await Future<void>.delayed(const Duration(milliseconds: 500));
   }
 
   Future<void> _loadExams() async {
-    final exams = await DatabaseHelper.instance.getExams();
-    setState(() {
-      _exams = exams;
-    });
+    try {
+      final exams = await DatabaseHelper.instance.getExams();
+      setState(() {
+        _exams = exams;
+      });
+    } catch (e) {
+      print('Error loading exams: $e');
+    }
   }
 
   Future<void> _loadAssignments() async {
-    final assignments = await DatabaseHelper.instance.getAssignments();
-    setState(() {
-      _assignments = assignments;
-    });
+    try {
+      final assignments = await DatabaseHelper.instance.getAssignments();
+      setState(() {
+        _assignments = assignments;
+      });
+    } catch (e) {
+      print('Error loading assignments: $e');
+    }
   }
 
   // ---------------------POP Observer To Refresh The Page--------------------------
@@ -216,10 +242,14 @@ class _HomeState extends State<Home> with RouteAware {
   }
 
   void _deleteExam(Exam exam) {
-    setState(() {
-      _exams.remove(exam);
-    });
-    DatabaseHelper.instance.deleteExam(exam.id!);
+    try {
+      setState(() {
+        _exams.remove(exam);
+      });
+      DatabaseHelper.instance.deleteExam(exam.id!);
+    } catch (e) {
+      print('Error deleting exam: $e');
+    }
   }
 
   void _editExam(Exam exam) {
@@ -227,10 +257,14 @@ class _HomeState extends State<Home> with RouteAware {
   }
 
   void _deleteAssignment(Assignment assignment) {
-    setState(() {
-      _assignments.remove(assignment);
-    });
-    DatabaseHelper.instance.deleteAssignment(assignment.id!);
+    try {
+      setState(() {
+        _assignments.remove(assignment);
+      });
+      DatabaseHelper.instance.deleteAssignment(assignment.id!);
+    } catch (e) {
+      print('Error deleting assignment: $e');
+    }
   }
 
   void _editAssignment(Assignment assignment) {
