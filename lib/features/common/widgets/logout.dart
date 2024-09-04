@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:univerx/database/database_helper.dart';
 import 'package:univerx/features/login/login.dart';
 
 Future<void> showLogoutDialog(BuildContext context, VoidCallback logout) {
@@ -26,6 +27,9 @@ Future<void> showLogoutDialog(BuildContext context, VoidCallback logout) {
                 MaterialPageRoute(builder: (context) => LoginPage()),
               );
               // Call the logout function
+              DatabaseHelper.instance.deleteNeptunLogin();
+              DatabaseHelper.instance.deleteNeptunClasses();
+              DatabaseHelper.instance.deleteCalendarICS();
               logout();
             },
           ),

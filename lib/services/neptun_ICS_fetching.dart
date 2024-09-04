@@ -65,6 +65,7 @@ class EventService {
       }
     } catch (e) {
       print('Error fetching events: $e');
+      await DatabaseHelper.instance.deleteCalendarICS();
       return null!;
     }
   }
