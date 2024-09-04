@@ -6,7 +6,7 @@ import 'package:univerx/models/exam.dart';
 import 'package:univerx/database/database_helper.dart';
 
 
-Future<void> addAssignmentOrExam(BuildContext context, ) async {
+Future<void> addAssignmentOrExam(BuildContext context, VoidCallback refresh) async {
   showDialog<void>(
     context: context,
     builder: (BuildContext context) {
@@ -41,7 +41,7 @@ Future<void> addAssignmentOrExam(BuildContext context, ) async {
                   ),
                   onPressed: () {
                     Navigator.pop(context);
-                    _showAssignmentDialog(context);
+                    _showAssignmentDialog(context, refresh);
                   },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +68,7 @@ Future<void> addAssignmentOrExam(BuildContext context, ) async {
                   ),
                   onPressed: () {
                     Navigator.pop(context);
-                    _showExamDialog(context);
+                    _showExamDialog(context, refresh);
                   },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +91,7 @@ Future<void> addAssignmentOrExam(BuildContext context, ) async {
   );
 }
 
-Future<void> _showAssignmentDialog(BuildContext context) async {
+Future<void> _showAssignmentDialog(BuildContext context,  VoidCallback refresh) async {
   final assignment = await showDialog<Assignment>(
     context: context,
     builder: (BuildContext context) {
@@ -251,10 +251,12 @@ Future<void> _showAssignmentDialog(BuildContext context) async {
   if (assignment != null) {
     await DatabaseHelper.instance.insertAssignment(assignment);
     // Call a callback or refresh the data as needed
+    refresh();
+
   }
 }
 
-Future<void> _showExamDialog(BuildContext context) async {
+Future<void> _showExamDialog(BuildContext context,  VoidCallback refresh) async {
   final exam = await showDialog<Exam>(
     context: context,
     builder: (BuildContext context) {
@@ -494,5 +496,6 @@ Future<void> _showExamDialog(BuildContext context) async {
   if (exam != null) {
     await DatabaseHelper.instance.insertExam(exam);
     // Call a callback or refresh the data as needed
+    refresh();
   }
 }

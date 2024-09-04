@@ -405,8 +405,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver, RouteAware {
               // Handle navigation to Home
             },
             button2: () {
-              addAssignmentOrExam(context);
-              _handleRefresh();
+              addAssignmentOrExam(context, _handleRefresh);
+              //_handleRefresh();
             },
             button3: () {
               // Open drawer menu

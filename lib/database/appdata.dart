@@ -1,6 +1,6 @@
 import 'package:univerx/models/class.dart';
 
-const String version_number = 'v1.0.4';
+const String version_number = 'v1.0.5';
 
 // create class for time with setter and getter with Datetime
 class CurrentTime{
