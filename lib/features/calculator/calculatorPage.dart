@@ -20,6 +20,13 @@ class _CalculatorState extends State<Calculator> {
   final List<TextEditingController> _creditsControllers = [];
   final List<TextEditingController> _gradeControllers = [];
 
+  // Variables to store the results
+  double kki = 0;
+  double ki = 0;
+  int allCredits = 0;
+  int completedCredits = 0;
+  double average = 0;
+
   @override
   void initState() {
     super.initState();
@@ -31,11 +38,9 @@ class _CalculatorState extends State<Calculator> {
   }
 
   void _calculate() {
-    double totalCredits = 0;
-    double weightedSum = 0;
     double summaTeljesitetKreditXerdemjegy = 0;
-    int completedCredits = 0;
-    int allCredits = 0;
+    completedCredits = 0;
+    allCredits = 0;
 
     for (int i = 0; i < _creditsControllers.length; i++) {
       int credits = int.tryParse(_creditsControllers[i].text) ?? 0;
@@ -49,35 +54,13 @@ class _CalculatorState extends State<Calculator> {
     }
 
     double sa = completedCredits > 0 ? (summaTeljesitetKreditXerdemjegy / completedCredits) : 0;
-    double ki = summaTeljesitetKreditXerdemjegy / 30;
-    double kki = (ki * (completedCredits / allCredits)).toDouble();
+    ki = summaTeljesitetKreditXerdemjegy / 30;
+    kki = (ki * (completedCredits / allCredits)).toDouble();
+    average = sa;
 
-    // Display results using a dialog or Snackbar
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Results'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("SA: ${sa.toStringAsFixed(2)}"),
-            Text("KKI: ${kki.toStringAsFixed(2)}"),
-            Text("KI: ${ki.toStringAsFixed(2)}"),
-            Text("All Credits: $allCredits"),
-            Text("Completed Credits: $completedCredits"),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
+    // Trigger UI update
+    setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +79,7 @@ class _CalculatorState extends State<Calculator> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
@@ -131,11 +114,11 @@ class _CalculatorState extends State<Calculator> {
                     future: _classesFuture,
                     builder: (BuildContext context, AsyncSnapshot<List<Class>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(child: Text('No classes found.'));
+                        return const Center(child: Text('No classes found.'));
                       } else {
                         List<Class> classes = snapshot.data!;
                         _creditsControllers.clear();
@@ -153,20 +136,70 @@ class _CalculatorState extends State<Calculator> {
                                 gradeController: gradeController,
                               );
                             }).toList(),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
                               child: ElevatedButton(
                                 onPressed: _calculate,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blueAccent,
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                  textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  backgroundColor: Color.fromARGB(255, 38, 51, 70),
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
-                                child: Center(child: Text('Calculate')),
+                                child: const Center(child: Text('Calculate', style: TextStyle(color: Colors.white, fontSize: 25))),
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
+                            // Results display
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(
+                                'Eredmények',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            // First Row with KKI and KI
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Box3DWidget(
+                                  title: 'KKI',
+                                  value: kki.toStringAsFixed(2),
+                                  width: 130,
+                                  height: 130,
+                                ),
+                                const SizedBox(width: 50), // Space between KKI and KI
+                                Box3DWidget(
+                                  title: 'KI',
+                                  value: ki.toStringAsFixed(2),
+                                  width: 130,
+                                  height: 130,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            // Merged Row with Felvett and Teljesített
+                            Box3DMergedWidget(
+                              title1: 'Felvett',
+                              value1: '$allCredits kr',
+                              title2: 'Teljesített',
+                              value2: '$completedCredits kr',
+                              width: 310,
+                              height: 130,
+                            ),
+                            const SizedBox(height: 20),
+                            // Third Row with Átlag
+                            Box3DWidget(
+                              title: 'Átlag',
+                              value: average.toStringAsFixed(2),
+                              width: 130,
+                              height: 130,
+                            ),
                           ],
                         );
                       }
@@ -175,6 +208,154 @@ class _CalculatorState extends State<Calculator> {
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Custom widget to represent the 3D boxes
+class Box3DWidget extends StatelessWidget {
+  final String title;
+  final String value;
+  final double width;
+  final double height;
+
+  const Box3DWidget({
+    Key? key,
+    required this.title,
+    required this.value,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Container(
+        width: width,
+        height: height,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 38, 51, 70),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              offset: const Offset(4, 4),
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white54,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Custom widget to represent the merged 3D box
+class Box3DMergedWidget extends StatelessWidget {
+  final String title1;
+  final String value1;
+  final String title2;
+  final String value2;
+  final double width;
+  final double height;
+
+  const Box3DMergedWidget({
+    Key? key,
+    required this.title1,
+    required this.value1,
+    required this.title2,
+    required this.value2,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 38, 51, 70),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            offset: const Offset(4, 4),
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                title1,
+                style: const TextStyle(
+                  color: Colors.white54,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                value1,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                title2,
+                style: const TextStyle(
+                  color: Colors.white54,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                value2,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ],
       ),
